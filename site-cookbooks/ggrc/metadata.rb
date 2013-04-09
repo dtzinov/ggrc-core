@@ -1,0 +1,7 @@
+maintainer "Reciprocity, Inc"
+maintainer_email "david@reciprocitylabs.com"
+license "Apache 2.0"
+description "Installs requirements for GGRC"
+version "0.1"
+long_description "Installs requirements for GGRC. Rails, etc.."
+depends "apt"

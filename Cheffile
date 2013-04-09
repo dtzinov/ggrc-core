@@ -1,0 +1,7 @@
+cookbook "apt",
+  :git => "https://github.com/cookbooks/apt.git",
+  :ref => "1.3.2"
+
+cookbook "build-essential",
+  :git => "https://github.com/opscode-cookbooks/build-essential.git",
+  :ref => "1.3.4"
