@@ -5,7 +5,7 @@ Vagrant.configure("2") do |config|
   config.vm.box = "ggrc"
 
   # Fetched the box if it doesn't already exist.
-  config.vm.box_url = "http://files.vagrantup.com/lucid64.box"
+  config.vm.box_url = "http://files.vagrantup.com/precise64.box"
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
