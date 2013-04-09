@@ -8,6 +8,7 @@ Requirements
 * VirtualBox
 * Vagrant
 * librarian (ruby gem)
+* librarian-chef (ruby gem)
 
 Getting Started
 ===============
@@ -17,6 +18,7 @@ Getting Started
 * run the following:
 
 .. sourcecode:: bash
+
   librarian-chef install
   vagrant up
   vagrant ssh
