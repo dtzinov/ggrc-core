@@ -1,3 +1,5 @@
+# install all prerequisites for GGRC-Core development within a Vagrant VM.
+
 include_recipe "apt"
 
 package "unzip" do

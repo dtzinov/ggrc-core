@@ -1,4 +1,20 @@
-unless File.exists?("/opt/packages.zip")
+# Create the packages.zip for use in GAE SDK or other environment.
+
+if not File.exists?("/opt/packages.zip") or \
+   not File.exists?("/opt/requirements.txt.md5") or \
+   not system("md5sum --status --strict -c /opt/requirements.txt.md5")
+  if File.exists?("/opt/packages.zip")
+    file "/opt/packages.zip" do
+      action :delete
+    end
+  end
+
+  if File.exists?("/opt/requirements.txt.md5")
+    file "/opt/requirements.txt.md5" do
+      action :delete
+    end
+  end
+
   python_virtualenv "/tmp/package_env" do
     interpreter "python2.7"
     action :create
@@ -29,6 +45,14 @@ unless File.exists?("/opt/packages.zip")
     group "root"
     creates "/opt/packages.zip"
     cwd "/tmp/packages"
+    action :run
+  end
+
+  execute "Store the md5sum of requirements.txt" do
+    command "md5sum /vagrant/src/requirements.txt > /opt/requirements.txt.md5"
+    user "root"
+    group "root"
+    creates "/opt/requirements.txt.md5"
     action :run
   end
 
