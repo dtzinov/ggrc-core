@@ -36,3 +36,10 @@ unless File.exists?("/opt/#{zipfile}")
 end
 
 include_recipe "ggrc::package_env"
+
+# Attempt to include custom local additions to the environment
+begin
+  include_recipe "ggrc::local"
+rescue Chef::Exceptions::RecipeNotFound
+  # Fail silently, since the file is optional
+end
