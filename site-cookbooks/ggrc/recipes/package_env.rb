@@ -1,16 +1,20 @@
 # Create the packages.zip for use in GAE SDK or other environment.
 
-if not File.exists?("/opt/packages.zip") or \
-   not File.exists?("/opt/requirements.txt.md5") or \
-   not system("md5sum --status --strict -c /opt/requirements.txt.md5")
-  if File.exists?("/opt/packages.zip")
-    file "/opt/packages.zip" do
+packages_zip = "/vagrant/src/packages.zip"
+reqs = "/vagrant/src/requirements.txt"
+reqs_md5 = reqs + ".md5"
+
+if not File.exists?(packages_zip) or \
+   not File.exists?(reqs_md5) or \
+   not system("md5sum --status --strict -c #{reqs_md5}")
+  if File.exists?(packages_zip)
+    file packages_zip do
       action :delete
     end
   end
 
-  if File.exists?("/opt/requirements.txt.md5")
-    file "/opt/requirements.txt.md5" do
+  if File.exists?(reqs_md5)
+    file reqs_md5 do
       action :delete
     end
   end
@@ -39,20 +43,21 @@ if not File.exists?("/opt/packages.zip") or \
   end
 
   execute "Create packages.zip" do
-    command "zip -9mrv packages.zip .;"\
-            "mv packages.zip /opt/packages.zip"
+    command "zip -9mrv #{packages_zip} .;"\
+            "mv packages.zip #{packages_zip};"\
+            "chown vagrant:vagrant #{packages_zip}"
     user "root"
     group "root"
-    creates "/opt/packages.zip"
+    creates packages_zip
     cwd "/tmp/packages"
     action :run
   end
 
   execute "Store the md5sum of requirements.txt" do
-    command "md5sum /vagrant/src/requirements.txt > /opt/requirements.txt.md5"
-    user "root"
-    group "root"
-    creates "/opt/requirements.txt.md5"
+    command "md5sum #{reqs} > #{reqs_md5}"
+    user "vagrant"
+    group "vagrant"
+    creates reqs_md5
     action :run
   end
 
