@@ -6,4 +6,4 @@ threadsafe: true
 
 handlers:
   - url: /.*
-    script: ggrc.app
+    script: ggrc.app.wsgi_app

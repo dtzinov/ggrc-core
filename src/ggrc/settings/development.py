@@ -1,3 +1,3 @@
 DEBUG = True
 TESTING = True
-SERVER_NAME = "0.0.0.0:5000"
+HOST = "0.0.0.0"
