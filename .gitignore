@@ -6,3 +6,4 @@ tmp
 src/requirements.txt.md5
 src/packages.zip
 *.pyc
+src/instance

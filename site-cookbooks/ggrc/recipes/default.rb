@@ -35,6 +35,20 @@ unless File.exists?("/opt/#{zipfile}")
   end
 end
 
+directory "/vagrant/src/instance" do
+  owner "vagrant"
+  group "vagrant"
+  action :create
+end
+
+execute "Copy development settings to instance directory" do
+  command "ln -s /vagrant/src/ggrc/settings/development.py /vagrant/src/instance/settings.cfg"
+  user "vagrant"
+  group "vagrant"
+  creates "/vagrant/src/instance/settings.cfg"
+  action :run
+end
+
 include_recipe "ggrc::package_env"
 
 # Attempt to include custom local additions to the environment
