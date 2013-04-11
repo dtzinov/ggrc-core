@@ -26,7 +26,7 @@ environment:
 Quick Start
 ===========
 
-Getting started with GGRC-Core development should be fast and easy once you
+Getting started with gGRC-Core development should be fast and easy once you
 have the prerequisite software installed. Here are the steps:
 
 * clone the repo
@@ -62,7 +62,7 @@ Launching gGRC in Google App Engine
 Details
 =======
 
-GGRC-Core provides both a ``Vagrantfile`` and a ``Cheffile`` to make standing
+gGRC-Core provides both a ``Vagrantfile`` and a ``Cheffile`` to make standing
 up a development environment simple and repeatable thanks to the magic of
 Vagrant, Chef, and librarian-chef. Vagrant enables developers to use a
 consistent and shared VM configuration to perform application testing while
@@ -73,11 +73,11 @@ provision the development VM,  with required packages.
 Gotchas
 =======
 
-After sync'ing your local clone of GGRC-Core you may experience a failure when
+After sync'ing your local clone of gGRC-Core you may experience a failure when
 trying to run the application due to a change (usually an addition) to the
 prerequisites. 
 
-There are two broad classes of requirements for GGRC-Core: cookbooks and Python
+There are two broad classes of requirements for gGRC-Core: cookbooks and Python
 packages. Cookbooks are managed via specification in the ``Cheffile`` while
 Python packages are managed via specification in ``src/requirements.txt`` for
 use with ``pip``.
