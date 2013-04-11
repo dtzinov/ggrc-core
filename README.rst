@@ -1,11 +1,11 @@
 *********
-GGRC-Core
+gGRC-Core
 *********
 
 Requirements
 ============
 
-The following software is required to stand up a GGRC-Core development
+The following software is required to stand up a gGRC-Core development
 environment:
 
 .. list-table::
@@ -42,6 +42,22 @@ have the prerequisite software installed. Here are the steps:
   ls
 
 Now you're in the VM and ready to rock. Get to work!
+
+Launching gGRC as Stand-alone Flask
+-----------------------------------
+
+.. sourcecode:: bash
+
+   cd /vagrant
+   ./launch_ggrc
+
+Launching gGRC in Google App Engine
+-----------------------------------
+
+.. sourcecode:: bash
+
+   cd /vagrant
+   ./launch_gae_ggrc
 
 Details
 =======
