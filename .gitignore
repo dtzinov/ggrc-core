@@ -7,3 +7,6 @@ src/requirements.txt.md5
 src/packages.zip
 *.pyc
 src/instance
+
+# Non-shared default recipe extension
+site-cookbooks/ggrc/recipes/local.rb
