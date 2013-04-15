@@ -33,6 +33,7 @@ if not File.exists?(packages_zip) or \
   execute "Prepare to build packages.zip using the temporary virtualenv" do
     command "/bin/bash -c '"\
             "source package_env/bin/activate;"\
+            "pip install -U pip;"\
             "pip install -r /vagrant/src/requirements.txt --target ./packages;"\
             "find packages -name \"*.pyc\" -delete;"\
             "find packages -name \"*.egg-info\" | xargs rm -rf'"
@@ -43,7 +44,7 @@ if not File.exists?(packages_zip) or \
   end
 
   execute "Create packages.zip" do
-    command "zip -9mrv #{packages_zip} .;"\
+    command "zip -9mrv packages.zip .;"\
             "mv packages.zip #{packages_zip};"\
             "chown vagrant:vagrant #{packages_zip}"
     user "root"
@@ -66,7 +67,8 @@ if not File.exists?(packages_zip) or \
     action :delete
   end
 
-  python_virtualenv "/tmp/package_env" do
+  directory "/tmp/package_env" do
+    recursive true
     action :delete
   end
 end
