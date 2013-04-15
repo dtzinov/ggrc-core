@@ -1,11 +1,11 @@
 import sys
 sys.path.insert(0, 'packages.zip')
 
-from flask import Flask
+from .bootstrap import app, db
+from .services.categories import Category, CategoriesCollection
 
-app = Flask('ggrc', instance_relative_config=True)
-app.config.from_object('ggrc.settings.default')
-app.config.from_pyfile('settings.cfg')
+CategoriesCollection.add_to(app, '/api/categories')
+Category.add_to(app, '/api/categories/<category_id>')
 
 @app.route("/")
 def hello():
