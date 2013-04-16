@@ -1,1 +1,1 @@
-from .categories import *
+from .category import *
