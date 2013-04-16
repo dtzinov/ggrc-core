@@ -1,11 +1,12 @@
-import sys
-sys.path.insert(0, 'packages.zip')
+from .bootstrap import app, db, logger
+import models
 
-from .bootstrap import app, db
-from .services.categories import Category, CategoriesCollection
+logger.info("Creating the database")
+db.create_all()
 
-CategoriesCollection.add_to(app, '/api/categories')
-Category.add_to(app, '/api/categories/<category_id>')
+from .services.categories import Category
+
+Category.add_to(app, '/api/categories')
 
 @app.route("/")
 def hello():

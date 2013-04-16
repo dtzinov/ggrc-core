@@ -1,5 +1,4 @@
 from ggrc import db
-from sqlalchemy import Boolean, Column, DateTime, Integer, String
 
 class Category(db.Model):
   __tablename__ = 'categories'
@@ -11,8 +10,8 @@ class Category(db.Model):
   rgt = db.Column(db.Integer)
   scope_id = db.Column(db.Integer)
   depth = db.Column(db.Integer)
-  created_at = db.Column(db.DateTime, nullable=False)
-  updated_at = db.Column(db.DateTime, nullable=False)
+  created_at = db.Column(db.DateTime, server_default=db.text('current_timestamp'))
+  updated_at = db.Column(db.DateTime, server_onupdate=db.text('current_timestamp'))
   modified_by_id = db.Column(db.Integer)
   required = db.Column(db.Boolean)
 

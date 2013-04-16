@@ -1,3 +1,11 @@
+import sys
+sys.path.insert(0, 'packages.zip')
+
+import logging
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
+
+
 from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
 
