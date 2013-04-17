@@ -1,5 +1,4 @@
 from .bootstrap import app, db, logger
-import models
 
 logger.info("Creating the database")
 db.create_all()

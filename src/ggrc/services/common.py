@@ -1,17 +1,20 @@
+import datetime
+import hashlib
+import json
+import time
 from flask.views import View
 from flask import url_for, request, current_app
 from ggrc import db
+from wsgiref.handlers import format_date_time
 
-
-# Custom JSONEncoder to handle datetime objects
-import json
-import datetime
-
-# from:
-#   http://stackoverflow.com/questions/12122007/python-json-encoder-to-support-datetime
-# also consider:
-#   http://hg.tryton.org/2.4/trytond/file/ade5432ac476/trytond/protocols/jsonrpc.py#l53
 class DateTimeEncoder(json.JSONEncoder):
+  '''Custom JSON Encoder to handle datetime objects
+
+  from:
+     `http://stackoverflow.com/questions/12122007/python-json-encoder-to-support-datetime`_
+  also consider:
+     `http://hg.tryton.org/2.4/trytond/file/ade5432ac476/trytond/protocols/jsonrpc.py#l53`_
+  '''
   def default(self, obj):
     if isinstance(obj, datetime.datetime):
       return obj.isoformat()
@@ -27,6 +30,19 @@ class DateTimeEncoder(json.JSONEncoder):
 #   - /resources (GET, POST)
 #   - /resources/<pk:pk_type> (GET, PUT, POST, DELETE)
 class Resource(View):
+  '''View base class for Views handling.  Will typically be registered with an
+  application following a collection style for routes. Collection ``GET`` and
+  ``POST`` will have a route like ``/resources`` while collection member
+  resource routes will have routes likej ``/resources/<pk:pk_type>``.
+
+  To register a Resource subclass FooCollection with a Flask application:
+
+  ..
+     
+     FooCollection.add_to(app, '/foos')
+
+  By default will only support the ``application/json`` content-type.
+  '''
   #methods = ['GET', 'PUT', 'POST', 'DELETE']
   pk = 'id'
   pk_type = 'int'
@@ -56,74 +72,58 @@ class Resource(View):
     else:
       raise NotImplementedError()
 
-  # Default request handlers
-  #def get(*args, **kwargs):
-  #  raise NotImplementedError()
-
-  #def put(*args, **kwargs):
-  #  raise NotImplementedError()
-
-  #def delete(*args, **kwargs):
-  #  raise NotImplementedError()
-
   def post(*args, **kwargs):
     raise NotImplementedError()
 
-  #def collection_get(*args, **kwargs):
-  #  raise NotImplementedError()
-
-  #def collection_post(*args, **kwargs):
-  #  raise NotImplementedError()
-
   # Default JSON request handlers
   def get(self, id):
-    category = self.get_object(id)
+    obj = self.get_object(id)
 
-    if category is None:
+    if obj is None:
       return self.not_found_response()
     else:
       return self.json_success_response(
-        self.object_for_json(category))
+        self.object_for_json(obj), obj.updated_at)
 
   def put(self, id):
-    category = self.get_object(id)
+    obj = self.get_object(id)
 
-    if category is None:
+    if obj is None:
       return self.not_found_response()
     else:
-      self.update_object_from_form(category, self.request.form)
-      db.session.add(category)
+      self.update_object_from_form(obj, self.request.form)
+      db.session.add(obj)
       db.session.commit()
 
       return self.json_success_response(
-        self.object_as_json(category))
+        self.object_as_json(obj), obj.updated_at)
 
   def delete(self, id):
-    category = self.get_object(id)
+    obj = self.get_object(id)
 
-    if category is None:
+    if obj is None:
       return self.not_found_response()
     else:
-      db.session.delete(category)
+      db.session.delete(obj)
       return self.json_success_response(
-        self.object_as_json(category))
+        self.object_as_json(obj), obj.updated_at)
 
   def collection_get(self):
-    categories = self.get_collection()
+    objs = self.get_collection()
 
     return self.json_success_response(
-      self.collection_for_json(categories))
+      self.collection_for_json(objs), self.collection_last_modified())
 
   def collection_post(self):
-    category = self.model()
+    obj = self.model()
 
-    self.update_object_from_form(category, self.request.form)
+    self.update_object_from_form(obj, self.request.form)
 
-    db.session.add(category)
+    db.session.add(obj)
     db.session.commit()
 
     return self.json_success_response(
-      self.object_for_json(category))
+      self.object_for_json(obj), obj.updated_at)
 
   # Simple accessor properties
   @property
@@ -224,9 +224,15 @@ class Resource(View):
 
     return collection_json
 
-  def json_success_response(self, response_object):
+  def json_success_response(self, response_object, last_modified):
+    last_modified = format_date_time(time.mktime(last_modified.utctimetuple()))
+    headers = [
+        ('Last-Modified', last_modified),
+        ('Etag', self.etag(last_modified)),
+        ('Content-Type', 'application/json'),
+        ]
     return current_app.make_response(
-      (self.as_json(response_object), 200, []))
+      (self.as_json(response_object), 200, headers))
 
   def not_found_message(self):
     return '%s not found.' % (self.model_name.title(),)
@@ -234,3 +240,23 @@ class Resource(View):
   def not_found_response(self):
     return current_app.make_response((self.not_found_message(), 404, []))
 
+  def etag(self, last_modified):
+    '''Generate the etag given a datetime for the last time the resource was
+    modified. This isn't as good as an etag generated off of a hash of the
+    representation, but, it doesn't require the representation in order to be
+    calculated. An alternative would be to keep an etag on the stored
+    representation, but this will do for now.
+    '''
+    return '"{}"'.format(hashlib.sha1(last_modified).hexdigest())
+
+  def collection_last_modified(self):
+    '''Calculate the last time a member of the collection was modified. This
+    method relies on the fact that the collection table has an ``updated_at``
+    column; services for models that don't have this field **MUST** override
+    this method.
+    '''
+    result = db.session.query(
+        self.model.updated_at).order_by(self.model.updated_at).first()
+    if result is not None:
+      return result.updated_at 
+    return datetime.datetime.now()
