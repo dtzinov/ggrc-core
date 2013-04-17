@@ -51,13 +51,21 @@ Launching gGRC as Stand-alone Flask
    cd /vagrant
    ./launch_ggrc
 
-Launching gGRC in Google App Engine
------------------------------------
+Launching gGRC in Google App Engine SDK
+---------------------------------------
 
 .. sourcecode:: bash
 
    cd /vagrant
    ./launch_gae_ggrc
+
+Accessing the Application
+-------------------------
+
+The application will be accessible via this URL: `http://localhost:8080/`_
+
+If you're running the Google App Engine SDK, the App Engine management console
+will be avaiable via this URL: `http://localhost:8000/`_
 
 Details
 =======
