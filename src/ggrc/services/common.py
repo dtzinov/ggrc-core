@@ -1,5 +1,6 @@
 from flask.views import View
-from flask import url_for, request
+from flask import url_for, request, current_app
+from ggrc import db
 
 
 # Custom JSONEncoder to handle datetime objects
@@ -30,6 +31,10 @@ class Resource(View):
   pk = 'id'
   pk_type = 'int'
 
+  _model = None
+  _model_name = 'object'
+  _model_plural = 'objects'
+
   def dispatch_request(self, *args, **kwargs):
     method = request.method.lower()
 
@@ -52,23 +57,73 @@ class Resource(View):
       raise NotImplementedError()
 
   # Default request handlers
-  def get(*args, **kwargs):
-    raise NotImplementedError()
+  #def get(*args, **kwargs):
+  #  raise NotImplementedError()
 
-  def put(*args, **kwargs):
-    raise NotImplementedError()
+  #def put(*args, **kwargs):
+  #  raise NotImplementedError()
 
-  def delete(*args, **kwargs):
-    raise NotImplementedError()
+  #def delete(*args, **kwargs):
+  #  raise NotImplementedError()
 
   def post(*args, **kwargs):
     raise NotImplementedError()
 
-  def collection_get(*args, **kwargs):
-    raise NotImplementedError()
+  #def collection_get(*args, **kwargs):
+  #  raise NotImplementedError()
 
-  def collection_post(*args, **kwargs):
-    raise NotImplementedError()
+  #def collection_post(*args, **kwargs):
+  #  raise NotImplementedError()
+
+  # Default JSON request handlers
+  def get(self, id):
+    category = self.get_object(id)
+
+    if category is None:
+      return self.not_found_response()
+    else:
+      return self.json_success_response(
+        self.object_for_json(category))
+
+  def put(self, id):
+    category = self.get_object(id)
+
+    if category is None:
+      return self.not_found_response()
+    else:
+      self.update_object_from_form(category, self.request.form)
+      db.session.add(category)
+      db.session.commit()
+
+      return self.json_success_response(
+        self.object_as_json(category))
+
+  def delete(self, id):
+    category = self.get_object(id)
+
+    if category is None:
+      return self.not_found_response()
+    else:
+      db.session.delete(category)
+      return self.json_success_response(
+        self.object_as_json(category))
+
+  def collection_get(self):
+    categories = self.get_collection()
+
+    return self.json_success_response(
+      self.collection_for_json(categories))
+
+  def collection_post(self):
+    category = self.model()
+
+    self.update_object_from_form(category, self.request.form)
+
+    db.session.add(category)
+    db.session.commit()
+
+    return self.json_success_response(
+      self.object_for_json(category))
 
   # Simple accessor properties
   @property
@@ -78,6 +133,33 @@ class Resource(View):
   @property
   def model(self):
     return self._model
+
+  # Model/DB Inspection
+  # TODO: Fix -- this is cheating
+  @property
+  def model_name(self):
+    if self.model is None:
+      return self._model_name
+    else:
+      return self.model.__name__.lower()
+
+  @property
+  def model_plural(self):
+    if self.model is None:
+      return self._model_plural
+    else:
+      return self.model.__tablename__
+
+  # Default model/DB helpers
+  def get_collection(self):
+    return db.session.query(self.model)
+
+  def get_object(self, id):
+    # This could also use `self.pk`
+    return self.get_collection().filter(self.model.id == id).first()
+
+  def update_object_from_form(self, category, form):
+    return
 
   # Routing helpers
   @classmethod
@@ -105,4 +187,50 @@ class Resource(View):
   @classmethod
   def as_json(cls, obj, **kwargs):
     return json.dumps(obj, cls=DateTimeEncoder, **kwargs)
+
+  def attrs_for_json(self, object):
+    return {}
+
+  def object_for_json(self, object, **kwargs):
+    model_name = kwargs.get('model_name', self.model_name)
+
+    object_for_json = {
+      'id': object.id,
+      'selfLink': self.url_for(id=object.id),
+      'created_at': object.created_at,
+      'updated_at': object.updated_at,
+      }
+    attrs_for_json = self.attrs_for_json(object)
+    object_for_json.update(attrs_for_json)
+
+    return { model_name: object_for_json }
+
+  def collection_for_json(self, objects, **kwargs):
+    model_name = kwargs.get('model_name', self.model_name)
+    model_plural = kwargs.get('model_plural', self.model_plural)
+    collection_name = kwargs.get('collection_name', '%s_collection' % (model_plural,))
+
+    objects_json = []
+    for object in objects:
+      object_for_json = self.object_for_json(object, model_name=model_name)
+      objects_json.append(object_for_json)
+
+    collection_json = {
+      collection_name: {
+        'selfLink': self.url_for(),
+        model_plural: objects_json,
+        }
+      }
+
+    return collection_json
+
+  def json_success_response(self, response_object):
+    return current_app.make_response(
+      (self.as_json(response_object), 200, []))
+
+  def not_found_message(self):
+    return '%s not found.' % (self.model_name.title(),)
+
+  def not_found_response(self):
+    return current_app.make_response((self.not_found_message(), 404, []))
 
