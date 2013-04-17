@@ -1,5 +1,5 @@
-from .mixins import Slugged, Timeboxed, Hyperlinked
+from ggrc import db
+from .mixins import BusinessObject
 
-class DataAsset(Slugged, Timeboxed, Hyperlinked, db.Model):
+class DataAsset(BusinessObject, db.Model):
   __tablename__ = 'data_assets'
-

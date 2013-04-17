@@ -22,9 +22,12 @@ class ChangeTracked(object):
   '''
   modified_by_id = db.Column(db.Integer, nullable=False)
   created_at = db.Column(
-      db.DateTime, server_default=db.text('current_timestamp'))
+      db.DateTime,
+      server_default=db.text('current_timestamp'))
   updated_at = db.Column(
-      db.DateTime, server_onupdate=db.text('current_timestamp'))
+      db.DateTime,
+      server_default=db.text('current_timestamp'),
+      server_onupdate=db.text('current_timestamp'))
 
 class Described(object):
   description = db.Column(db.Text)
