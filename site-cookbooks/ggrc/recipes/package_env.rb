@@ -34,7 +34,7 @@ if not File.exists?(packages_zip) or \
     command "/bin/bash -c '"\
             "source package_env/bin/activate;"\
             "pip install -U pip;"\
-            "pip install -r /vagrant/src/requirements.txt --target ./packages;"\
+            "pip install -r #{reqs} --target ./packages;"\
             "find packages -name \"*.pyc\" -delete;"\
             "find packages -name \"*.egg-info\" | xargs rm -rf'"
     user "root"

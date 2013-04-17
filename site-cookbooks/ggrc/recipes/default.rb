@@ -50,6 +50,7 @@ execute "Copy development settings to instance directory" do
 end
 
 include_recipe "ggrc::package_env"
+include_recipe "ggrc::test_env"
 
 # Attempt to include custom local additions to the environment
 begin
