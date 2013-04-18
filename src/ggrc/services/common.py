@@ -5,6 +5,7 @@ import time
 from flask.views import View
 from flask import url_for, request, current_app
 from ggrc import db
+from types import MethodType
 from wsgiref.handlers import format_date_time
 
 class DateTimeEncoder(json.JSONEncoder):
@@ -152,7 +153,7 @@ class Resource(View):
 
   # Default model/DB helpers
   def get_collection(self):
-    return db.session.query(self.model)
+    return db.session.query(self.model).order_by(self.model.updated_at.desc())
 
   def get_object(self, id):
     # This could also use `self.pk`
@@ -188,31 +189,42 @@ class Resource(View):
   def as_json(cls, obj, **kwargs):
     return json.dumps(obj, cls=DateTimeEncoder, **kwargs)
 
+  def _attrs_for_json(self, object):
+    attrs = {}
+    for base in self.__class__.__bases__:
+      method = getattr(base, 'attrs_for_json', None)
+      if method and isinstance(base, MethodType):
+        attrs.update(method(self, object))
+    attrs.update(self.attrs_for_json(object))
+    return attrs
+
   def attrs_for_json(self, object):
     return {}
 
-  def object_for_json(self, object, **kwargs):
-    model_name = kwargs.get('model_name', self.model_name)
+  def object_for_json(self, object, model_name=None):
+    model_name = model_name or self.model_name
+    return { model_name: self.object_for_json_container(object) }
 
+  def object_for_json_container(self, object):
     object_for_json = {
       'id': object.id,
       'selfLink': self.url_for(id=object.id),
       'created_at': object.created_at,
       'updated_at': object.updated_at,
       }
-    attrs_for_json = self.attrs_for_json(object)
+    attrs_for_json = self._attrs_for_json(object)
     object_for_json.update(attrs_for_json)
+    return object_for_json
 
-    return { model_name: object_for_json }
-
-  def collection_for_json(self, objects, **kwargs):
-    model_name = kwargs.get('model_name', self.model_name)
-    model_plural = kwargs.get('model_plural', self.model_plural)
-    collection_name = kwargs.get('collection_name', '%s_collection' % (model_plural,))
+  def collection_for_json(
+      self, objects, model_name=None, model_plural=None, collection_name=None):
+    model_name = model_name or self.model_name
+    model_plural = model_plural or self.model_plural
+    collection_name = collection_name or '%s_collection' % (model_plural,)
 
     objects_json = []
     for object in objects:
-      object_for_json = self.object_for_json(object, model_name=model_name)
+      object_for_json = self.object_for_json_container(object)
       objects_json.append(object_for_json)
 
     collection_json = {
@@ -256,7 +268,7 @@ class Resource(View):
     this method.
     '''
     result = db.session.query(
-        self.model.updated_at).order_by(self.model.updated_at).first()
+        self.model.updated_at).order_by(self.model.updated_at.desc()).first()
     if result is not None:
       return result.updated_at 
     return datetime.datetime.now()
