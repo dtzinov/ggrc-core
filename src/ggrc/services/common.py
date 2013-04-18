@@ -234,8 +234,7 @@ class Resource(View):
     return object_for_json
 
   def collection_for_json(
-      self, objects, model_name=None, model_plural=None, collection_name=None):
-    model_name = model_name or self.model_name
+      self, objects, model_plural=None, collection_name=None):
     model_plural = model_plural or self.model_plural
     collection_name = collection_name or '%s_collection' % (model_plural,)
 

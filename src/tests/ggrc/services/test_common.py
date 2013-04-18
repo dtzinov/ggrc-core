@@ -37,6 +37,24 @@ class TestResource(TestCase):
       return URL_MOCK_RESOURCE.format(resource)
     return URL_MOCK_COLLECTION
 
+  def mock_json(self, model):
+    format = '%Y-%m-%dT%H:%M:%S'
+    updated_at = unicode(model.updated_at.strftime(format))
+    created_at = unicode(model.created_at.strftime(format))
+    return {
+        u'id': model.id,
+        u'selfLink': unicode(URL_MOCK_RESOURCE.format(model.id)),
+        u'modified_by_id': unicode(model.modified_by_id),
+        u'updated_at': updated_at,
+        u'created_at': created_at,
+        }
+
+  def mock_model(self, **kwarg):
+    mock = MockModel(**kwarg)
+    ggrc.db.session.add(mock)
+    ggrc.db.session.commit()
+    return mock
+
   def http_timestamp(self, timestamp):
     return format_date_time(time.mktime(timestamp.utctimetuple()))
 
@@ -46,7 +64,6 @@ class TestResource(TestCase):
     self.assertIn('Last-Modified', response.headers)
     self.assertIn('Content-Type', response.headers)
     for k,v in headers.items():
-      print 'validating header {}'.format(k)
       self.assertEquals(v, response.headers.get(k))
 
   def test_empty_collection_get(self):
@@ -60,11 +77,10 @@ class TestResource(TestCase):
   def test_collection_get(self):
     date1 = datetime(2013, 4, 17, 0, 0, 0, 0)
     date2 = datetime(2013, 4, 20, 0, 0, 0, 0)
-    mock1 = MockModel(modified_by_id=42, created_at=date1, updated_at=date1)
-    mock2 = MockModel(modified_by_id=43, created_at=date2, updated_at=date2)
-    ggrc.db.session.add(mock1)
-    ggrc.db.session.add(mock2)
-    ggrc.db.session.commit()
+    mock1 = self.mock_model(
+        modified_by_id=42, created_at=date1, updated_at=date1)
+    mock2 = self.mock_model(
+        modified_by_id=43, created_at=date2, updated_at=date2)
     response = self.client.get(self.mock_url())
     self.assert200(response)
     self.assertRequiredHeaders(
@@ -78,21 +94,19 @@ class TestResource(TestCase):
     self.assertIn('test_model', response.json['test_model_collection'])
     collection = response.json['test_model_collection']['test_model']
     self.assertEqual(2, len(collection))
-    self.assertDictEqual(
-        { u'id': mock2.id,
-          u'selfLink': u'/api/mock_resources/{}'.format(mock2.id),
-          u'modified_by_id': unicode(mock2.modified_by_id),
-          u'updated_at': u'2013-04-20T00:00:00',
-          u'created_at': u'2013-04-20T00:00:00',
-        },
-        collection[0]
-        )
-    self.assertDictEqual(
-        { u'id': mock1.id,
-          u'selfLink': u'/api/mock_resources/{}'.format(mock1.id),
-          u'modified_by_id': unicode(mock1.modified_by_id),
-          u'updated_at': u'2013-04-17T00:00:00',
-          u'created_at': u'2013-04-17T00:00:00',
-        },
-        collection[1]
-        )
+    self.assertDictEqual(self.mock_json(mock2), collection[0])
+    self.assertDictEqual(self.mock_json(mock1), collection[1])
+
+  def test_resource_get(self):
+    date1 = datetime(2013, 4, 17, 0, 0, 0, 0)
+    mock1 = self.mock_model(
+        modified_by_id=42, created_at=date1, updated_at=date1)
+    response = self.client.get(self.mock_url(mock1.id))
+    self.assert200(response)
+    self.assertRequiredHeaders(
+      response,
+      { 'Last-Modified': self.http_timestamp(date1),
+        'Content-Type': 'application/json',
+      })
+    self.assertIn('mockmodel', response.json)
+    self.assertDictEqual(self.mock_json(mock1), response.json['mockmodel'])
