@@ -62,10 +62,10 @@ Launching gGRC in Google App Engine SDK
 Accessing the Application
 -------------------------
 
-The application will be accessible via this URL: `http://localhost:8080/`_
+The application will be accessible via this URL: http://localhost:8080/
 
 If you're running the Google App Engine SDK, the App Engine management console
-will be avaiable via this URL: `http://localhost:8000/`_
+will be avaiable via this URL: http://localhost:8000/
 
 Details
 =======
