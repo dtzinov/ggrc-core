@@ -32,9 +32,9 @@ class DateTimeEncoder(json.JSONEncoder):
 #   - /resources/<pk:pk_type> (GET, PUT, POST, DELETE)
 class Resource(View):
   '''View base class for Views handling.  Will typically be registered with an
-  application following a collection style for routes. Collection ``GET`` and
-  ``POST`` will have a route like ``/resources`` while collection member
-  resource routes will have routes likej ``/resources/<pk:pk_type>``.
+  application following a collection style for routes. Collection `GET` and
+  `POST` will have a route like `/resources` while collection member
+  resource routes will have routes likej `/resources/<pk:pk_type>`.
 
   To register a Resource subclass FooCollection with a Flask application:
 
@@ -42,7 +42,7 @@ class Resource(View):
      
      FooCollection.add_to(app, '/foos')
 
-  By default will only support the ``application/json`` content-type.
+  By default will only support the `application/json` content-type.
   '''
   #methods = ['GET', 'PUT', 'POST', 'DELETE']
   pk = 'id'
@@ -189,17 +189,33 @@ class Resource(View):
   def as_json(cls, obj, **kwargs):
     return json.dumps(obj, cls=DateTimeEncoder, **kwargs)
 
-  def _attrs_for_json(self, object):
+  def _attrs_for_json_from(self, base, obj):
+    '''return all attributes to contribute to the JSON representation of this
+    object that are contributed from the base class `base` for the given
+    model object `obj`.
+    '''
+    method = getattr(base, 'attrs_for_json', None)
+    if method and isinstance(method, MethodType):
+      return method(self, obj)
+
+  def _attrs_for_json(self, obj):
+    '''Build up the json representation of the object by walking all base
+    clases and gathering their contributions and finally adding the
+    contributions from the instance's concrete class.
+    '''
     attrs = {}
     for base in self.__class__.__bases__:
-      method = getattr(base, 'attrs_for_json', None)
-      if method and isinstance(base, MethodType):
-        print base, method
-        #attrs.update(method(self, object))
-    attrs.update(self.attrs_for_json(object))
+      attrs.update(self._attrs_for_json_from(base, obj))
+    attrs.update(self._attrs_for_json_from(self.__class__, obj))
     return attrs
 
-  def attrs_for_json(self, object):
+  def attrs_for_json(self, obj):
+    '''All mixin classes and subclasses that have content to contribute to the
+    JSON representation of the model instance `obj` **MUST** implement this
+    method.
+
+    Refer to `_attrs_for_json` to see how this is performed.
+    '''
     return {}
 
   def object_for_json(self, object, model_name=None):
@@ -264,7 +280,7 @@ class Resource(View):
 
   def collection_last_modified(self):
     '''Calculate the last time a member of the collection was modified. This
-    method relies on the fact that the collection table has an ``updated_at``
+    method relies on the fact that the collection table has an `updated_at`
     column; services for models that don't have this field **MUST** override
     this method.
     '''

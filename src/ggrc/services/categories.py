@@ -9,8 +9,4 @@ class Category(Resource):
     category.name = form.get("name", "")
 
   def attrs_for_json(self, object):
-    attrs_for_json = super(Category, self).attrs_for_json(object)
-    attrs_for_json.update({
-      'name': object.name
-    })
-    return attrs_for_json
+    return { 'name': object.name, }
