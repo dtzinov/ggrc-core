@@ -194,7 +194,8 @@ class Resource(View):
     for base in self.__class__.__bases__:
       method = getattr(base, 'attrs_for_json', None)
       if method and isinstance(base, MethodType):
-        attrs.update(method(self, object))
+        print base, method
+        #attrs.update(method(self, object))
     attrs.update(self.attrs_for_json(object))
     return attrs
 

@@ -12,10 +12,8 @@ class MockModel(Base, ggrc.db.Model):
 class MockResourceService(Resource):
   _model = MockModel
 
-  def object_for_json_container(self, object):
-    obj = super(MockResourceService, self).object_for_json_container(object)
-    obj['modified_by_id'] = unicode(object.modified_by_id)
-    return obj
+  def attrs_for_json(self, object):
+    return {'modified_by_id': unicode(object.modified_by_id), }
 
 URL_MOCK_COLLECTION = '/api/mock_resources'
 URL_MOCK_RESOURCE = '/api/mock_resources/{}'
