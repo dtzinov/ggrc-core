@@ -2,8 +2,8 @@ import datetime
 import hashlib
 import json
 import time
-from flask.views import View
 from flask import url_for, request, current_app
+from flask.views import View
 from ggrc import db
 from types import MethodType
 from wsgiref.handlers import format_date_time
@@ -82,9 +82,14 @@ class Resource(View):
 
     if obj is None:
       return self.not_found_response()
-    else:
-      return self.json_success_response(
-        self.object_for_json(obj), obj.updated_at)
+
+    if 'Accept' in self.request.headers and \
+       'application/json' not in self.request.headers['Accept']:
+      return current_app.make_response((
+        'application/json', 406, [('Content-Type', 'text/plain')]))
+
+    return self.json_success_response(
+      self.object_for_json(obj), obj.updated_at)
 
   def put(self, id):
     obj = self.get_object(id)
@@ -92,7 +97,7 @@ class Resource(View):
     if obj is None:
       return self.not_found_response()
     else:
-      self.update_object_from_form(obj, self.request.form)
+      self._update_object(obj, self.request.form)
       db.session.add(obj)
       db.session.commit()
 
@@ -110,21 +115,38 @@ class Resource(View):
         self.object_as_json(obj), obj.updated_at)
 
   def collection_get(self):
+    if 'Accept' in self.request.headers and \
+       'application/json' not in self.request.headers['Accept']:
+      return current_app.make_response((
+        'application/json', 406, [('Content-Type', 'text/plain')]))
+
     objs = self.get_collection()
 
     return self.json_success_response(
       self.collection_for_json(objs), self.collection_last_modified())
 
   def collection_post(self):
-    obj = self.model()
+    if self.request.headers['Content_Type'] != 'application/json':
+      return current_app.make_response((
+        'Content-Type must be application/json', 415,[]))
 
-    self.update_object_from_form(obj, self.request.form)
+    obj = self.model()
+    src = self.request.json
+
+    try:
+      src = json.loads(self.request.data)
+    except ValueError as err:
+      return current_app.make_response((str(err), 400, []))
+      
+    self._update_object(obj, src)
+    #FIXME Fake the modified_by_id until we have that information in session.
+    obj.modified_by_id = 1
 
     db.session.add(obj)
     db.session.commit()
 
     return self.json_success_response(
-      self.object_for_json(obj), obj.updated_at)
+      self.object_for_json(obj), obj.updated_at, id=obj.id, status=201)
 
   # Simple accessor properties
   @property
@@ -159,7 +181,17 @@ class Resource(View):
     # This could also use `self.pk`
     return self.get_collection().filter(self.model.id == id).first()
 
-  def update_object_from_form(self, category, form):
+  def _update_object_for(self, base, obj, src):
+    method = getattr(base, 'update_object', None)
+    if method and isinstance(method, MethodType):
+      method(self, obj, src)
+
+  def _update_object(self, obj, src):
+    for base in self.__class__.__bases__:
+      self._update_object_for(base, obj, src)
+    self._update_object_for(self.__class__, obj, src)
+
+  def update_object(self, obj, src):
     return
 
   # Routing helpers
@@ -252,15 +284,18 @@ class Resource(View):
 
     return collection_json
 
-  def json_success_response(self, response_object, last_modified):
+  def json_success_response(
+      self, response_object, last_modified, status=200, id=None):
     last_modified = format_date_time(time.mktime(last_modified.utctimetuple()))
     headers = [
         ('Last-Modified', last_modified),
         ('Etag', self.etag(last_modified)),
         ('Content-Type', 'application/json'),
         ]
+    if id:
+      headers.append(('Location', self.url_for(id=id)))
     return current_app.make_response(
-      (self.as_json(response_object), 200, headers))
+      (self.as_json(response_object), status, headers))
 
   def not_found_message(self):
     return '%s not found.' % (self.model_name.title(),)
