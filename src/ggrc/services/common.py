@@ -79,25 +79,21 @@ class Resource(View):
   # Default JSON request handlers
   def get(self, id):
     obj = self.get_object(id)
-
     if obj is None:
       return self.not_found_response()
-
     if 'Accept' in self.request.headers and \
        'application/json' not in self.request.headers['Accept']:
       return current_app.make_response((
         'application/json', 406, [('Content-Type', 'text/plain')]))
-
+    object_for_json = self.object_for_json(obj)
+    if 'If-None-Match' in self.request.headers and \
+        self.request.headers['If-None-Match'] == self.etag(object_for_json):
+      return current_app.make_response((
+        '', 304, [('Etag', self.etag(object_for_json))]))
     return self.json_success_response(
       self.object_for_json(obj), obj.updated_at)
 
-  def put(self, id):
-    obj = self.get_object(id)
-    if obj is None:
-      return self.not_found_response()
-    if self.request.headers['Content-Type'] != 'application/json':
-      return current_app.make_response((
-        'Content-Type must be application/json', 415,[]))
+  def validate_headers_for_put_or_delete(self, obj):
     missing_headers = []
     if 'If-Match' not in self.request.headers:
       missing_headers.append('If-Match')
@@ -105,7 +101,6 @@ class Resource(View):
       missing_headers.append('If-Unmodified-Since')
     if missing_headers:
       # rfc 6585 defines a new status code for missing required headers
-      print 'missing:', missing_headers, 'headers:', self.request.headers
       return current_app.make_response((
         'If-Match is required.', 428, [('Content-Type', 'text/plain')]))
     if request.headers['If-Match'] != self.etag(self.object_for_json(obj)) or \
@@ -118,6 +113,18 @@ class Resource(View):
           409,
           [('Content-Type', 'text/plain')]
           ))
+    return None
+
+  def put(self, id):
+    obj = self.get_object(id)
+    if obj is None:
+      return self.not_found_response()
+    if self.request.headers['Content-Type'] != 'application/json':
+      return current_app.make_response((
+        'Content-Type must be application/json', 415,[]))
+    header_error = self.validate_headers_for_put_or_delete(obj)
+    if header_error:
+      return header_error
     self._update_object(obj, self.request.json)
     #FIXME Fake the modified_by_id until we have that information in session.
     obj.modified_by_id = 1
@@ -132,10 +139,13 @@ class Resource(View):
 
     if obj is None:
       return self.not_found_response()
-    else:
-      db.session.delete(obj)
-      return self.json_success_response(
-        self.object_for_json(obj), obj.updated_at)
+    header_error = self.validate_headers_for_put_or_delete(obj)
+    if header_error:
+      return header_error
+    db.session.delete(obj)
+    db.session.commit()
+    return self.json_success_response(
+      self.object_for_json(obj), obj.updated_at)
 
   def collection_get(self):
     if 'Accept' in self.request.headers and \

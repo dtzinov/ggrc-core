@@ -240,7 +240,7 @@ class TestResource(TestCase):
         )
     self.assert400(response)
 
-  def test_put_conflict(self):
+  def test_put_and_delete_conflict(self):
     mock = self.mock_model(foo='mudder')
     response = self.client.get(self.mock_url(mock.id))
     self.assert200(response)
@@ -263,18 +263,48 @@ class TestResource(TestCase):
         content_type='application/json',
         )
     self.assertStatus(response, 409)
+    response = self.client.delete(
+        url,
+        headers=[
+          ('If-Unmodified-Since', original_headers['Last-Modified']),
+          ('If-Match', original_headers['Etag']),
+          ],
+        content_type='application/json',
+        )
+    self.assertStatus(response, 409)
 
-  def test_put_missing_precondition(self):
-    pass
+  def test_put_and_delete_missing_precondition(self):
+    mock = self.mock_model(foo='tricky')
+    response = self.client.get(self.mock_url(mock.id))
+    self.assert200(response)
+    obj = response.json
+    obj['mockmodel']['foo'] = 'strings'
+    url = urlparse(obj['mockmodel']['selfLink']).path
+    response = self.client.put(
+        url,
+        data=json.dumps(obj),
+        content_type='application/json',
+        )
+    self.assertStatus(response, 428)
+    response = self.client.delete(url)
+    self.assertStatus(response, 428)
 
   def test_delete_successful(self):
-    pass
-
-  def test_delete_failed_precondition(self):
-    pass
-
-  def test_delete_missing_precondition(self):
-    pass
+    mock = self.mock_model(foo='delete me')
+    response = self.client.get(self.mock_url(mock.id))
+    self.assert200(response)
+    url = urlparse(response.json['mockmodel']['selfLink']).path
+    response = self.client.delete(
+        url,
+        headers=[
+          ('If-Unmodified-Since', response.headers['Last-Modified']),
+          ('If-Match', response.headers['Etag']),
+          ],
+        )
+    self.assert200(response)
+    response = self.client.get(url)
+    #410 would be nice! But, requires a tombstone.
+    self.assert404(response)
 
   def test_options(self):
     mock = self.mock_model()
@@ -305,4 +335,18 @@ class TestResource(TestCase):
     self.assertEqual('application/json', response.data)
 
   def test_get_if_none_match(self):
-    pass
+    mock1 = self.mock_model(foo='baz')
+    response = self.client.get(
+        self.mock_url(mock1.id),
+        headers=[('Accept', 'application/json')],
+        )
+    self.assert200(response)
+    previous_headers = dict(response.headers)
+    response = self.client.get(
+        self.mock_url(mock1.id),
+        headers=[
+          ('Accept', 'application/json'),
+          ('If-None-Match', previous_headers['Etag']),
+          ]
+        )
+    self.assertStatus(response, 304)
