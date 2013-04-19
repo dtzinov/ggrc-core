@@ -7,7 +7,7 @@ from flask.ext.testing import TestCase
 from ggrc import db
 from ggrc.models.mixins import Base
 from ggrc.services.common import Resource
-from werkzeug.datastructures import Headers
+from urlparse import urlparse
 from wsgiref.handlers import format_date_time
 
 class MockModel(Base, ggrc.db.Model):
@@ -192,7 +192,36 @@ class TestResource(TestCase):
     self.assertStatus(response, 415)
 
   def test_put_successful(self):
-    pass
+    mock = self.mock_model(foo='buzz')
+    response = self.client.get(self.mock_url(mock.id))
+    self.assert200(response)
+    self.assertRequiredHeaders(response)
+    obj = response.json
+    self.assertEqual('buzz', obj['mockmodel']['foo'])
+    obj['mockmodel']['foo'] = 'baz'
+    url = urlparse(obj['mockmodel']['selfLink']).path
+    original_headers = dict(response.headers)
+    # wait a moment so that we can be sure to get differing Last-Modified
+    # after the put - the lack of latency means it's easy to end up with
+    # the same HTTP timestamp thanks to the standard's lack of precision.
+    time.sleep(1.1)
+    response = self.client.put(
+        url,
+        data=json.dumps(obj),
+        headers=[
+          ('If-Not-Modified-Since', original_headers['Last-Modified']),
+          ('If-Match', original_headers['Etag']),
+          ],
+        content_type='application/json',
+        )
+    self.assert200(response)
+    response = self.client.get(url)
+    self.assert200(response)
+    self.assertNotEqual(
+        original_headers['Last-Modified'], response.headers['Last-Modified'])
+    self.assertNotEqual(
+        original_headers['Etag'], response.headers['Etag'])
+    self.assertEqual('baz', response.json['mockmodel']['foo'])
 
   def test_put_bad_request(self):
     pass
@@ -239,3 +268,6 @@ class TestResource(TestCase):
     self.assertStatus(response, 406)
     self.assertEqual('text/plain', response.headers.get('Content-Type'))
     self.assertEqual('application/json', response.data)
+
+  def test_get_if_none_match(self):
+    pass

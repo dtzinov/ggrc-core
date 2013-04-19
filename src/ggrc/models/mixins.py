@@ -1,4 +1,4 @@
-from ggrc import db
+from ggrc import db, app
 
 '''Mixins to add common attributes and relationships. Note, all model classes
 must also inherit from ``db.Model``. For example:
@@ -15,6 +15,23 @@ class Identifiable(object):
   '''
   id = db.Column(db.Integer, primary_key=True)
 
+def created_at_args():
+  '''Sqlite doesn't have a server, per se, so the server_* args are useless.'''
+  if app.config['SQLALCHEMY_DATABASE_URI'].startswith('sqlite'):
+    return {'default': db.text('current_timestamp'),}
+  return {'server_default': db.text('current_timestamp'),}
+
+def updated_at_args():
+  '''Sqlite doesn't have a server, per se, so the server_* args are useless.'''
+  if app.config['SQLALCHEMY_DATABASE_URI'].startswith('sqlite'):
+    return {
+        'default': db.text('current_timestamp'),
+        'onupdate': db.text('current_timestamp'),
+        }
+  return {
+      'server_default': db.text('current_timestamp'),
+      'server_onupdate': db.text('current_timestamp'),
+      }
 
 class ChangeTracked(object):
   '''A model with fields to tracked the last user to modify the model, the
@@ -23,11 +40,10 @@ class ChangeTracked(object):
   modified_by_id = db.Column(db.Integer, nullable=False)
   created_at = db.Column(
       db.DateTime,
-      server_default=db.text('current_timestamp'))
+      **created_at_args())
   updated_at = db.Column(
       db.DateTime,
-      server_default=db.text('current_timestamp'),
-      server_onupdate=db.text('current_timestamp'))
+      **updated_at_args())
 
 class Described(object):
   description = db.Column(db.Text)

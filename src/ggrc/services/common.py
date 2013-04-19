@@ -93,16 +93,19 @@ class Resource(View):
 
   def put(self, id):
     obj = self.get_object(id)
-
     if obj is None:
       return self.not_found_response()
-    else:
-      self._update_object(obj, self.request.form)
-      db.session.add(obj)
-      db.session.commit()
-
-      return self.json_success_response(
-        self.object_as_json(obj), obj.updated_at)
+    if self.request.headers['Content-Type'] != 'application/json':
+      return current_app.make_response((
+        'Content-Type must be application/json', 415,[]))
+    self._update_object(obj, self.request.json)
+    #FIXME Fake the modified_by_id until we have that information in session.
+    obj.modified_by_id = 1
+    db.session.add(obj)
+    db.session.commit()
+    obj = self.get_object(id)
+    return self.json_success_response(
+        self.object_for_json(obj), obj.updated_at)
 
   def delete(self, id):
     obj = self.get_object(id)
@@ -112,7 +115,7 @@ class Resource(View):
     else:
       db.session.delete(obj)
       return self.json_success_response(
-        self.object_as_json(obj), obj.updated_at)
+        self.object_for_json(obj), obj.updated_at)
 
   def collection_get(self):
     if 'Accept' in self.request.headers and \
@@ -126,25 +129,16 @@ class Resource(View):
       self.collection_for_json(objs), self.collection_last_modified())
 
   def collection_post(self):
-    if self.request.headers['Content_Type'] != 'application/json':
+    if self.request.headers['Content-Type'] != 'application/json':
       return current_app.make_response((
         'Content-Type must be application/json', 415,[]))
-
     obj = self.model()
     src = self.request.json
-
-    try:
-      src = json.loads(self.request.data)
-    except ValueError as err:
-      return current_app.make_response((str(err), 400, []))
-      
     self._update_object(obj, src)
     #FIXME Fake the modified_by_id until we have that information in session.
     obj.modified_by_id = 1
-
     db.session.add(obj)
     db.session.commit()
-
     return self.json_success_response(
       self.object_for_json(obj), obj.updated_at, id=obj.id, status=201)
 
@@ -222,7 +216,7 @@ class Resource(View):
     return json.dumps(obj, cls=DateTimeEncoder, **kwargs)
 
   def _attrs_for_json_from(self, base, obj):
-    '''return all attributes to contribute to the JSON representation of this
+    '''Return all attributes to contribute to the JSON representation of this
     object that are contributed from the base class `base` for the given
     model object `obj`.
     '''
@@ -286,9 +280,9 @@ class Resource(View):
 
   def json_success_response(
       self, response_object, last_modified, status=200, id=None):
-    last_modified = format_date_time(time.mktime(last_modified.utctimetuple()))
+    last_modified_str = format_date_time(time.mktime(last_modified.utctimetuple()))
     headers = [
-        ('Last-Modified', last_modified),
+        ('Last-Modified', last_modified_str),
         ('Etag', self.etag(last_modified)),
         ('Content-Type', 'application/json'),
         ]
@@ -309,8 +303,14 @@ class Resource(View):
     representation, but, it doesn't require the representation in order to be
     calculated. An alternative would be to keep an etag on the stored
     representation, but this will do for now.
+
+    .. note::
+      
+       Using the datetime implies the need for some care - the resolution of
+       the time object needs to be sufficient such that you don't end up with
+       the same etag due to two updates performed in rapdid succession.
     '''
-    return '"{}"'.format(hashlib.sha1(last_modified).hexdigest())
+    return '"{}"'.format(hashlib.sha1(str(last_modified)).hexdigest())
 
   def collection_last_modified(self):
     '''Calculate the last time a member of the collection was modified. This
