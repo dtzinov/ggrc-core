@@ -98,6 +98,26 @@ class Resource(View):
     if self.request.headers['Content-Type'] != 'application/json':
       return current_app.make_response((
         'Content-Type must be application/json', 415,[]))
+    missing_headers = []
+    if 'If-Match' not in self.request.headers:
+      missing_headers.append('If-Match')
+    if 'If-Unmodified-Since' not in self.request.headers:
+      missing_headers.append('If-Unmodified-Since')
+    if missing_headers:
+      # rfc 6585 defines a new status code for missing required headers
+      print 'missing:', missing_headers, 'headers:', self.request.headers
+      return current_app.make_response((
+        'If-Match is required.', 428, [('Content-Type', 'text/plain')]))
+    if request.headers['If-Match'] != self.etag(self.object_for_json(obj)) or \
+       request.headers['If-Unmodified-Since'] != \
+          self.http_timestamp(obj.updated_at):
+      return current_app.make_response((
+          'The resource has been changed. The conflict must be resolved and '
+          'the request resubmitted with an up to date Etag for If-Match '
+          'header.',
+          409,
+          [('Content-Type', 'text/plain')]
+          ))
     self._update_object(obj, self.request.json)
     #FIXME Fake the modified_by_id until we have that information in session.
     obj.modified_by_id = 1
@@ -278,12 +298,14 @@ class Resource(View):
 
     return collection_json
 
+  def http_timestamp(self, timestamp):
+    return format_date_time(time.mktime(timestamp.utctimetuple()))
+
   def json_success_response(
       self, response_object, last_modified, status=200, id=None):
-    last_modified_str = format_date_time(time.mktime(last_modified.utctimetuple()))
     headers = [
-        ('Last-Modified', last_modified_str),
-        ('Etag', self.etag(last_modified)),
+        ('Last-Modified', self.http_timestamp(last_modified)),
+        ('Etag', self.etag(response_object)),
         ('Content-Type', 'application/json'),
         ]
     if id:

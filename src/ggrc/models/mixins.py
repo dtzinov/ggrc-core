@@ -44,6 +44,9 @@ class ChangeTracked(object):
   updated_at = db.Column(
       db.DateTime,
       **updated_at_args())
+  #TODO Add a transaction id, this will be handy for generating etags
+  #and for tracking the changes made to several resources together.
+  #transaction_id = db.Column(db.Integer)
 
 class Described(object):
   description = db.Column(db.Text)

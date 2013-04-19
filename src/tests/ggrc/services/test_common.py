@@ -209,7 +209,7 @@ class TestResource(TestCase):
         url,
         data=json.dumps(obj),
         headers=[
-          ('If-Not-Modified-Since', original_headers['Last-Modified']),
+          ('If-Unmodified-Since', original_headers['Last-Modified']),
           ('If-Match', original_headers['Etag']),
           ],
         content_type='application/json',
@@ -224,10 +224,45 @@ class TestResource(TestCase):
     self.assertEqual('baz', response.json['mockmodel']['foo'])
 
   def test_put_bad_request(self):
-    pass
+    mock = self.mock_model(foo='tough')
+    response = self.client.get(self.mock_url(mock.id))
+    self.assert200(response)
+    self.assertRequiredHeaders(response)
+    url = urlparse(response.json['mockmodel']['selfLink']).path
+    response = self.client.put(
+        url,
+        content_type='application/json',
+        data='This is most definitely not valid content.',
+        headers=[
+          ('If-Unmodified-Since', response.headers['Last-Modified']),
+          ('If-Match', response.headers['Etag']),
+          ],
+        )
+    self.assert400(response)
 
   def test_put_conflict(self):
-    pass
+    mock = self.mock_model(foo='mudder')
+    response = self.client.get(self.mock_url(mock.id))
+    self.assert200(response)
+    self.assertRequiredHeaders(response)
+    obj = response.json
+    obj['mockmodel']['foo'] = 'rocks'
+    mock = ggrc.db.session.query(MockModel).filter(MockModel.id==mock.id).one()
+    mock.foo = 'dirt'
+    ggrc.db.session.add(mock)
+    ggrc.db.session.commit()
+    url = urlparse(obj['mockmodel']['selfLink']).path
+    original_headers = dict(response.headers)
+    response = self.client.put(
+        url,
+        data=json.dumps(obj),
+        headers=[
+          ('If-Unmodified-Since', original_headers['Last-Modified']),
+          ('If-Match', original_headers['Etag']),
+          ],
+        content_type='application/json',
+        )
+    self.assertStatus(response, 409)
 
   def test_put_missing_precondition(self):
     pass
