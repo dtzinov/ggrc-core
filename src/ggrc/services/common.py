@@ -154,9 +154,13 @@ class Resource(View):
         'application/json', 406, [('Content-Type', 'text/plain')]))
 
     objs = self.get_collection()
-
+    collection = self.collection_for_json(objs)
+    if 'If-None-Match' in self.request.headers and \
+        self.request.headers['If-None-Match'] == self.etag(collection):
+      return current_app.make_response((
+        '', 304, [('Etag', self.etag(collection))]))
     return self.json_success_response(
-      self.collection_for_json(objs), self.collection_last_modified())
+      collection, self.collection_last_modified())
 
   def collection_post(self):
     if self.request.headers['Content-Type'] != 'application/json':

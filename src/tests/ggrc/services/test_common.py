@@ -350,3 +350,22 @@ class TestResource(TestCase):
           ]
         )
     self.assertStatus(response, 304)
+    self.assertIn('Etag', response.headers)
+
+  def test_collection_get_if_non_match(self):
+    self.mock_model(foo='baz')
+    response = self.client.get(
+        URL_MOCK_COLLECTION,
+        headers=[('Accept', 'application/json')],
+        )
+    self.assert200(response)
+    previous_headers = dict(response.headers)
+    response = self.client.get(
+        URL_MOCK_COLLECTION,
+        headers=[
+          ('Accept', 'application/json'),
+          ('If-None-Match', previous_headers['Etag']),
+          ]
+        )
+    self.assertStatus(response, 304)
+    self.assertIn('Etag', response.headers)
