@@ -308,7 +308,7 @@ class Resource(View):
       
        Using the datetime implies the need for some care - the resolution of
        the time object needs to be sufficient such that you don't end up with
-       the same etag due to two updates performed in rapdid succession.
+       the same etag due to two updates performed in rapid succession.
     '''
     return '"{}"'.format(hashlib.sha1(str(last_modified)).hexdigest())
 
