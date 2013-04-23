@@ -1,7 +1,7 @@
 from ggrc import db
-from .mixins import Base, Child
+from .mixins import Base, Hierarchical
 
-class Category(Base, Child, db.Model):
+class Category(Base, Hierarchical, db.Model):
   __tablename__ = 'categories'
 
   name = db.Column(db.String)

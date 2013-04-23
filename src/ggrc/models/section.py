@@ -1,7 +1,7 @@
 from ggrc import db
-from .mixins import BusinessObject, Child
+from .mixins import BusinessObject, Hierarchical
 
-class Section(BusinessObject, Child, db.Model):
+class Section(BusinessObject, Hierarchical, db.Model):
   __tablename__ = 'sections'
 
   directive_id = db.Column(db.Integer, db.ForeignKey('directives.id'))

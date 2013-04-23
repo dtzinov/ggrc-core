@@ -1,4 +1,6 @@
 from ggrc import db, app
+from sqlalchemy.ext.declarative import declared_attr
+from sqlalchemy.orm import relationship
 
 '''Mixins to add common attributes and relationships. Note, all model classes
 must also inherit from ``db.Model``. For example:
@@ -54,8 +56,18 @@ class Described(object):
 class Hyperlinked(object):
   url = db.Column(db.String)
 
-class Child(object):
-  parent_id = db.Column(db.Integer)
+class Hierarchical(object):
+  @declared_attr
+  def parent_id(cls):
+    return db.Column(
+        db.Integer, db.ForeignKey('{}.id'.format(cls.__tablename__)))
+
+  @declared_attr
+  def children(cls):
+    return db.relationship(
+        cls.__name__,
+        backref=db.backref('parent', remote_side='{}.id'.format(cls.__name__)),
+        )
 
 class Timeboxed(object):
   start_date = db.Column(db.DateTime)
