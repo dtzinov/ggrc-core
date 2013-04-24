@@ -13,7 +13,8 @@ class Categorization(Base, db.Model):
 
   @property
   def categorizable_attr(self):
-    return '{}_categorizable'.format(self.categorizable_type)
+    return '{}_{}_categorizable'.format(
+        self.categorizable_type, self.category.scope_id)
 
   @property
   def categorizable(self):
@@ -24,33 +25,36 @@ class Categorization(Base, db.Model):
     setattr(self, self.categorizable_attr, value)
 
 class Categorizable(object):
-  '''Subclasses **MUST** override `__SCOPE__`'''
+  '''Subclasses **MUST** provide a declared_attr method that defines the
+  relationship and association_proxy. For example:
+    
+  ..
+     
+     @declared_attr
+     def control_categorizations(cls):
+       return cls.categorizations(
+           'control_categorizations', 'control_categories', 100)
+  '''
   __SCOPE__ = None
 
-  @declared_attr
-  def categorizations(cls):
-    cls.categories = association_proxy(
-        'categorizations', 'category',
+  @classmethod
+  def _categorizations(cls, rel_name, proxy_name, scope):
+    setattr(cls, proxy_name, association_proxy(
+        rel_name, 'category',
         creator=lambda category: Categorization(
             category=category,
             #FIXME add from http session!
             modified_by_id=1,
             categorizable_type=cls.__name__,
             ),
-        )
-    joinstr_args = {'type': cls.__name__}
+        ))
     joinstr = 'and_(foreign(Categorization.categorizable_id) == {type}.id, '\
-                   'foreign(Categorization.categorizable_type) == "{type}"'
-    if cls.__SCOPE__:
-      joinstr_args['scope'] = cls.__SCOPE__
-      joinstr += ', '\
-                 'Categorization.category_id == Category.id, '\
-                 'Category.scope_id == {scope})'
-    else:
-      joinstr += ')'
-    joinstr = joinstr.format(**joinstr_args)
+                   'foreign(Categorization.categorizable_type) == "{type}", '\
+                   'Categorization.category_id == Category.id, '\
+                   'Category.scope_id == {scope})'
+    joinstr = joinstr.format(type=cls.__name__, scope=scope)
     return db.relationship(
         'Categorization',
         primaryjoin=joinstr,
-        backref='{}_categorizable'.format(cls.__name__),
+        backref='{}_{}_categorizable'.format(cls.__name__, scope),
         )

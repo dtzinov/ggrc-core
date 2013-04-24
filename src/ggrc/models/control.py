@@ -1,14 +1,24 @@
 from ggrc import db
 from sqlalchemy.ext.associationproxy import association_proxy
+from sqlalchemy.ext.declarative import declared_attr
 from .categorization import Categorizable
 from .mixins import Slugged, Described, Hierarchical, Hyperlinked, Timeboxed
 
 class ControlCategorized(Categorizable):
-  __SCOPE__ = 100
+  @declared_attr
+  def categorizations(cls):
+    return cls._categorizations('categorizations', 'categories', 100)
+
+class AssertionCategorized(Categorizable):
+  __SCOPE__ = 102
+
+  @declared_attr
+  def assertations(cls):
+    return cls._categorizations('assertations', 'assertions', 102)
 
 class Control(
-    ControlCategorized, Slugged, Described, Hierarchical, Hyperlinked, Timeboxed,
-    db.Model):
+    ControlCategorized, AssertionCategorized, Slugged, Described, Hierarchical,
+    Hyperlinked, Timeboxed, db.Model):
   __tablename__ = 'controls'
 
   directive_id = db.Column(db.Integer, db.ForeignKey('directives.id'))
