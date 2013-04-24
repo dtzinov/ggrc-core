@@ -3,10 +3,10 @@ import json
 import random
 import time
 from datetime import datetime
-from flask.ext.testing import TestCase
 from ggrc import db
 from ggrc.models.mixins import Base
 from ggrc.services.common import Resource
+from tests.ggrc import TestCase
 from urlparse import urlparse
 from wsgiref.handlers import format_date_time
 
@@ -34,18 +34,6 @@ COLLECTION_ALLOWED = ['HEAD', 'GET', 'POST', 'OPTIONS']
 RESOURCE_ALLOWED = ['HEAD', 'GET', 'PUT', 'DELETE', 'OPTIONS']
 
 class TestResource(TestCase):
-  def setUp(self):
-    ggrc.db.create_all()
-
-  def tearDown(self):
-    ggrc.db.session.remove()
-    ggrc.db.drop_all()
-
-  def create_app(self):
-    ggrc.app.testing = True
-    ggrc.app.debug = False
-    return ggrc.app
-
   def mock_url(self, resource=None):
     if resource is not None:
       return URL_MOCK_RESOURCE.format(resource)
