@@ -1,2 +1,3 @@
 behave
 Flask-Testing
+factory_boy

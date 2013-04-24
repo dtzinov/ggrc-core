@@ -1,7 +1,10 @@
 from ggrc import db
+from .categorization import Categorizable
 from .mixins import Slugged, Described, Hierarchical, Hyperlinked, Timeboxed
 
-class Control(Slugged, Described, Hierarchical, Hyperlinked, Timeboxed, db.Model):
+class Control(
+    Categorizable, Slugged, Described, Hierarchical, Hyperlinked, Timeboxed,
+    db.Model):
   __tablename__ = 'controls'
 
   directive_id = db.Column(db.Integer, db.ForeignKey('directives.id'))

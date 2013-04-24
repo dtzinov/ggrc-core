@@ -1,7 +1,8 @@
 from ggrc import db
+from .categorization import Categorizable
 from .mixins import BusinessObject
 
-class Risk(BusinessObject, db.Model):
+class Risk(BusinessObject, Categorizable, db.Model):
   __tablename__ = 'risks'
 
   kind = db.Column(db.String)
