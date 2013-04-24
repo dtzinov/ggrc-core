@@ -4,17 +4,20 @@ from sqlalchemy.ext.declarative import declared_attr
 from .categorization import Categorizable
 from .mixins import Slugged, Described, Hierarchical, Hyperlinked, Timeboxed
 
+CATEGORY_CONTROL_TYPE_ID = 100
+CATEGORY_ASSERTION_TYPE_ID = 102
+
 class ControlCategorized(Categorizable):
   @declared_attr
   def categorizations(cls):
-    return cls._categorizations('categorizations', 'categories', 100)
+    return cls._categorizations(
+        'categorizations', 'categories', CATEGORY_CONTROL_TYPE_ID)
 
 class AssertionCategorized(Categorizable):
-  __SCOPE__ = 102
-
   @declared_attr
   def assertations(cls):
-    return cls._categorizations('assertations', 'assertions', 102)
+    return cls._categorizations(
+        'assertations', 'assertions', CATEGORY_ASSERTION_TYPE_ID)
 
 class Control(
     ControlCategorized, AssertionCategorized, Slugged, Described, Hierarchical,
