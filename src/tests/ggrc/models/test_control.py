@@ -5,7 +5,7 @@ from .factories import CategoryFactory, ControlFactory
 
 class TestControl(TestCase):
   def test_simple_categorization(self):
-    category = CategoryFactory()
+    category = CategoryFactory(scope_id=100)
     control = ControlFactory()
     control.categories.append(category)
     db.session.commit()

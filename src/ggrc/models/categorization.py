@@ -24,6 +24,9 @@ class Categorization(Base, db.Model):
     setattr(self, self.categorizable_attr, value)
 
 class Categorizable(object):
+  '''Subclasses **MUST** override `__SCOPE__`'''
+  __SCOPE__ = None
+
   @declared_attr
   def categorizations(cls):
     cls.categories = association_proxy(
@@ -35,9 +38,17 @@ class Categorizable(object):
             categorizable_type=cls.__name__,
             ),
         )
+    joinstr_args = {'type': cls.__name__}
     joinstr = 'and_(foreign(Categorization.categorizable_id) == {type}.id, '\
-                   'foreign(Categorization.categorizable_type) == "{type}")'
-    joinstr = joinstr.format(type=cls.__name__)
+                   'foreign(Categorization.categorizable_type) == "{type}"'
+    if cls.__SCOPE__:
+      joinstr_args['scope'] = cls.__SCOPE__
+      joinstr += ', '\
+                 'Categorization.category_id == Category.id, '\
+                 'Category.scope_id == {scope})'
+    else:
+      joinstr += ')'
+    joinstr = joinstr.format(**joinstr_args)
     return db.relationship(
         'Categorization',
         primaryjoin=joinstr,

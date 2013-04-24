@@ -16,3 +16,4 @@ class Directive(Slugged, Hyperlinked, db.Model):
   audit_frequency_id = db.Column(db.Integer)
   audit_duration_id = db.Column(db.Integer)
   kind = db.Column(db.String)
+  controls = db.relationship('Control', backref='directive')

@@ -1,4 +1,5 @@
 from ggrc import db
+from sqlalchemy.ext.associationproxy import association_proxy
 from .mixins import BusinessObject
 
 class System(BusinessObject, db.Model):
@@ -14,3 +15,5 @@ class System(BusinessObject, db.Model):
   notes = db.Column(db.Text)
   # TODO: handle option
   network_zone_id = db.Column(db.Integer)
+  system_controls = db.relationship('SystemControl', backref='system')
+  controls = association_proxy('system_controls', 'control')
