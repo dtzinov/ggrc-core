@@ -1,15 +1,12 @@
 from ggrc import db
 from sqlalchemy.ext.associationproxy import association_proxy
-from .mixins import Slugged, Hyperlinked
+from .mixins import Slugged, Hyperlinked, Timeboxed
 
-class Directive(Slugged, Hyperlinked, db.Model):
+class Directive(Slugged, Hyperlinked, Timeboxed, db.Model):
   __tablename__ = 'directives'
 
   company = db.Column(db.Boolean, default=False, nullable=False)
   version = db.Column(db.String)
-  #FIXME Can this be Timeboxed for these two fields?
-  start_date = db.Column(db.DateTime)
-  stop_date = db.Column(db.DateTime)
   organization = db.Column(db.String)
   scope = db.Column(db.Text)
   kind_id = db.Column(db.Integer)

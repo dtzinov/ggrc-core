@@ -2,11 +2,12 @@ from ggrc import db
 from sqlalchemy.ext.associationproxy import association_proxy
 from .control import ControlCategorized
 from .mixins import BusinessObject
+from .mixins import BusinessObject, Timeboxed
 from .object_document import Documentable
 from .object_person import Personable
 
 class Risk(
-    Documentable, Personable, BusinessObject, ControlCategorized , db.Model):
+    Documentable, Personable, Timeboxed, BusinessObject, ControlCategorized , db.Model):
   __tablename__ = 'risks'
 
   kind = db.Column(db.String)

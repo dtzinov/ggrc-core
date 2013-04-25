@@ -1,7 +1,7 @@
 from ggrc import db
 from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.ext.declarative import declared_attr
-from .mixins import BusinessObject
+from .mixins import BusinessObject, Timeboxed
 from .categorization import Categorizable
 
 CATEGORY_SYSTEM_TYPE_ID = 101
@@ -12,7 +12,7 @@ class SystemCategorized(Categorizable):
     return cls._categorizations(
         'categorizations', 'categories', CATEGORY_SYSTEM_TYPE_ID)
 
-class System(BusinessObject, SystemCategorized, db.Model):
+class System(Timeboxed, BusinessObject, SystemCategorized, db.Model):
   __tablename__ = 'systems'
 
   infrastructure = db.Column(db.Boolean)
