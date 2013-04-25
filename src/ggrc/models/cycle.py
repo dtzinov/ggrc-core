@@ -15,6 +15,4 @@ class Cycle(Base, db.Model):
   end_at = db.Column(db.Date)
   program_id = db.Column(db.Integer, db.ForeignKey('programs.id'))
   report_due_at = db.Column(db.Date)
-
-  #program = db.relationship(
-  #    'ggrc.models.Program', foreign_keys=['programs.id'])
+  pbc_lists = db.relationship('PbcList', backref='audit_cycle')

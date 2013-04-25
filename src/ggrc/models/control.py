@@ -55,4 +55,4 @@ class Control(
       'implementing_control_controls', 'control')
   control_risks = db.relationship('ControlRisk', backref='control')
   risks = association_proxy('control_risks', 'risk')
-
+  control_assessments = db.relationship('ControlAssessment', backref='control')

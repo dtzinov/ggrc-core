@@ -12,3 +12,4 @@ class ControlAssessment(Base, db.Model):
   external_tod = db.Column(db.Boolean)
   external_toe = db.Column(db.Boolean)
   notes = db.Column(db.Text)
+  requests = db.relationship('Request', backref='control_assessment')

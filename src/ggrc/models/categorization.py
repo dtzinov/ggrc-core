@@ -35,8 +35,6 @@ class Categorizable(object):
        return cls.categorizations(
            'control_categorizations', 'control_categories', 100)
   '''
-  __SCOPE__ = None
-
   @classmethod
   def _categorizations(cls, rel_name, proxy_name, scope):
     setattr(cls, proxy_name, association_proxy(

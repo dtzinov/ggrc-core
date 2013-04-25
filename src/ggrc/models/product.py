@@ -1,8 +1,16 @@
 from ggrc import db
 from .mixins import BusinessObject
+from .object_document import Documentable
+from .object_person import Personable
 
-class Product(BusinessObject, db.Model):
+class Product(Documentable, Personable, BusinessObject, db.Model):
   __tablename__ = 'products'
 
   type_id = db.Column(db.Integer)
   version = db.Column(db.String)
+  type = db.relationship(
+      'Option',
+      primaryjoin='and_(foreign(Product.type_id) == Option.id, '\
+                       'Option.role == "product_type")',
+      uselist=False,
+      )

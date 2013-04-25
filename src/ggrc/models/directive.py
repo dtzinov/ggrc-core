@@ -1,4 +1,5 @@
 from ggrc import db
+from sqlalchemy.ext.associationproxy import association_proxy
 from .mixins import Slugged, Hyperlinked
 
 class Directive(Slugged, Hyperlinked, db.Model):
@@ -16,4 +17,21 @@ class Directive(Slugged, Hyperlinked, db.Model):
   audit_frequency_id = db.Column(db.Integer)
   audit_duration_id = db.Column(db.Integer)
   kind = db.Column(db.String)
-  controls = db.relationship('Control', backref='directive')
+  sections = db.relationship(
+      'Section', backref='parent', order_by='Section.slug')
+  controls = db.relationship(
+      'Control', backref='directive', order_by='Control.slug')
+  program_directives = db.relationship('ProgramDirective', backref='directive')
+  programs = association_proxy('program_directives', 'program')
+  audit_frequency = db.relationship(
+      'Option',
+      primaryjoin='and_(foreign(Directive.audit_frequency_id) == Option.id, '\
+                       'Option.role == "audit_frequency")',
+      uselist=False,
+      )
+  audit_duration = db.relationship(
+      'Option',
+      primaryjoin='and_(foreign(Directive.audit_duration_id) == Option.id, '\
+                       'Option.role == "audit_duration")',
+      uselist=False,
+      )
