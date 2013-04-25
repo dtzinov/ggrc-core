@@ -17,3 +17,4 @@ class Request(Base, db.Model):
   status = db.Column(db.String)
   control_assessment_id = db.Column(db.Integer, db.ForeignKey('control_assessments.id'))
   response_due_at = db.Column(db.Date)
+  responses = db.relationship('Response', backref='request')

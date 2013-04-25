@@ -1,8 +1,8 @@
 from ggrc import db
 from sqlalchemy.ext.associationproxy import association_proxy
-from .mixins import BusinessObject
+from .mixins import BusinessObject, Hierarchical
 
-class Section(BusinessObject, db.Model):
+class Section(Hierarchical, BusinessObject, db.Model):
   __tablename__ = 'sections'
 
   directive_id = db.Column(db.Integer, db.ForeignKey('directives.id'))

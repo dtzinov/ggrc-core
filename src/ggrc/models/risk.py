@@ -1,9 +1,12 @@
 from ggrc import db
 from sqlalchemy.ext.associationproxy import association_proxy
-from .categorization import Categorizable
+from .control import ControlCategorized
 from .mixins import BusinessObject
+from .object_document import Documentable
+from .object_person import Personable
 
-class Risk(BusinessObject, Categorizable, db.Model):
+class Risk(
+    Documentable, Personable, BusinessObject, ControlCategorized , db.Model):
   __tablename__ = 'risks'
 
   kind = db.Column(db.String)
@@ -23,3 +26,7 @@ class Risk(BusinessObject, Categorizable, db.Model):
   impact = db.Column(db.Text)
   control_risks = db.relationship('ControlRisk', backref='risk')
   controls = association_proxy('control_risks', 'control')
+  risk_risky_attributes = db.relationship(
+      'RiskRiskyAttribute', backref='risk')
+  risky_attributes = association_proxy(
+      'risk_risky_attributes', 'risky_attribute')

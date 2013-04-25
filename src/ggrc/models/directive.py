@@ -18,7 +18,7 @@ class Directive(Slugged, Hyperlinked, db.Model):
   audit_duration_id = db.Column(db.Integer)
   kind = db.Column(db.String)
   sections = db.relationship(
-      'Section', backref='parent', order_by='Section.slug')
+      'Section', backref='directive', order_by='Section.slug')
   controls = db.relationship(
       'Control', backref='directive', order_by='Control.slug')
   program_directives = db.relationship('ProgramDirective', backref='directive')

@@ -6,6 +6,5 @@ class SystemSystem(Base, db.Model):
 
   parent_id = db.Column(db.Integer, db.ForeignKey('systems.id'))
   child_id = db.Column(db.Integer, db.ForeignKey('systems.id'))
-
   type = db.Column(db.String)
   order = db.Column(db.Integer)

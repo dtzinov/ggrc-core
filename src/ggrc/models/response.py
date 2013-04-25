@@ -1,7 +1,9 @@
 from ggrc import db
 from .mixins import Base
+from .object_document import Documentable
+from .object_person import Personable
 
-class Response(Base, db.Model):
+class Response(Documentable, Personable, Base, db.Model):
   __tablename__ = 'responses'
 
   request_id = db.Column(db.Integer, db.ForeignKey('requests.id'))
