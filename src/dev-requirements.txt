@@ -1,3 +1,5 @@
 behave
 Flask-Testing
 factory_boy
+mock
+requests

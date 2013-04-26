@@ -20,7 +20,7 @@ class MockResourceService(Resource):
   _model = MockModel
 
   def update_object(self, obj, src):
-    obj.foo = src['mockmodel'].get('foo', '')
+    obj.foo = src.get('foo', '')
 
 class MockModelBuilder(object):
   @classmethod
@@ -30,9 +30,6 @@ class MockModelBuilder(object):
         'foo': unicode(obj.foo or ''),
         }
 
-ggrc.json.MockModel = MockModelBuilder
-ggrc.services.MockModel = MockResourceService
-
 URL_MOCK_COLLECTION = '/api/mock_resources'
 URL_MOCK_RESOURCE = '/api/mock_resources/{}'
 MockResourceService.add_to(ggrc.app, URL_MOCK_COLLECTION)
@@ -41,6 +38,16 @@ COLLECTION_ALLOWED = ['HEAD', 'GET', 'POST', 'OPTIONS']
 RESOURCE_ALLOWED = ['HEAD', 'GET', 'PUT', 'DELETE', 'OPTIONS']
 
 class TestResource(TestCase):
+  def setUp(self):
+    super(TestResource, self).setUp()
+    ggrc.json.MockModel = MockModelBuilder
+    ggrc.services.MockModel = MockResourceService
+
+  def tearDown(self):
+    delattr(ggrc.json, 'MockModel')
+    delattr(ggrc.services, 'MockModel')
+    super(TestResource, self).tearDown()
+
   def mock_url(self, resource=None):
     if resource is not None:
       return URL_MOCK_RESOURCE.format(resource)

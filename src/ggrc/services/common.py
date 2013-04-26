@@ -26,6 +26,19 @@ class DateTimeEncoder(json.JSONEncoder):
       return (datetime.datetime.min + obj).time().isoformat()
     else:
       return super(DateTimeEncoder, self).default(obj)
+    
+class UnicodeSafeJsonWrapper(dict):
+  '''JSON received via POST has keys as unicode. This makes get work with plain
+  `str` keys.
+  '''
+  def __getitem__(self, key):
+    ret = self.get(key)
+    if not ret:
+      raise KeyError(key)
+    return ret
+
+  def get(self, key, default=None):
+    return super(UnicodeSafeJsonWrapper, self).get(unicode(key), default)
 
 # View base class for Views handling
 #   - /resources (GET, POST)
@@ -167,7 +180,7 @@ class Resource(View):
       return current_app.make_response((
         'Content-Type must be application/json', 415,[]))
     obj = self.model()
-    src = self.request.json
+    src = UnicodeSafeJsonWrapper(self.request.json)
     self._update_object(obj, src)
     #FIXME Fake the modified_by_id until we have that information in session.
     obj.modified_by_id = 1
@@ -215,6 +228,7 @@ class Resource(View):
       method(self, obj, src)
 
   def _update_object(self, obj, src):
+    src = src[self.model_name]
     for base in self.__class__.__bases__:
       self._update_object_for(base, obj, src)
     self._update_object_for(self.__class__, obj, src)
@@ -321,3 +335,8 @@ class Resource(View):
     if result is not None:
       return result.updated_at 
     return datetime.datetime.now()
+
+  def getval(self, src, attr, *args):
+    if args:
+      return src.get(unicode(attr), *args)
+    return src.get(unicode(attr))
