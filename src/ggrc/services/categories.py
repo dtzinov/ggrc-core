@@ -8,5 +8,3 @@ class Category(Resource):
   def update_object(self, category, src):
     category.name = src.get("name", "")
 
-  def attrs_for_json(self, object):
-    return { 'name': object.name, }

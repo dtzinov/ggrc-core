@@ -1,4 +1,5 @@
 import datetime
+import ggrc.json
 import hashlib
 import json
 import time
@@ -25,7 +26,6 @@ class DateTimeEncoder(json.JSONEncoder):
       return (datetime.datetime.min + obj).time().isoformat()
     else:
       return super(DateTimeEncoder, self).default(obj)
-
 
 # View base class for Views handling
 #   - /resources (GET, POST)
@@ -229,6 +229,8 @@ class Resource(View):
 
   @classmethod
   def url_for(cls, *args, **kwargs):
+    if args and isinstance(args[0], db.Model):
+      return url_for(cls.endpoint_name(), *args[1:], id=args[0].id, **kwargs)
     return url_for(cls.endpoint_name(), *args, **kwargs)
 
   @classmethod
@@ -249,49 +251,9 @@ class Resource(View):
   def as_json(cls, obj, **kwargs):
     return json.dumps(obj, cls=DateTimeEncoder, **kwargs)
 
-  def _attrs_for_json_from(self, base, obj):
-    '''Return all attributes to contribute to the JSON representation of this
-    object that are contributed from the base class `base` for the given
-    model object `obj`.
-    '''
-    method = getattr(base, 'attrs_for_json', None)
-    if method and isinstance(method, MethodType):
-      return method(self, obj)
-
-  def _attrs_for_json(self, obj):
-    '''Build up the json representation of the object by walking all base
-    clases and gathering their contributions and finally adding the
-    contributions from the instance's concrete class.
-    '''
-    attrs = {}
-    for base in self.__class__.__bases__:
-      attrs.update(self._attrs_for_json_from(base, obj))
-    attrs.update(self._attrs_for_json_from(self.__class__, obj))
-    return attrs
-
-  def attrs_for_json(self, obj):
-    '''All mixin classes and subclasses that have content to contribute to the
-    JSON representation of the model instance `obj` **MUST** implement this
-    method.
-
-    Refer to `_attrs_for_json` to see how this is performed.
-    '''
-    return {}
-
-  def object_for_json(self, object, model_name=None):
+  def object_for_json(self, obj, model_name=None):
     model_name = model_name or self.model_name
-    return { model_name: self.object_for_json_container(object) }
-
-  def object_for_json_container(self, object):
-    object_for_json = {
-      'id': object.id,
-      'selfLink': self.url_for(id=object.id),
-      'created_at': object.created_at,
-      'updated_at': object.updated_at,
-      }
-    attrs_for_json = self._attrs_for_json(object)
-    object_for_json.update(attrs_for_json)
-    return object_for_json
+    return { model_name: ggrc.json.build(obj) }
 
   def collection_for_json(
       self, objects, model_plural=None, collection_name=None):
@@ -300,7 +262,7 @@ class Resource(View):
 
     objects_json = []
     for object in objects:
-      object_for_json = self.object_for_json_container(object)
+      object_for_json = ggrc.json.build(object)
       objects_json.append(object_for_json)
 
     collection_json = {

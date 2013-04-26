@@ -1,4 +1,6 @@
 import ggrc
+import ggrc.json
+import ggrc.services
 import json
 import random
 import time
@@ -20,11 +22,16 @@ class MockResourceService(Resource):
   def update_object(self, obj, src):
     obj.foo = src['mockmodel'].get('foo', '')
 
-  def attrs_for_json(self, object):
+class MockModelBuilder(object):
+  @classmethod
+  def build_contribution(cls, obj):
     return {
-        'modified_by_id': unicode(object.modified_by_id),
-        'foo': unicode(object.foo or ''),
+        'modified_by_id': unicode(obj.modified_by_id),
+        'foo': unicode(obj.foo or ''),
         }
+
+ggrc.json.MockModel = MockModelBuilder
+ggrc.services.MockModel = MockResourceService
 
 URL_MOCK_COLLECTION = '/api/mock_resources'
 URL_MOCK_RESOURCE = '/api/mock_resources/{}'

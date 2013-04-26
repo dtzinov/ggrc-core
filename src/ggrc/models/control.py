@@ -3,6 +3,8 @@ from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.ext.declarative import declared_attr
 from .categorization import Categorizable
 from .mixins import Slugged, Described, Hierarchical, Hyperlinked, Timeboxed
+from .object_document import Documentable
+from .object_person import Personable
 
 CATEGORY_CONTROL_TYPE_ID = 100
 CATEGORY_ASSERTION_TYPE_ID = 102
@@ -20,8 +22,8 @@ class AssertionCategorized(Categorizable):
         'assertations', 'assertions', CATEGORY_ASSERTION_TYPE_ID)
 
 class Control(
-    ControlCategorized, AssertionCategorized, Slugged, Described, Hierarchical,
-    Hyperlinked, Timeboxed, db.Model):
+    Documentable, Personable, ControlCategorized, AssertionCategorized,
+    Slugged, Described, Hierarchical, Hyperlinked, Timeboxed, db.Model):
   __tablename__ = 'controls'
 
   directive_id = db.Column(db.Integer, db.ForeignKey('directives.id'))
