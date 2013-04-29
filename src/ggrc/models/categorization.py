@@ -1,6 +1,5 @@
 from ggrc import db
 from sqlalchemy.ext.associationproxy import association_proxy
-from sqlalchemy.ext.declarative import declared_attr
 from .mixins import Base
 
 class Categorization(Base, db.Model):
@@ -56,3 +55,6 @@ class Categorizable(object):
         primaryjoin=joinstr,
         backref='{}_{}_categorizable'.format(cls.__name__, scope),
         )
+
+  # REST properties
+   

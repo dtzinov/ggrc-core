@@ -1,22 +1,28 @@
 import ggrc.json
 import ggrc.services
 
+CACHE_BUILDERS = True
+
 def url_for(obj):
-  service = getattr(ggrc.services, obj.__class__.__name__)
-  return service.url_for(obj)
+  service = getattr(ggrc.services, obj.__class__.__name__, None)
+  return service.url_for(obj) if service else None
 
 def get_json_builder(obj):
-  return getattr(ggrc.json, obj.__class__.__name__, None)
+  if type(obj) is type:
+    cls = obj
+  else:
+    cls = obj.__class__
+  builder = getattr(ggrc.json, cls.__name__, None)
+  if not builder:
+    builder = Builder(cls)
+    setattr(ggrc.json, cls.__name__, builder)
+  return builder
 
 def publish(obj):
   publisher = get_json_builder(obj)
-  if publisher:
-    ret = {
-        'id': obj.id,
-        'selfLink': url_for(obj),
-        'created_at': obj.created_at,
-        'updated_at': obj.updated_at,
-        }
+  if publisher and publisher._publish_attrs:
+    url = url_for(obj)
+    ret = {'selfLink': url_for(obj)} if url else {}
     ret.update(publisher.publish_contribution(obj))
     return ret
   # Otherwise, just return the value itself by default
@@ -48,22 +54,40 @@ class Builder(object):
   Builder for that class will be run and have it's contributions to the
   dictionary recorded.
   '''
-  _publish_attrs = []
-  _update_attrs = None # If None, same as _publish_attrs by default
-  _create_attrs = None # If None, same as _update_attrs by default
+  def __init__(self, tgt_class):
+    self._publish_attrs = Builder.gather_publish_attrs(tgt_class)
+    self._update_attrs = Builder.gather_update_attrs(tgt_class)
+    self._create_attrs = Builder.gather_create_attrs(tgt_class)
 
   @classmethod
-  def publish_attrs(cls, obj, json_obj):
-    for a in cls._publish_attrs:
+  def gather_attrs(cls, tgt_class, src_attrs, accumulator=None):
+    src_attrs = src_attrs if type(src_attrs) is list else [src_attrs]
+    accumulator = accumulator if accumulator is not None else []
+    for attr in src_attrs:
+      attrs = getattr(tgt_class, attr, None)
+      if attrs is not None:
+        accumulator.extend(attrs)
+        break
+    for base in tgt_class.__bases__:
+      cls.gather_attrs(base, src_attrs, accumulator)
+    return accumulator
+
+  @classmethod
+  def gather_publish_attrs(cls, tgt_class):
+    return cls.gather_attrs(tgt_class, '_publish_attrs')
+
+  @classmethod
+  def gather_update_attrs(cls, tgt_class):
+    return cls.gather_attrs(tgt_class, ['_update_attrs', '_publish_attrs'])
+
+  @classmethod
+  def gather_create_attrs(cls, tgt_class):
+    return cls.gather_attrs(tgt_class, [
+      '_create_attrs', '_update_attrs', '_publish_attrs'])
+
+  def publish_attrs(self, obj, json_obj):
+    for a in self._publish_attrs:
       json_obj[a] = publish(getattr(obj, a))
-
-  @classmethod
-  def get_update_attrs(cls):
-    return cls._update_attrs or cls._publish_attrs
-
-  @classmethod
-  def get_create_attrs(cls):
-    return cls._create_attrs or cls.get_update_attrs()
 
   @classmethod
   def do_update_attrs(cls, obj, json_obj, attrs):
@@ -71,46 +95,20 @@ class Builder(object):
     for a in attrs:
       setattr(obj, a, json_obj.get(a))
 
-  @classmethod
-  def update_attrs(cls, obj, json_obj):
-    cls.do_update_attrs(obj, json_obj, cls.get_update_attrs())
+  def update_attrs(self, obj, json_obj):
+    self.do_update_attrs(obj, json_obj, self._update_attrs)
 
-  @classmethod
-  def create_attrs(cls, obj, json_obj):
-    cls.do_update_attrs(obj, json_obj, cls.get_create_attrs())
+  def create_attrs(self, obj, json_obj):
+    self.do_update_attrs(obj, json_obj, self._create_attrs)
 
-  @classmethod
-  def publish_base_contributions(cls, obj, json_obj, bases):
-    for base in bases:
-      if hasattr(ggrc.json, base.__name__):
-        getattr(ggrc.json, base.__name__).publish_attrs(obj, json_obj)
-        cls.publish_base_contributions(obj, json_obj, base.__bases__)
-
-  @classmethod
-  def publish_contribution(cls, obj):
+  def publish_contribution(self, obj):
     json_obj = {}
-    cls.publish_attrs(obj, json_obj)
-    cls.publish_base_contributions(obj, json_obj, obj.__class__.__bases__)
+    self.publish_attrs(obj, json_obj)
     return json_obj
 
-  @classmethod
-  def do_base_updates(cls, obj, json_obj, bases, update=True):
-    for base in bases:
-      builder = getattr(ggrc.json, base.__name__, None)
-      if builder:
-        if update:
-          builder.update_attrs(obj, json_obj)
-        else:
-          builder.create_attrs(obj, json_obj)
-        cls.do_base_updates(obj, json_obj, base.__bases__, update)
+  def update(self, obj, json_obj):
+    self.update_attrs(obj, json_obj)
 
-  @classmethod
-  def update(cls, obj, json_obj):
-    cls.update_attrs(obj, json_obj)
-    cls.do_base_updates(obj, json_obj, obj.__class__.__bases__)
-
-  @classmethod
-  def create(cls, obj, json_obj):
-    cls.create_attrs(obj, json_obj)
-    cls.do_base_updates(obj, json_obj, obj.__class__.__bases__, False)
+  def create(self, obj, json_obj):
+    self.create_attrs(obj, json_obj)
 

@@ -58,3 +58,15 @@ class Control(
   control_risks = db.relationship('ControlRisk', backref='control')
   risks = association_proxy('control_risks', 'risk')
   control_assessments = db.relationship('ControlAssessment', backref='control')
+
+  # REST properties
+  _publish_attrs = [
+      'version',
+      'documentation_description',
+      'fraud_related',
+      'key_control',
+      'active',
+      'notes',
+      #TODO 'systems',
+      ]
+

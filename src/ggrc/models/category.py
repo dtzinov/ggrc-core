@@ -45,3 +45,8 @@ class Category(Base, Hierarchical, db.Model):
           categorizable_type='Risk',
           ),
       )
+
+  # REST properties
+  _publish_attrs = [
+      'name',
+      ]

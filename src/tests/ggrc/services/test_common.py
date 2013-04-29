@@ -6,7 +6,6 @@ import random
 import time
 from datetime import datetime
 from ggrc import db
-from ggrc.json.common import Builder as JsonBuilder
 from ggrc.models.mixins import Base
 from ggrc.services.common import Resource
 from tests.ggrc import TestCase
@@ -17,15 +16,15 @@ class MockModel(Base, ggrc.db.Model):
   __tablename__ = 'test_model'
   foo = db.Column(db.String)
 
+  # REST properties
+  _publish_attrs = ['modified_by_id', 'foo']
+  _update_attrs = ['foo']
+
 class MockResourceService(Resource):
   _model = MockModel
 
   def update_object(self, obj, src):
     obj.foo = src.get('foo', '')
-
-class MockModelBuilder(JsonBuilder):
-  _publish_attrs = ['modified_by_id', 'foo']
-  _update_attrs = ['foo']
 
 URL_MOCK_COLLECTION = '/api/mock_resources'
 URL_MOCK_RESOURCE = '/api/mock_resources/{}'
@@ -37,11 +36,9 @@ RESOURCE_ALLOWED = ['HEAD', 'GET', 'PUT', 'DELETE', 'OPTIONS']
 class TestResource(TestCase):
   def setUp(self):
     super(TestResource, self).setUp()
-    ggrc.json.MockModel = MockModelBuilder
     ggrc.services.MockModel = MockResourceService
 
   def tearDown(self):
-    delattr(ggrc.json, 'MockModel')
     delattr(ggrc.services, 'MockModel')
     super(TestResource, self).tearDown()
 

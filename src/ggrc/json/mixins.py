@@ -27,7 +27,7 @@ class Timeboxed(Builder):
 
 class Slugged(Builder):
   _publish_attrs = ['slug', 'title']
-  _update_attrs = ['title']
+  _update_attrs = ['slug', 'title'] #FIXME Should slug be modifiable??
   _create_attrs = _publish_attrs
 
 # BusinessObject has no properties of its own; it's intentionally left out.

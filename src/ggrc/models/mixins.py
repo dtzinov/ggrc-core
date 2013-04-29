@@ -17,6 +17,10 @@ class Identifiable(object):
   '''
   id = db.Column(db.Integer, primary_key=True)
 
+  # REST properties
+  _publish_attrs = ['id']
+  _update_attrs = []
+
 def created_at_args():
   '''Sqlite doesn't have a server, per se, so the server_* args are useless.'''
   if app.config['SQLALCHEMY_DATABASE_URI'].startswith('sqlite'):
@@ -50,11 +54,25 @@ class ChangeTracked(object):
   #and for tracking the changes made to several resources together.
   #transaction_id = db.Column(db.Integer)
 
+  # REST properties
+  _publish_attrs = [
+      #'modified_by_id' link to person??
+      'created_at',
+      'updated_at',
+      ]
+  _update_attrs = []
+
 class Described(object):
   description = db.Column(db.Text)
+  
+  # REST properties
+  _publish_attrs = ['description']
 
 class Hyperlinked(object):
   url = db.Column(db.String)
+
+  # REST properties
+  _publish_attrs = ['url']
 
 class Hierarchical(object):
   @declared_attr
@@ -69,9 +87,14 @@ class Hierarchical(object):
         backref=db.backref('parent', remote_side='{}.id'.format(cls.__name__)),
         )
 
+  # TODO REST properties
+
 class Timeboxed(object):
   start_date = db.Column(db.DateTime)
   end_date = db.Column(db.DateTime)
+
+  # REST properties
+  _publish_attrs = ['start_date', 'end_date']
 
 class Base(Identifiable, ChangeTracked):
   '''Several of the models use the same mixins. This class covers that common
@@ -86,6 +109,11 @@ class Slugged(Base):
   '''
   slug = db.Column(db.String, nullable=False)
   title = db.Column(db.String, nullable=False)
+
+  # REST properties
+  _publish_attrs = ['slug', 'title']
+  _update_attrs = ['title']
+  _create_attrs = _publish_attrs
 
 class BusinessObject(Slugged, Described, Hyperlinked):
   pass
