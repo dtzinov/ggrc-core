@@ -1,6 +1,6 @@
 import ggrc.json
 import ggrc.models
-from ggrc.json.common import Builder, build
+from ggrc.json.common import Builder, publish
 from ggrc.services.common import Resource
 from mock import MagicMock
 from tests.ggrc import TestCase
@@ -15,7 +15,7 @@ class TestBuilder(TestCase):
 
   def mock_builder(self, name, simple_attrs=[]):
     class MockBuilder(Builder):
-      _simple_attrs = simple_attrs
+      _publish_attrs = simple_attrs
     self.mock_builders[name] = MockBuilder
     setattr(ggrc.json, name, MockBuilder)
     return MockBuilder
@@ -49,7 +49,7 @@ class TestBuilder(TestCase):
     self.mock_service('MockModel')
     self.mock_builder('MockModel', ['foo'])
     model = self.mock_model('MockModel', foo='bar')
-    json_obj = build(model)
+    json_obj = publish(model)
     self.assertIn('foo', json_obj)
     self.assertEqual('bar', json_obj['foo'])
 
@@ -60,7 +60,7 @@ class TestBuilder(TestCase):
     mock_mixin = self.mock_class('MockMixin')
     model = self.mock_model(
         'MockModel', bases=(mock_mixin,), foo='bar', boo='far')
-    json_obj = build(model)
+    json_obj = publish(model)
     self.assertDictContainsSubset(
         {'foo': 'bar', 'boo': 'far'},
         json_obj)
@@ -79,12 +79,12 @@ class TestBuilder(TestCase):
         prop_a='prop_a', mixin='mixin_a', mixin_subclass='mixin_subclass_a')
     model_b = self.mock_model('ModelB',
         bases=(mixin,), prop_b='prop_b', mixin='mixin_b')
-    json_obj = build(model_a)
+    json_obj = publish(model_a)
     self.assertDictContainsSubset(
         {'prop_a': 'prop_a', 'mixin': 'mixin_a',
          'mixin_subclass': 'mixin_subclass_a'},
         json_obj)
-    json_obj = build(model_b)
+    json_obj = publish(model_b)
     self.assertDictContainsSubset(
         {'prop_b': 'prop_b', 'mixin': 'mixin_b'},
         json_obj)

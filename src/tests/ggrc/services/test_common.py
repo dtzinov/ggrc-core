@@ -6,6 +6,7 @@ import random
 import time
 from datetime import datetime
 from ggrc import db
+from ggrc.json.common import Builder as JsonBuilder
 from ggrc.models.mixins import Base
 from ggrc.services.common import Resource
 from tests.ggrc import TestCase
@@ -22,13 +23,9 @@ class MockResourceService(Resource):
   def update_object(self, obj, src):
     obj.foo = src.get('foo', '')
 
-class MockModelBuilder(object):
-  @classmethod
-  def build_contribution(cls, obj):
-    return {
-        'modified_by_id': unicode(obj.modified_by_id),
-        'foo': unicode(obj.foo or ''),
-        }
+class MockModelBuilder(JsonBuilder):
+  _publish_attrs = ['modified_by_id', 'foo']
+  _update_attrs = ['foo']
 
 URL_MOCK_COLLECTION = '/api/mock_resources'
 URL_MOCK_RESOURCE = '/api/mock_resources/{}'
@@ -60,10 +57,10 @@ class TestResource(TestCase):
     return {
         u'id': model.id,
         u'selfLink': unicode(URL_MOCK_RESOURCE.format(model.id)),
-        u'modified_by_id': unicode(model.modified_by_id),
+        u'modified_by_id': model.modified_by_id,
         u'updated_at': updated_at,
         u'created_at': created_at,
-        u'foo': unicode(model.foo or ''),
+        u'foo': (unicode(model.foo) if model.foo else None),
         }
 
   def mock_model(self, id=None, modified_by_id=1, **kwarg):

@@ -1,9 +1,7 @@
-from .common import build
+from .common import publish
 
 class Categorization(object):
   @classmethod
-  def build_contribution(cls, obj):
-    return {
-        'category': build(obj.category),
-        'categorizable': build(obj.categorizable),
-        }
+  def publish_attrs(cls, obj, json_obj):
+    json_obj['category'] = publish(obj.category)
+    json_obj['categorizable'] = publish(obj.categorizable)

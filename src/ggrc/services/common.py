@@ -138,7 +138,8 @@ class Resource(View):
     header_error = self.validate_headers_for_put_or_delete(obj)
     if header_error:
       return header_error
-    self._update_object(obj, self.request.json)
+    src = self.request.json[self.model_name]
+    ggrc.json.update(obj, src)
     #FIXME Fake the modified_by_id until we have that information in session.
     obj.modified_by_id = 1
     db.session.add(obj)
@@ -181,7 +182,8 @@ class Resource(View):
         'Content-Type must be application/json', 415,[]))
     obj = self.model()
     src = UnicodeSafeJsonWrapper(self.request.json)
-    self._update_object(obj, src)
+    src = src[self.model_name]
+    ggrc.json.create(obj, src)
     #FIXME Fake the modified_by_id until we have that information in session.
     obj.modified_by_id = 1
     db.session.add(obj)
@@ -222,17 +224,6 @@ class Resource(View):
     # This could also use `self.pk`
     return self.get_collection().filter(self.model.id == id).first()
 
-  def _update_object_for(self, base, obj, src):
-    method = getattr(base, 'update_object', None)
-    if method and isinstance(method, MethodType):
-      method(self, obj, src)
-
-  def _update_object(self, obj, src):
-    src = src[self.model_name]
-    for base in self.__class__.__bases__:
-      self._update_object_for(base, obj, src)
-    self._update_object_for(self.__class__, obj, src)
-
   def update_object(self, obj, src):
     return
 
@@ -248,7 +239,11 @@ class Resource(View):
     return url_for(cls.endpoint_name(), *args, **kwargs)
 
   @classmethod
-  def add_to(cls, app, url):
+  def add_to(cls, app, url, model_class=None):
+    #if model_class:
+      #class service_class(Resource):
+        #_model = model_class
+      #cls = service_class
     view_func = cls.as_view(cls.endpoint_name())
     app.add_url_rule(
         url,
@@ -267,7 +262,7 @@ class Resource(View):
 
   def object_for_json(self, obj, model_name=None):
     model_name = model_name or self.model_name
-    return { model_name: ggrc.json.build(obj) }
+    return { model_name: ggrc.json.publish(obj) }
 
   def collection_for_json(
       self, objects, model_plural=None, collection_name=None):
@@ -276,7 +271,7 @@ class Resource(View):
 
     objects_json = []
     for object in objects:
-      object_for_json = ggrc.json.build(object)
+      object_for_json = ggrc.json.publish(object)
       objects_json.append(object_for_json)
 
     collection_json = {
