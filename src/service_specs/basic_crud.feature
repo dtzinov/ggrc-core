@@ -31,7 +31,7 @@ Feature: Basic RESTful CRUD Support
       #| PopulationSample   | /api/population_samples    |
       #| Product            | /api/products              |
       #| Project            | /api/projects              |
-      #| Program            | /api/programs              |
+      | Program            | /api/programs              |
       #| ProgramDirective   | /api/program_directives    |
       #| Relationship       | /api/relationships         |
       #| Request            | /api/requests              |

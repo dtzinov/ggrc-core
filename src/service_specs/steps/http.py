@@ -1,6 +1,7 @@
 import datetime
 import json
 from behave import given, when, then
+from iso8601 import parse_date
 
 class DateTimeEncoder(json.JSONEncoder):
   '''Custom JSON Encoder to handle datetime objects
@@ -12,11 +13,11 @@ class DateTimeEncoder(json.JSONEncoder):
   '''
   def default(self, obj):
     if isinstance(obj, datetime.datetime):
-      return obj.isoformat()
+      return obj.isoformat('T')
     elif isinstance(obj, datetime.date):
-      return obj.isoformat()
+      return obj.isoformat('T')
     elif isinstance(obj, datetime.timedelta):
-      return (datetime.datetime.min + obj).time().isoformat()
+      return (datetime.datetime.min + obj).time().isoformat('T')
     else:
       return super(DateTimeEncoder, self).default(obj)
  
@@ -34,12 +35,13 @@ def example_resource(context, resource_type):
 def post_example_resource(context, resource_type, collection):
   #For **some** reason, I can't import this at the module level in a steps file
   import requests
+  data = json.dumps(
+      {resource_type.lower(): context.example_resource},
+      cls=DateTimeEncoder,
+      )
   context.response = requests.post(
       context.base_url+collection,
-      data=json.dumps(
-        {resource_type.lower(): context.example_resource},
-        cls=DateTimeEncoder,
-        ),
+      data=data,
       headers={
         'Content-Type': 'application/json',
         },
@@ -61,7 +63,13 @@ def validate_resource_in_response(context, resource_type):
 
 @then('the received "{resource_type}" matches the one we posted')
 def check_resource_equality_for_response(context, resource_type):
-  resp_json = get_json_response(context)[unicode(resource_type.lower())]
-  for k in context.example_resource:
-    assert context.example_resource[k] == resp_json[unicode(k)]
+  root = unicode(resource_type.lower())
+  resp_json = get_json_response(context)[root]
+  orig_json = context.example_resource
+  for k in orig_json:
+    original = context.example_resource[k]
+    response = resp_json[unicode(k)]
+    if isinstance(original, datetime.datetime):
+      response = parse_date(response)
+    assert  original == response
 

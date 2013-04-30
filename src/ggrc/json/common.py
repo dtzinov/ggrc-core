@@ -1,5 +1,8 @@
 import ggrc.json
 import ggrc.services
+import sqlalchemy.types
+from datetime import datetime
+from iso8601 import parse_date
 from sqlalchemy.ext.associationproxy import AssociationProxy
 from sqlalchemy.orm.attributes import InstrumentedAttribute
 from sqlalchemy.orm.properties import ColumnProperty, RelationshipProperty
@@ -21,7 +24,8 @@ def get_json_builder(obj):
 
 def publish(obj):
   publisher = get_json_builder(obj)
-  if publisher and publisher._publish_attrs:
+  if publisher and hasattr(publisher, '_publish_attrs') \
+      and publisher._publish_attrs:
     url = url_for(obj)
     ret = {'selfLink': url_for(obj)} if url else {}
     ret.update(publisher.publish_contribution(obj))
@@ -63,11 +67,12 @@ class Builder(object):
   @classmethod
   def gather_attrs(cls, tgt_class, src_attrs, accumulator=None):
     src_attrs = src_attrs if type(src_attrs) is list else [src_attrs]
-    accumulator = accumulator if accumulator is not None else []
+    accumulator = accumulator if accumulator is not None else set()
     for attr in src_attrs:
-      attrs = getattr(tgt_class, attr, None)
+      #attrs = getattr(tgt_class, attr, None)
+      attrs = tgt_class.__dict__.get(attr, None)
       if attrs is not None:
-        accumulator.extend(attrs)
+        accumulator.update(attrs)
         break
     for base in tgt_class.__bases__:
       cls.gather_attrs(base, src_attrs, accumulator)
@@ -79,7 +84,8 @@ class Builder(object):
 
   @classmethod
   def gather_update_attrs(cls, tgt_class):
-    return cls.gather_attrs(tgt_class, ['_update_attrs', '_publish_attrs'])
+    attrs = cls.gather_attrs(tgt_class, ['_update_attrs', '_publish_attrs'])
+    return attrs
 
   @classmethod
   def gather_create_attrs(cls, tgt_class):
@@ -108,17 +114,25 @@ class Builder(object):
         else:
           json_obj[attr_name] = self.publish_link(obj, json_obj, attr_name)
       else:
-        json_obj[attr_name] = publish(getattr(obj, attr_name))
+        json_obj[attr_name] = getattr(obj, attr_name)
+
+  @classmethod
+  def attr_is_type(cls, class_attr, column_type):
+    return isinstance(class_attr.property.expression.type, column_type)
 
   @classmethod
   def do_update_attrs(cls, obj, json_obj, attrs):
-    #TODO deal with nested objects
     for attr_name in attrs:
-      #class_attr = getattr(obj.__class__, attr_name)
-      #if isinstance(class_attr, InstrumentedAttribute) and \
-         #isinstance(class_attr.property, ColumnProperty):
-        #if class_attr.property.
-      setattr(obj, attr_name, json_obj.get(attr_name))
+      class_attr = getattr(obj.__class__, attr_name)
+      value = json_obj.get(attr_name)
+      if value is not None and \
+         isinstance(class_attr, InstrumentedAttribute) and \
+         isinstance(class_attr.property, ColumnProperty):
+           if cls.attr_is_type(class_attr, sqlalchemy.types.DateTime):
+             value = parse_date(value)
+           elif cls.attr_is_type(class_attr, sqlalchemy.types.Date):
+             value = datetime.strptime(value, "%Y-%m-%d")
+      setattr(obj, attr_name, value)
 
   def update_attrs(self, obj, json_obj):
     self.do_update_attrs(obj, json_obj, self._update_attrs)
