@@ -49,4 +49,14 @@ class Category(Base, Hierarchical, db.Model):
   # REST properties
   _publish_attrs = [
       'name',
+      'required',
+      'categorizations',
+      'control_categorizations',
+      'risk_categorizations',
+      'controls',
+      'risks',
+      ]
+  _update_attrs = [
+      'name',
+      'required',
       ]

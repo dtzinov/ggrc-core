@@ -15,7 +15,7 @@ class DateTimeEncoder(json.JSONEncoder):
     if isinstance(obj, datetime.datetime):
       return obj.isoformat('T')
     elif isinstance(obj, datetime.date):
-      return obj.isoformat('T')
+      return obj.isoformat()
     elif isinstance(obj, datetime.timedelta):
       return (datetime.datetime.min + obj).time().isoformat('T')
     else:
@@ -71,5 +71,8 @@ def check_resource_equality_for_response(context, resource_type):
     response = resp_json[unicode(k)]
     if isinstance(original, datetime.datetime):
       response = parse_date(response)
-    assert  original == response
+    elif isinstance(original, datetime.date):
+      response = datetime.datetime.strptime(response, '%Y-%m-%d').date()
+    assert original == response, 'for {}: expected {}, received {}'.format(
+        k, original, response)
 

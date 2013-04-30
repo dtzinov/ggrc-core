@@ -1,7 +1,7 @@
 import datetime
 import factory
 import random
-from factory.fuzzy import FuzzyChoice, FuzzyDateTime
+from factory.fuzzy import FuzzyChoice, FuzzyDate, FuzzyDateTime
 from factory.compat import UTC
 
 def random_string(prefix=''):
@@ -13,6 +13,9 @@ def random_string(prefix=''):
 def random_string_attribute(prefix=''):
   return factory.LazyAttribute(lambda m: random_string(prefix))
 
+class ChangeTrackedFactory(factory.Factory):
+  ABSTRACT_FACTORY = True
+
 class DescribedFactory(factory.Factory):
   ABSTRACT_FACTORY = True
   description = random_string_attribute('description ')
@@ -21,6 +24,12 @@ class HyperlinkedFactory(factory.Factory):
   ABSTRACT_FACTORY = True
   # No properties to contribute by default, just useful for mirroring the class
   # hierarchy
+
+class IdentifiableFactory(factory.Factory):
+  ABSTRACT_FACTORY = True
+
+class BaseFactory(IdentifiableFactory, ChangeTrackedFactory):
+  FACTORY_FOR = dict
 
 class SluggedFactory(factory.Factory):
   ABSTRACT_FACTORY = True
@@ -42,6 +51,14 @@ class BusinessObjectFactory(
     DescribedFactory, HyperlinkedFactory, SluggedFactory):
   ABSTRACT_FACTORY = True
 
+class HierarchicalFactory(factory.Factory):
+  ABSTRACT_FACTORY = True
+
+class CategoryFactory(BaseFactory, HierarchicalFactory):
+  FACTORY_FOR = dict
+  name = random_string_attribute('name')
+  required = FuzzyChoice([True, False])
+
 class ControlFactory(SluggedFactory):
   FACTORY_FOR = dict
   #directive_id = None
@@ -54,6 +71,27 @@ class ControlFactory(SluggedFactory):
   key_control = None
   active = None
   notes = None
+
+class CycleFactory(BaseFactory, DescribedFactory):
+  FACTORY_FOR = dict
+  start_at = FuzzyDate(
+      datetime.date(2000,1,1),
+      datetime.date(2013,1,1),
+      )
+  complete = FuzzyChoice([True,False])
+  title = random_string_attribute('title')
+  audit_firm = random_string_attribute('some firm, LLC ')
+  audit_lead = random_string_attribute('Some One, ')
+  status = random_string_attribute('status')
+  notes = random_string_attribute('notes')
+  end_at = FuzzyDate(
+      datetime.date(2013,1,1),
+      datetime.date.today() + datetime.timedelta(days=730),
+      )
+  report_due_at =  FuzzyDate(
+      datetime.date(2013,1,1),
+      datetime.date.today() + datetime.timedelta(days=730),
+      )
 
 class ProgramFactory(BusinessObjectFactory, TimeboxedFactory):
   FACTORY_FOR = dict

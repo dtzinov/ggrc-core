@@ -11,11 +11,11 @@ Feature: Basic RESTful CRUD Support
   Examples: Resources
       | resource_type      | collection                 |
       #| Categorization     | /api/categorizations       |
-      #| Category           | /api/categories            |
+      | Category           | /api/categories            |
       | Control            | /api/controls              |
       #| ControlAssessment  | /api/control_assessments   |
       #| ControlRisk        | /api/control_risks         |
-      #| Cycle              | /api/cycles                |
+      | Cycle              | /api/cycles                |
       #| DataAsset          | /api/data_assets           |
       #| Directive          | /api/directives            |
       #| Document           | /api/documents             |
