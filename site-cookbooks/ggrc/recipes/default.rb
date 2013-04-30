@@ -14,6 +14,10 @@ package "python-virtualenv" do
   action :install
 end
 
+package "git" do
+  action :install
+end
+
 version = node[:ggrc][:app_engine_version]
 zipfile = "google_appengine_#{version}.zip"
 

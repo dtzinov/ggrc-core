@@ -1,7 +1,8 @@
 import ggrc.json
 import ggrc.services
-
-CACHE_BUILDERS = True
+from sqlalchemy.ext.associationproxy import AssociationProxy
+from sqlalchemy.orm.attributes import InstrumentedAttribute
+from sqlalchemy.orm.properties import ColumnProperty, RelationshipProperty
 
 def url_for(obj):
   service = getattr(ggrc.services, obj.__class__.__name__, None)
@@ -85,15 +86,39 @@ class Builder(object):
     return cls.gather_attrs(tgt_class, [
       '_create_attrs', '_update_attrs', '_publish_attrs'])
 
+  def publish_link_collection(self, obj, json_obj, attr_name):
+    return [{'id': o.id, 'href': url_for(o)} for o in getattr(obj, attr_name)]
+
+  def publish_link(self, obj, json_obj, attr_name):
+    attr_value = getattr(obj, attr_name)
+    if attr_value:
+      return {'id': attr_value.id, 'href': url_for(attr_value)}
+    return None
+
   def publish_attrs(self, obj, json_obj):
-    for a in self._publish_attrs:
-      json_obj[a] = publish(getattr(obj, a))
+    for attr_name in self._publish_attrs:
+      class_attr = getattr(obj.__class__, attr_name)
+      if isinstance(class_attr, AssociationProxy):
+        json_obj[attr_name] = self.publish_link_collection(
+            obj, json_obj, attr_name)
+      elif isinstance(class_attr.property, RelationshipProperty):
+        if class_attr.property.uselist:
+          json_obj[attr_name] = self.publish_link_collection(
+              obj, json_obj, attr_name)
+        else:
+          json_obj[attr_name] = self.publish_link(obj, json_obj, attr_name)
+      else:
+        json_obj[attr_name] = publish(getattr(obj, attr_name))
 
   @classmethod
   def do_update_attrs(cls, obj, json_obj, attrs):
     #TODO deal with nested objects
-    for a in attrs:
-      setattr(obj, a, json_obj.get(a))
+    for attr_name in attrs:
+      #class_attr = getattr(obj.__class__, attr_name)
+      #if isinstance(class_attr, InstrumentedAttribute) and \
+         #isinstance(class_attr.property, ColumnProperty):
+        #if class_attr.property.
+      setattr(obj, attr_name, json_obj.get(attr_name))
 
   def update_attrs(self, obj, json_obj):
     self.do_update_attrs(obj, json_obj, self._update_attrs)

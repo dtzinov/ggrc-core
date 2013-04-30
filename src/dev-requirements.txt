@@ -1,5 +1,5 @@
 behave
 Flask-Testing
-factory_boy
+-e git+https://github.com/rbarrois/factory_boy.git#egg=factory-boy
 mock
 requests
