@@ -12,7 +12,7 @@ from tests.ggrc import TestCase
 from urlparse import urlparse
 from wsgiref.handlers import format_date_time
 
-class MockModel(Base, ggrc.db.Model):
+class ServicesTestMockModel(Base, ggrc.db.Model):
   __tablename__ = 'test_model'
   foo = db.Column(db.String)
 
@@ -20,15 +20,17 @@ class MockModel(Base, ggrc.db.Model):
   _publish_attrs = ['modified_by_id', 'foo']
   _update_attrs = ['foo']
 
-class MockResourceService(Resource):
-  _model = MockModel
+#class MockResourceService(Resource):
+  #_model = MockModel
 
-  def update_object(self, obj, src):
-    obj.foo = src.get('foo', '')
+  #def update_object(self, obj, src):
+    #obj.foo = src.get('foo', '')
 
 URL_MOCK_COLLECTION = '/api/mock_resources'
 URL_MOCK_RESOURCE = '/api/mock_resources/{}'
-MockResourceService.add_to(ggrc.app, URL_MOCK_COLLECTION)
+#MockResourceService.add_to(ggrc.app, URL_MOCK_COLLECTION)
+Resource.add_to(
+    ggrc.app, URL_MOCK_COLLECTION, model_class=ServicesTestMockModel)
 
 COLLECTION_ALLOWED = ['HEAD', 'GET', 'POST', 'OPTIONS']
 RESOURCE_ALLOWED = ['HEAD', 'GET', 'PUT', 'DELETE', 'OPTIONS']
@@ -36,10 +38,10 @@ RESOURCE_ALLOWED = ['HEAD', 'GET', 'PUT', 'DELETE', 'OPTIONS']
 class TestResource(TestCase):
   def setUp(self):
     super(TestResource, self).setUp()
-    ggrc.services.MockModel = MockResourceService
+    #ggrc.services.MockModel = MockResourceService
 
   def tearDown(self):
-    delattr(ggrc.services, 'MockModel')
+    #delattr(ggrc.services, 'MockModel')
     super(TestResource, self).tearDown()
 
   def mock_url(self, resource=None):
@@ -65,7 +67,7 @@ class TestResource(TestCase):
       kwarg['id'] = random.randint(0,999999999)
     if 'modified_by_id' not in kwarg:
       kwarg['modified_by_id'] = 1
-    mock = MockModel(**kwarg)
+    mock = ServicesTestMockModel(**kwarg)
     ggrc.db.session.add(mock)
     ggrc.db.session.commit()
     return mock
@@ -137,8 +139,8 @@ class TestResource(TestCase):
       { 'Last-Modified': self.http_timestamp(date1),
         'Content-Type': 'application/json',
       })
-    self.assertIn('mockmodel', response.json)
-    self.assertDictEqual(self.mock_json(mock1), response.json['mockmodel'])
+    self.assertIn('servicestestmockmodel', response.json)
+    self.assertDictEqual(self.mock_json(mock1), response.json['servicestestmockmodel'])
 
   def test_collection_put(self):
     self.assertAllow(self.client.put(URL_MOCK_COLLECTION), COLLECTION_ALLOWED)
@@ -148,7 +150,7 @@ class TestResource(TestCase):
         self.client.delete(URL_MOCK_COLLECTION), COLLECTION_ALLOWED)
 
   def test_collection_post_successful(self):
-    data = json.dumps({ 'mockmodel': { 'foo': 'bar' } })
+    data = json.dumps({ 'servicestestmockmodel': { 'foo': 'bar' } })
     response = self.client.post(
         URL_MOCK_COLLECTION, 
         content_type='application/json',
@@ -160,9 +162,9 @@ class TestResource(TestCase):
     self.assert200(response)
     self.assertIn('Content-Type', response.headers)
     self.assertEqual('application/json', response.headers['Content-Type'])
-    self.assertIn('mockmodel', response.json)
-    self.assertIn('foo', response.json['mockmodel'])
-    self.assertEqual('bar', response.json['mockmodel']['foo'])
+    self.assertIn('servicestestmockmodel', response.json)
+    self.assertIn('foo', response.json['servicestestmockmodel'])
+    self.assertEqual('bar', response.json['servicestestmockmodel']['foo'])
     # check the collection, too
     response = self.client.get(URL_MOCK_COLLECTION)
     self.assert200(response)
@@ -193,9 +195,9 @@ class TestResource(TestCase):
     self.assert200(response)
     self.assertRequiredHeaders(response)
     obj = response.json
-    self.assertEqual('buzz', obj['mockmodel']['foo'])
-    obj['mockmodel']['foo'] = 'baz'
-    url = urlparse(obj['mockmodel']['selfLink']).path
+    self.assertEqual('buzz', obj['servicestestmockmodel']['foo'])
+    obj['servicestestmockmodel']['foo'] = 'baz'
+    url = urlparse(obj['servicestestmockmodel']['selfLink']).path
     original_headers = dict(response.headers)
     # wait a moment so that we can be sure to get differing Last-Modified
     # after the put - the lack of latency means it's easy to end up with
@@ -217,14 +219,14 @@ class TestResource(TestCase):
         original_headers['Last-Modified'], response.headers['Last-Modified'])
     self.assertNotEqual(
         original_headers['Etag'], response.headers['Etag'])
-    self.assertEqual('baz', response.json['mockmodel']['foo'])
+    self.assertEqual('baz', response.json['servicestestmockmodel']['foo'])
 
   def test_put_bad_request(self):
     mock = self.mock_model(foo='tough')
     response = self.client.get(self.mock_url(mock.id))
     self.assert200(response)
     self.assertRequiredHeaders(response)
-    url = urlparse(response.json['mockmodel']['selfLink']).path
+    url = urlparse(response.json['servicestestmockmodel']['selfLink']).path
     response = self.client.put(
         url,
         content_type='application/json',
@@ -242,12 +244,13 @@ class TestResource(TestCase):
     self.assert200(response)
     self.assertRequiredHeaders(response)
     obj = response.json
-    obj['mockmodel']['foo'] = 'rocks'
-    mock = ggrc.db.session.query(MockModel).filter(MockModel.id==mock.id).one()
+    obj['servicestestmockmodel']['foo'] = 'rocks'
+    mock = ggrc.db.session.query(
+        ServicesTestMockModel).filter(ServicesTestMockModel.id==mock.id).one()
     mock.foo = 'dirt'
     ggrc.db.session.add(mock)
     ggrc.db.session.commit()
-    url = urlparse(obj['mockmodel']['selfLink']).path
+    url = urlparse(obj['servicestestmockmodel']['selfLink']).path
     original_headers = dict(response.headers)
     response = self.client.put(
         url,
@@ -274,8 +277,8 @@ class TestResource(TestCase):
     response = self.client.get(self.mock_url(mock.id))
     self.assert200(response)
     obj = response.json
-    obj['mockmodel']['foo'] = 'strings'
-    url = urlparse(obj['mockmodel']['selfLink']).path
+    obj['servicestestmockmodel']['foo'] = 'strings'
+    url = urlparse(obj['servicestestmockmodel']['selfLink']).path
     response = self.client.put(
         url,
         data=json.dumps(obj),
@@ -289,7 +292,7 @@ class TestResource(TestCase):
     mock = self.mock_model(foo='delete me')
     response = self.client.get(self.mock_url(mock.id))
     self.assert200(response)
-    url = urlparse(response.json['mockmodel']['selfLink']).path
+    url = urlparse(response.json['servicestestmockmodel']['selfLink']).path
     response = self.client.delete(
         url,
         headers=[

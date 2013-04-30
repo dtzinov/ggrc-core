@@ -6,7 +6,6 @@ import time
 from flask import url_for, request, current_app
 from flask.views import View
 from ggrc import db
-from types import MethodType
 from wsgiref.handlers import format_date_time
 
 class DateTimeEncoder(json.JSONEncoder):
@@ -240,11 +239,15 @@ class Resource(View):
 
   @classmethod
   def add_to(cls, app, url, model_class=None):
-    #if model_class:
-      #class service_class(Resource):
-        #_model = model_class
-      #cls = service_class
-    view_func = cls.as_view(cls.endpoint_name())
+    if model_class:
+      service_class = type(model_class.__name__, (Resource,), {
+        '_model': model_class,
+        })
+      import ggrc.services
+      setattr(ggrc.services, model_class.__name__, service_class)
+    else:
+      service_class = cls
+    view_func = service_class.as_view(service_class.endpoint_name())
     app.add_url_rule(
         url,
         defaults={cls.pk: None},
