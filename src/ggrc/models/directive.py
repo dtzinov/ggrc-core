@@ -32,3 +32,29 @@ class Directive(Slugged, Hyperlinked, Timeboxed, db.Model):
                        'Option.role == "audit_duration")',
       uselist=False,
       )
+
+  _publish_attrs = [
+      'company',
+      'version',
+      'organization',
+      'scope',
+      'audit_start_date',
+      'audit_frequency',
+      'audit_duration',
+      'kind',
+      'sections',
+      'controls',
+      'program_directives',
+      'programs',
+      ]
+  _update_attrs = [
+      'company',
+      'version',
+      'organization',
+      'scope',
+      'audit_start_date',
+      #FIXME
+      #'audit_frequency',
+      #'audit_duration',
+      #etc..
+      ]

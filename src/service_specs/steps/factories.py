@@ -93,6 +93,20 @@ class CycleFactory(BaseFactory, DescribedFactory):
       datetime.date.today() + datetime.timedelta(days=730),
       )
 
+class DirectiveFactory(SluggedFactory, HyperlinkedFactory, TimeboxedFactory):
+  FACTORY_FOR = dict
+  company = FuzzyChoice([True,False])
+  version = random_string_attribute('version ')
+  organization = random_string_attribute('organization ')
+  scope = random_string_attribute('scope ')
+  audit_start_date = FuzzyDateTime(
+      datetime.datetime(2000,1,1,tzinfo=UTC),
+      datetime.datetime.now(UTC),
+      )
+
+class DataAssetFactory(TimeboxedFactory, BusinessObjectFactory):
+  FACTORY_FOR = dict
+
 class ProgramFactory(BusinessObjectFactory, TimeboxedFactory):
   FACTORY_FOR = dict
   kind = FuzzyChoice(['Directive', 'Company Controls'])

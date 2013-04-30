@@ -16,8 +16,8 @@ Feature: Basic RESTful CRUD Support
       #| ControlAssessment  | /api/control_assessments   |
       #| ControlRisk        | /api/control_risks         |
       | Cycle              | /api/cycles                |
-      #| DataAsset          | /api/data_assets           |
-      #| Directive          | /api/directives            |
+      | DataAsset          | /api/data_assets           |
+      | Directive          | /api/directives            |
       #| Document           | /api/documents             |
       #| Facility           | /api/facilities            |
       #| Market             | /api/markets               |

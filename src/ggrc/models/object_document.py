@@ -45,3 +45,9 @@ class Documentable(object):
         primaryjoin=joinstr,
         backref='{}_documentable'.format(cls.__name__),
         )
+
+  _publish_attrs = [
+      'documents',
+      'object_documents',
+      ]
+  _update_attrs = []

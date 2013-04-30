@@ -45,3 +45,9 @@ class Personable(object):
         primaryjoin=joinstr,
         backref='{}_personable'.format(cls.__name__),
         )
+
+  _publish_attrs = [
+      'people',
+      'object_people',
+      ]
+  _update_attrs = []
