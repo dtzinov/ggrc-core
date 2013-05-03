@@ -13,3 +13,4 @@ def association_proxy(target_collection, attr, model_class):
         attr: arg,
         'modified_by_id': 1, #FIXME
         }))
+

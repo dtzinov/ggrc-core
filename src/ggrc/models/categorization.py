@@ -2,6 +2,8 @@ from ggrc import db
 from sqlalchemy.ext.associationproxy import association_proxy
 from .mixins import Base
 
+BACKREF_NAME_FORMAT = '{type}_{scope}_categorizable'
+
 class Categorization(Base, db.Model):
   __tablename__ = 'categorizations'
 
@@ -12,8 +14,8 @@ class Categorization(Base, db.Model):
 
   @property
   def categorizable_attr(self):
-    return '{}_{}_categorizable'.format(
-        self.categorizable_type, self.category.scope_id)
+    return BACKREF_NAME_FORMAT.format(
+        type=self.categorizable_type, scope=self.category.scope_id)
 
   @property
   def categorizable(self):
@@ -58,6 +60,6 @@ class Categorizable(object):
     return db.relationship(
         'Categorization',
         primaryjoin=joinstr,
-        backref='{}_{}_categorizable'.format(cls.__name__, scope),
+        backref=BACKREF_NAME_FORMAT.format(type=cls.__name__, scope=scope),
         )
 

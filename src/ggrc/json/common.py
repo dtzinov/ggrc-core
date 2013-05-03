@@ -46,10 +46,15 @@ def create(obj, json_obj):
 
 class UpdateAttrHandler(object):
   @classmethod
-  def do_update_attr(cls, obj, json_obj, attr_name):
-    class_attr = getattr(obj.__class__, attr_name)
-    method = getattr(cls, class_attr.__class__.__name__)
-    value = method(obj, json_obj, attr_name, class_attr)
+  def do_update_attr(cls, obj, json_obj, attr):
+    if (hasattr(attr, '__call__')):
+      attr_name = attr.attr_name
+      value = attr(cls, obj, json_obj)
+    else:
+      attr_name = attr
+      class_attr = getattr(obj.__class__, attr_name)
+      method = getattr(cls, class_attr.__class__.__name__)
+      value = method(obj, json_obj, attr_name, class_attr)
     setattr(obj, attr_name, value)
 
   @classmethod
@@ -80,11 +85,10 @@ class UpdateAttrHandler(object):
     return datetime.strptime(value, "%Y-%m-%d") if value else None
 
   @classmethod
-  def RelationshipProperty(cls, obj, json_obj, attr_name, class_attr):
-    rel_class = class_attr.property.mapper.class_
-    if class_attr.property.uselist:
+  def query_for(cls, rel_class, json_obj, attr_name, uselist):
+    if uselist:
       value = json_obj.get(attr_name)
-      rel_ids = [o.id for o in value] if value else []
+      rel_ids = [o[u'id'] for o in value] if value else []
       if rel_ids:
         return db.session.query(rel_class).filter(
             rel_class.id.in_(rel_ids)).all()
@@ -98,18 +102,16 @@ class UpdateAttrHandler(object):
       return None
 
   @classmethod
+  def RelationshipProperty(cls, obj, json_obj, attr_name, class_attr):
+    rel_class = class_attr.property.mapper.class_
+    return cls.query_for(
+        rel_class, json_obj, attr_name, class_attr.property.uselist)
+
+  @classmethod
   def AssociationProxy(cls, obj, json_obj, attr_name, class_attr):
-    if type(class_attr.remote_attr) is property:
-      remote_attr_property = class_attr.remote_attr.getter().property
-    else:
-      remote_attr_property = class_attr. remote_attr.property
-    rel_class = remote_attr_property.mapper.class_
-    value = json_obj.get(attr_name)
-    rel_ids = [o[u'id'] for o in value] if value else []
-    if rel_ids:
-      return db.session.query(rel_class).filter(rel_class.id.in_(rel_ids)).all()
-    else:
-      return []
+    rel_class = class_attr.remote_attr.property.mapper.class_
+    return cls.query_for(
+        rel_class, json_obj, attr_name, True)
 
 class Builder(object):
   '''JSON Dictionary builder for ggrc.models.* objects and their mixins.
@@ -167,7 +169,11 @@ class Builder(object):
     return None
 
   def publish_attrs(self, obj, json_obj):
-    for attr_name in self._publish_attrs:
+    for attr in self._publish_attrs:
+      if hasattr(attr, '__call__'):
+        attr_name = attr.attr_name
+      else:
+        attr_name = attr
       class_attr = getattr(obj.__class__, attr_name)
       if isinstance(class_attr, AssociationProxy):
         json_obj[attr_name] = self.publish_link_collection(

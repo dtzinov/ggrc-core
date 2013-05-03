@@ -3,6 +3,19 @@ from sqlalchemy.ext.associationproxy import association_proxy
 from .categorization import Categorization
 from .mixins import Base, Hierarchical
 
+class CategorizedPublishable(object):
+  def __init__(self, attr_name, type_name):
+    self.attr_name = attr_name
+    self.type_name = type_name
+
+  @property
+  def rel_class(self):
+    import ggrc.models
+    return getattr(ggrc.models, self.type_name)
+
+  def __call__(self, updater, obj, json_obj):
+    return updater.query_for(self.rel_class, json_obj, self.attr_name, True)
+
 class Category(Base, Hierarchical, db.Model):
   __tablename__ = 'categories'
 
@@ -54,18 +67,7 @@ class Category(Base, Hierarchical, db.Model):
       'categorizations',
       'control_categorizations',
       'risk_categorizations',
-      'controls',
-      'risks',
-      ]
-  #FIXME need to exclude association_proxy to polymorphic for now
-  _update_attrs = [
-      'name',
-      'scope_id',
-      'required',
-      'categorizations',
-      'control_categorizations',
-      'risk_categorizations',
-      #'controls',
-      #'risks',
+      CategorizedPublishable('controls', 'Control'),
+      CategorizedPublishable('risks', 'Risk'),
       ]
 
