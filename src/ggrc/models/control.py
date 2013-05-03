@@ -1,6 +1,6 @@
 from ggrc import db
-from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.ext.declarative import declared_attr
+from .associationproxy import association_proxy
 from .categorization import Categorizable
 from .mixins import Slugged, Described, Hierarchical, Hyperlinked, Timeboxed
 from .object_document import Documentable
@@ -38,25 +38,25 @@ class Control(
   active = db.Column(db.Boolean)
   notes = db.Column(db.Text)
   system_controls = db.relationship('SystemControl', backref='control')
-  systems = association_proxy('system_controls', 'system')
+  systems = association_proxy('system_controls', 'system', 'System')
   control_sections = db.relationship('ControlSection', backref='control')
-  sections = association_proxy('control_sections', 'section')
+  sections = association_proxy('control_sections', 'section', 'Section')
   control_controls = db.relationship(
       'ControlControl',
       foreign_keys='ControlControl.control_id',
       backref='control',
       )
   implemented_controls = association_proxy(
-      'control_controls', 'implemented_control')
+      'control_controls', 'implemented_control', 'Control')
   implementing_control_controls = db.relationship(
       'ControlControl',
       foreign_keys='ControlControl.implemented_control_id',
       backref='implemented_control',
       )
   implementing_controls = association_proxy(
-      'implementing_control_controls', 'control')
+      'implementing_control_controls', 'control', 'Control')
   control_risks = db.relationship('ControlRisk', backref='control')
-  risks = association_proxy('control_risks', 'risk')
+  risks = association_proxy('control_risks', 'risk', 'Risk')
   control_assessments = db.relationship('ControlAssessment', backref='control')
 
   # REST properties

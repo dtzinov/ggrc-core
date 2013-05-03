@@ -1,5 +1,5 @@
 from ggrc import db
-from sqlalchemy.ext.associationproxy import association_proxy
+from .associationproxy import association_proxy
 from .mixins import BusinessObject, Timeboxed
 
 class Program(BusinessObject, Timeboxed, db.Model):
@@ -16,7 +16,8 @@ class Program(BusinessObject, Timeboxed, db.Model):
 
   kind = db.Column(db.String)
   program_directives = db.relationship('ProgramDirective', backref='program')
-  directives = association_proxy('program_directives', 'directive')
+  directives = association_proxy(
+      'program_directives', 'directive', 'Directive')
   cycles = db.relationship('Cycle', backref='program')
 
   _publish_attrs = ['kind', 'program_directives', 'directives', 'cycles',]

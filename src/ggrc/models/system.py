@@ -1,6 +1,6 @@
 from ggrc import db
-from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.ext.declarative import declared_attr
+from .associationproxy import association_proxy
 from .mixins import BusinessObject, Timeboxed
 from .categorization import Categorizable
 
@@ -26,16 +26,16 @@ class System(Timeboxed, BusinessObject, SystemCategorized, db.Model):
   # TODO: handle option
   network_zone_id = db.Column(db.Integer)
   system_controls = db.relationship('SystemControl', backref='system')
-  controls = association_proxy('system_controls', 'control')
+  controls = association_proxy('system_controls', 'control', 'Control')
   responses = db.relationship('Response', backref='system')
   #TODO What about system_section?
   owner = db.relationship('Person', uselist=False)
   sub_system_systems = db.relationship(
       'SystemSystem', foreign_keys='SystemSystem.parent_id', backref='parent')
-  sub_systems = association_proxy('sub_system_systems', 'parent')
+  sub_systems = association_proxy('sub_system_systems', 'parent', 'System')
   super_system_systems = db.relationship(
       'SystemSystem', foreign_keys='SystemSystem.child_id', backref='child')
-  super_systems = association_proxy('super_system_systems', 'child')
+  super_systems = association_proxy('super_system_systems', 'child', 'System')
   transactions = db.relationship('Transaction', backref='system')
   type = db.relationship(
       'Option',

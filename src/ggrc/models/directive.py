@@ -1,6 +1,5 @@
 from ggrc import db
-from sqlalchemy.ext.associationproxy import association_proxy
-from .program_directive import ProgramDirective
+from .associationproxy import association_proxy
 from .mixins import Slugged, Hyperlinked, Timeboxed
 
 class Directive(Slugged, Hyperlinked, Timeboxed, db.Model):
@@ -20,11 +19,8 @@ class Directive(Slugged, Hyperlinked, Timeboxed, db.Model):
   controls = db.relationship(
       'Control', backref='directive', order_by='Control.slug')
   program_directives = db.relationship('ProgramDirective', backref='directive')
-  programs = association_proxy('program_directives', 'program', creator=\
-      lambda program: ProgramDirective(
-        program=program,
-        modified_by_id=1,
-        ))
+  programs = association_proxy(
+      'program_directives', 'program', 'ProgramDirective')
   audit_frequency = db.relationship(
       'Option',
       primaryjoin='and_(foreign(Directive.audit_frequency_id) == Option.id, '\
@@ -39,26 +35,26 @@ class Directive(Slugged, Hyperlinked, Timeboxed, db.Model):
       )
 
   _publish_attrs = [
-      'company',
-      'version',
-      'organization',
-      'scope',
       'audit_start_date',
       'audit_frequency',
       'audit_duration',
-      'kind',
-      'sections',
+      'company',
       'controls',
-      'program_directives',
+      'kind',
+      'organization',
       'programs',
+      'program_directives',
+      'scope',
+      'sections',
+      'version',
       ]
   _update_attrs = [
-      'company',
-      'version',
-      'organization',
-      'scope',
       'audit_start_date',
+      'company',
+      'organization',
       'programs',
+      'scope',
+      'version',
       #FIXME
       #'audit_frequency',
       #'audit_duration',
