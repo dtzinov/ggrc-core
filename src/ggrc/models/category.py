@@ -49,6 +49,7 @@ class Category(Base, Hierarchical, db.Model):
   # REST properties
   _publish_attrs = [
       'name',
+      'scope_id',
       'required',
       'categorizations',
       'control_categorizations',
@@ -56,7 +57,15 @@ class Category(Base, Hierarchical, db.Model):
       'controls',
       'risks',
       ]
+  #FIXME need to exclude association_proxy to polymorphic for now
   _update_attrs = [
       'name',
+      'scope_id',
       'required',
+      'categorizations',
+      'control_categorizations',
+      'risk_categorizations',
+      #'controls',
+      #'risks',
       ]
+

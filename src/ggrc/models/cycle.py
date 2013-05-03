@@ -29,15 +29,4 @@ class Cycle(Base, Described, db.Model):
       'report_due_at',
       'pbc_lists',
       ]
-  _update_attrs = [
-      'start_at',
-      'complete',
-      'title',
-      'audit_firm',
-      'audit_lead',
-      'status',
-      'notes',
-      'end_at',
-      'report_due_at',
-      ]
 

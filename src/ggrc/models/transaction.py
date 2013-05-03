@@ -6,3 +6,8 @@ class Transaction(Base, Described, db.Model):
 
   title = db.Column(db.String)
   system_id = db.Column(db.Integer, db.ForeignKey('systems.id'))
+
+  _publish_attrs = [
+      'title',
+      'system',
+      ]

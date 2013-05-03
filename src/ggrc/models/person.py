@@ -15,3 +15,11 @@ class Person(Base, db.Model):
                        'Option.role == "person_language")',
       uselist=False,
       )
+
+  _publish_attrs = [
+      'email',
+      'name',
+      'language',
+      'company',
+      'object_people',
+      ]

@@ -26,6 +26,13 @@ class ObjectDocument(Base, Timeboxed, db.Model):
   def documentable(self, value):
     return setattr(self, self.documentable_attr, value)
 
+  _publish_attrs = [
+      'role',
+      'notes',
+      'document',
+      'documentable',
+      ]
+
 class Documentable(object):
   @declared_attr
   def object_documents(cls):
@@ -50,4 +57,3 @@ class Documentable(object):
       'documents',
       'object_documents',
       ]
-  _update_attrs = []

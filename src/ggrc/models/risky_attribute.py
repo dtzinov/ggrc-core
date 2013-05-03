@@ -11,3 +11,9 @@ class RiskyAttribute(Documentable, Personable, Timeboxed, BusinessObject, db.Mod
   risk_risky_attributes = db.relationship(
       'RiskRiskyAttribute', backref='risky_attribute')
   risks = association_proxy('risk_risky_attributes', 'risk', 'Risk')
+
+  _publish_attrs = [
+      'type_string',
+      'risk_risky_attributes',
+      'risks',
+      ]

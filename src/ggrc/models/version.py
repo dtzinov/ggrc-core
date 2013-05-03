@@ -10,3 +10,12 @@ class Version(Identifiable, db.Model):
   whodunnit = db.Column(db.String)
   object = db.Column(db.Text)
   created_at = db.Column(db.DateTime)
+
+  _publish_attrs = [
+      'item_type',
+      'item_id',
+      'event',
+      'whodunnit',
+      'object',
+      'created_at',
+      ]

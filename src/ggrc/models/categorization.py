@@ -23,6 +23,11 @@ class Categorization(Base, db.Model):
   def categorizable(self, value):
     setattr(self, self.categorizable_attr, value)
 
+  _publish_attrs = [
+      'categorizable',
+      ]
+  _update_attrs = []
+
 class Categorizable(object):
   '''Subclasses **MUST** provide a declared_attr method that defines the
   relationship and association_proxy. For example:
@@ -56,5 +61,3 @@ class Categorizable(object):
         backref='{}_{}_categorizable'.format(cls.__name__, scope),
         )
 
-  # REST properties
-   

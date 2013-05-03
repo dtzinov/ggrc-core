@@ -8,3 +8,10 @@ class SystemSystem(Base, db.Model):
   child_id = db.Column(db.Integer, db.ForeignKey('systems.id'))
   type = db.Column(db.String)
   order = db.Column(db.Integer)
+
+  _publish_attrs = [
+      'parent',
+      'child',
+      'type',
+      'order',
+      ]

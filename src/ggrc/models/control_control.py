@@ -6,3 +6,8 @@ class ControlControl(Base, db.Model):
 
   control_id = db.Column(db.Integer, db.ForeignKey('controls.id'))
   implemented_control_id = db.Column(db.Integer, db.ForeignKey('controls.id'))
+
+  _publish_attrs = [
+    'control',
+    'implemented_control',
+    ]

@@ -10,3 +10,11 @@ class PopulationSample(Base, db.Model):
   sample_worksheet_document_id = db.Column(db.Integer, db.ForeignKey('documents.id'))
   samples = db.Column(db.Integer)
   sample_evidence_document_id = db.Column(db.Integer, db.ForeignKey('documents.id'))
+
+  _publish_attrs = [
+      'response',
+      'population_document',
+      'population',
+      'sample_worksheet_document',
+      'sample_evidence_document',
+      ]

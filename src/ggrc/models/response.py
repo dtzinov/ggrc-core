@@ -12,3 +12,11 @@ class Response(Documentable, Personable, Base, db.Model):
   meetings = db.relationship('Meeting', backref='response')
   population_sample = db.relationship(
       'PopulationSample', backref='response', uselist=False)
+
+  _publish_attrs = [
+      'request',
+      'system',
+      'status',
+      'meetings',
+      'population_sample',
+      ]

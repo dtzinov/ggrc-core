@@ -37,6 +37,26 @@ class Control(
   key_control = db.Column(db.Boolean)
   active = db.Column(db.Boolean)
   notes = db.Column(db.Text)
+  type = db.relationship(
+      'Option',
+      primaryjoin='and_(foreign(Control.type_id) == Option.id, '\
+                  'Option.role == "control_type")',
+      uselist=False)
+  kind = db.relationship(
+      'Option',
+      primaryjoin='and_(foreign(Control.kind_id) == Option.id, '\
+                  'Option.role == "control_kind")',
+      uselist=False)
+  means = db.relationship(
+      'Option',
+      primaryjoin='and_(foreign(Control.means_id) == Option.id, '\
+                  'Option.role == "control_means")',
+      uselist=False)
+  verify_frequency = db.relationship(
+      'Option',
+      primaryjoin='and_(foreign(Control.verify_frequency_id) == Option.id, '\
+                  'Option.role == "verify_frequency")',
+      uselist=False)
   system_controls = db.relationship('SystemControl', backref='control')
   systems = association_proxy('system_controls', 'system', 'System')
   control_sections = db.relationship('ControlSection', backref='control')
@@ -61,12 +81,27 @@ class Control(
 
   # REST properties
   _publish_attrs = [
+      'directive',
+      'type',
+      'kind',
+      'means',
+      'verify_frequency',
       'version',
       'documentation_description',
       'fraud_related',
       'key_control',
       'active',
       'notes',
-      #TODO 'systems',
+      'system_controls',
+      'systems',
+      'control_sections',
+      'sections',
+      'control_controls',
+      'implemented_controls',
+      'implementing_control_controls',
+      'implementing_controls',
+      'control_risks',
+      'risks',
+      'control_assessments',
       ]
 

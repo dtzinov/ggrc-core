@@ -9,3 +9,10 @@ class SystemControl(Base, db.Model):
   state = db.Column(db.Integer, default=1, nullable=False)
   cycle_id = db.Column(db.Integer, db.ForeignKey('cycles.id'))
   cycle = db.relationship('Cycle', uselist=False)
+
+  _publish_attrs = [
+      'system',
+      'control',
+      'state',
+      'cycle',
+      ]

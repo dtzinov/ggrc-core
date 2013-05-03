@@ -13,3 +13,15 @@ class ControlAssessment(Base, db.Model):
   external_toe = db.Column(db.Boolean)
   notes = db.Column(db.Text)
   requests = db.relationship('Request', backref='control_assessment')
+
+  _publish_attrs = [
+      'pbc_list',
+      'control',
+      'control_version',
+      'internal_tod',
+      'internal_toe',
+      'external_tod',
+      'external_toe',
+      'notes',
+      'requests',
+      ]

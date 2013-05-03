@@ -30,3 +30,22 @@ class Risk(
       'RiskRiskyAttribute', backref='risk')
   risky_attributes = association_proxy(
       'risk_risky_attributes', 'risky_attribute', 'RiskRiskyAttribute')
+
+  _publish_attrs = [
+      'kind',
+      'likelihood',
+      'threat_vector',
+      'trigger',
+      'preconditions',
+      'likelihood_rating',
+      'financial_impact_rating',
+      'reputational_impact_rating',
+      'operational_impact_rating',
+      'inerent_risk',
+      'residual_risk',
+      'impact',
+      'control_risks',
+      'controls',
+      'risk_risky_attributes',
+      'risky_attributes',
+      ]

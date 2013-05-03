@@ -26,6 +26,13 @@ class ObjectPerson(Base, Timeboxed, db.Model):
   def personable(self, value):
     setattr(self, self.personable_attr, value)
 
+  _publish_attrs = [
+      'role',
+      'notes',
+      'person',
+      'personable',
+      ]
+
 class Personable(object):
   @declared_attr
   def object_people(cls):
@@ -50,4 +57,3 @@ class Personable(object):
       'people',
       'object_people',
       ]
-  _update_attrs = []

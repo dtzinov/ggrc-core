@@ -20,5 +20,9 @@ class Program(BusinessObject, Timeboxed, db.Model):
       'program_directives', 'directive', 'Directive')
   cycles = db.relationship('Cycle', backref='program')
 
-  _publish_attrs = ['kind', 'program_directives', 'directives', 'cycles',]
-  _update_attrs = ['kind', 'directives']
+  _publish_attrs = [
+      'kind',
+      'program_directives',
+      'directives',
+      'cycles',
+      ]

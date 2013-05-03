@@ -51,3 +51,17 @@ class Document(Base, db.Model):
                        'Option.role == "language")',
       uselist=False,
       )
+
+  _publish_attrs = [
+      'title',
+      'link',
+      'description',
+      'object_documents',
+      'population_worksheets_documented',
+      'sample_worksheets_documented',
+      'sample_evidences_documented',
+      'type',
+      'kind',
+      'year',
+      'language',
+      ]

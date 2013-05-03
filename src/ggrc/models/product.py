@@ -14,3 +14,8 @@ class Product(Documentable, Personable, Timeboxed, BusinessObject, db.Model):
                        'Option.role == "product_type")',
       uselist=False,
       )
+
+  _publish_attrs = [
+      'type',
+      'version',
+      ]

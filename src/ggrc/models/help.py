@@ -5,3 +5,7 @@ class Help(Slugged, db.Model):
   __tablename__ = 'helps'
 
   content = db.Column(db.Text)
+  
+  _publish_attrs = [
+      'content',
+      ]

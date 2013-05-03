@@ -6,3 +6,8 @@ class ControlSection(Base, db.Model):
 
   control_id = db.Column(db.Integer, db.ForeignKey('controls.id'))
   section_id = db.Column(db.Integer, db.ForeignKey('sections.id'))
+
+  _publish_attrs = [
+      'control',
+      'section',
+      ]

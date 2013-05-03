@@ -85,8 +85,11 @@ class UpdateAttrHandler(object):
     if class_attr.property.uselist:
       value = json_obj.get(attr_name)
       rel_ids = [o.id for o in value] if value else []
-      return db.session.query(rel_class).filter(
-          rel_class.id.in_(rel_ids)).all()
+      if rel_ids:
+        return db.session.query(rel_class).filter(
+            rel_class.id.in_(rel_ids)).all()
+      else:
+        return []
     else:
       rel_obj = json_obj.get(attr_name)
       if rel_obj:
@@ -96,10 +99,17 @@ class UpdateAttrHandler(object):
 
   @classmethod
   def AssociationProxy(cls, obj, json_obj, attr_name, class_attr):
-    rel_class = class_attr.remote_attr.property.mapper.class_
+    if type(class_attr.remote_attr) is property:
+      remote_attr_property = class_attr.remote_attr.getter().property
+    else:
+      remote_attr_property = class_attr. remote_attr.property
+    rel_class = remote_attr_property.mapper.class_
     value = json_obj.get(attr_name)
     rel_ids = [o[u'id'] for o in value] if value else []
-    return db.session.query(rel_class).filter(rel_class.id.in_(rel_ids)).all()
+    if rel_ids:
+      return db.session.query(rel_class).filter(rel_class.id.in_(rel_ids)).all()
+    else:
+      return []
 
 class Builder(object):
   '''JSON Dictionary builder for ggrc.models.* objects and their mixins.

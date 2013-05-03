@@ -7,3 +7,9 @@ class Meeting(Base, db.Model):
   response_id = db.Column(db.Integer, db.ForeignKey('responses.id'))
   start_at = db.Column(db.DateTime)
   calendar_url = db.Column(db.String)
+
+  _publish_attrs = [
+      'response',
+      'start_at',
+      'calendar_url',
+      ]

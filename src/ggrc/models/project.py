@@ -5,3 +5,4 @@ from .object_person import Personable
 
 class Project(Documentable, Personable, Timeboxed, BusinessObject, db.Model):
   __tablename__ = 'projects'
+

@@ -6,3 +6,8 @@ class ProgramDirective(Base, db.Model):
 
   program_id = db.Column(db.Integer, db.ForeignKey('programs.id'))
   directive_id = db.Column(db.Integer, db.ForeignKey('directives.id'))
+
+  _publish_attrs = [
+      'program',
+      'directive',
+      ]

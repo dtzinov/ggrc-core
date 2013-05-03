@@ -92,7 +92,6 @@ class Hierarchical(object):
       'children',
       'parent',
       ]
-  _update_attrs = [] #TODO handle update of parent id and/or children
 
 class Timeboxed(object):
   start_date = db.Column(db.DateTime)

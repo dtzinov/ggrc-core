@@ -18,3 +18,20 @@ class Request(Base, db.Model):
   control_assessment_id = db.Column(db.Integer, db.ForeignKey('control_assessments.id'))
   response_due_at = db.Column(db.Date)
   responses = db.relationship('Response', backref='request')
+
+  _publish_attrs = [
+      'pbc_list',
+      'type_id',
+      'pbc_control_code',
+      'pbc_control_desc',
+      'request',
+      'test',
+      'notes',
+      'company_responsible',
+      'auditor_responsible',
+      'date_requested',
+      'status',
+      'control_assessment',
+      'response_due_at',
+      'responses',
+      ]

@@ -46,8 +46,20 @@ class Relationship(Base, db.Model):
     self.destination_id = value.id
     self.destination_type = value.__class__.name
 
+  _publish_attrs = [
+      'source',
+      'destination',
+      'relationship_type',
+      ]
+
 class RelationshipType(Base, Described, db.Model):
   __tablename__ = 'relationship_types'
   forward_phrase = db.Column(db.String)
   backward_phrase = db.Column(db.String)
   symmetric = db.Column(db.Boolean, nullable=False)
+
+  _publish_attrs = [
+      'forward_phrase',
+      'backward_phrase',
+      'symmetric',
+      ]

@@ -53,10 +53,18 @@ class System(Timeboxed, BusinessObject, SystemCategorized, db.Model):
   # REST properties
   _publish_attrs = [
       'infrastructure',
-      #'owner_id, this should probably be a "Person"
       'is_biz_process',
-      #'type_id', this should be a Type
+      'type',
       'version',
       'notes',
-      #'network_zone_id',
+      'network_zone',
+      'system_controls',
+      'controls',
+      'responses',
+      'owner',
+      'sub_system_systems',
+      'sub_systems',
+      'super_system_systems',
+      'super_systems',
+      'transactions',
       ]

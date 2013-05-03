@@ -7,3 +7,9 @@ class Option(Base, Described, db.Model):
   role = db.Column(db.String)
   title = db.Column(db.String)
   required = db.Column(db.Boolean)
+
+  _publish_attrs = [
+      'role',
+      'title',
+      'required',
+      ]

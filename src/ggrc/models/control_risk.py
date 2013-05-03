@@ -6,3 +6,8 @@ class ControlRisk(Base, db.Model):
 
   control_id = db.Column(db.Integer, db.ForeignKey('controls.id'))
   risk_id = db.Column(db.Integer, db.ForeignKey('risks.id'))
+
+  _publish_attrs = [
+      'control',
+      'risk',
+      ]
