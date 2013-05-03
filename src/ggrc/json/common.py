@@ -1,11 +1,10 @@
 import ggrc.json
 import ggrc.services
-import sqlalchemy.types
 from datetime import datetime
+from ggrc import db
 from iso8601 import parse_date
 from sqlalchemy.ext.associationproxy import AssociationProxy
-from sqlalchemy.orm.attributes import InstrumentedAttribute
-from sqlalchemy.orm.properties import ColumnProperty, RelationshipProperty
+from sqlalchemy.orm.properties import RelationshipProperty
 
 def url_for(obj):
   service = getattr(ggrc.services, obj.__class__.__name__, None)
@@ -45,6 +44,63 @@ def create(obj, json_obj):
   if creator:
     creator.create(obj, json_obj)
 
+class UpdateAttrHandler(object):
+  @classmethod
+  def do_update_attr(cls, obj, json_obj, attr_name):
+    class_attr = getattr(obj.__class__, attr_name)
+    method = getattr(cls, class_attr.__class__.__name__)
+    value = method(obj, json_obj, attr_name, class_attr)
+    setattr(obj, attr_name, value)
+
+  @classmethod
+  def InstrumentedAttribute(cls, obj, json_obj, attr_name, class_attr):
+    method = getattr(cls, class_attr.property.__class__.__name__)
+    return method(obj, json_obj, attr_name, class_attr)
+
+  @classmethod
+  def ColumnProperty(cls, obj, json_obj, attr_name, class_attr):
+    method = getattr(
+        cls,
+        class_attr.property.expression.type.__class__.__name__,
+        cls.default_column_handler)
+    return method(obj, json_obj, attr_name, class_attr)
+
+  @classmethod
+  def default_column_handler(cls, obj, json_obj, attr_name, class_attr):
+    return json_obj.get(attr_name)
+
+  @classmethod
+  def DateTime(cls, obj, json_obj, attr_name, class_attr):
+    value = json_obj.get(attr_name)
+    return parse_date(value) if value else None
+
+  @classmethod
+  def Date(cls, obj, json_obj, attr_name, class_attr):
+    value = json_obj.get(attr_name)
+    return datetime.strptime(value, "%Y-%m-%d") if value else None
+
+  @classmethod
+  def RelationshipProperty(cls, obj, json_obj, attr_name, class_attr):
+    rel_class = class_attr.property.mapper.class_
+    if class_attr.property.uselist:
+      value = json_obj.get(attr_name)
+      rel_ids = [o.id for o in value] if value else []
+      return db.session.query(rel_class).filter(
+          rel_class.id.in_(rel_ids)).all()
+    else:
+      rel_obj = json_obj.get(attr_name)
+      if rel_obj:
+        return db.session.query(rel_class).filter(
+            rel_class.id == rel_obj.id).one()
+      return None
+
+  @classmethod
+  def AssociationProxy(cls, obj, json_obj, attr_name, class_attr):
+    rel_class = class_attr.remote_attr.property.mapper.class_
+    value = json_obj.get(attr_name)
+    rel_ids = [o[u'id'] for o in value] if value else []
+    return db.session.query(rel_class).filter(rel_class.id.in_(rel_ids)).all()
+
 class Builder(object):
   '''JSON Dictionary builder for ggrc.models.* objects and their mixins.
 
@@ -69,7 +125,6 @@ class Builder(object):
     src_attrs = src_attrs if type(src_attrs) is list else [src_attrs]
     accumulator = accumulator if accumulator is not None else set()
     for attr in src_attrs:
-      #attrs = getattr(tgt_class, attr, None)
       attrs = tgt_class.__dict__.get(attr, None)
       if attrs is not None:
         accumulator.update(attrs)
@@ -117,22 +172,9 @@ class Builder(object):
         json_obj[attr_name] = getattr(obj, attr_name)
 
   @classmethod
-  def attr_is_type(cls, class_attr, column_type):
-    return isinstance(class_attr.property.expression.type, column_type)
-
-  @classmethod
   def do_update_attrs(cls, obj, json_obj, attrs):
     for attr_name in attrs:
-      class_attr = getattr(obj.__class__, attr_name)
-      value = json_obj.get(attr_name)
-      if value is not None and \
-         isinstance(class_attr, InstrumentedAttribute) and \
-         isinstance(class_attr.property, ColumnProperty):
-           if cls.attr_is_type(class_attr, sqlalchemy.types.DateTime):
-             value = parse_date(value)
-           elif cls.attr_is_type(class_attr, sqlalchemy.types.Date):
-             value = datetime.strptime(value, "%Y-%m-%d")
-      setattr(obj, attr_name, value)
+      UpdateAttrHandler.do_update_attr(obj, json_obj, attr_name)
 
   def update_attrs(self, obj, json_obj):
     self.do_update_attrs(obj, json_obj, self._update_attrs)

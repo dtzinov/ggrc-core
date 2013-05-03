@@ -103,6 +103,7 @@ class DirectiveFactory(SluggedFactory, HyperlinkedFactory, TimeboxedFactory):
       datetime.datetime(2000,1,1,tzinfo=UTC),
       datetime.datetime.now(UTC),
       )
+  programs = []
 
 class DataAssetFactory(TimeboxedFactory, BusinessObjectFactory):
   FACTORY_FOR = dict

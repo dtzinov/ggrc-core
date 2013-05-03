@@ -26,30 +26,81 @@ def get_json_response(context):
     context.json = context.response.json()
   return context.json
 
-@given('an example "{resource_type}"')
-def example_resource(context, resource_type):
-  resource_factory = globals()['{}Factory'.format(resource_type)]
-  context.example_resource = resource_factory()
+def factory_for(resource_type):
+  return globals()['{}Factory'.format(resource_type)]
 
-@when('the example "{resource_type}" is POSTed to the "{collection}"')
-def post_example_resource(context, resource_type, collection):
+def post_example(context, resource_type, example, url):
   #For **some** reason, I can't import this at the module level in a steps file
   import requests
   data = json.dumps(
-      {resource_type.lower(): context.example_resource},
+      {resource_type.lower(): example},
       cls=DateTimeEncoder,
       )
-  context.response = requests.post(
-      context.base_url+collection,
+  return requests.post(
+      context.base_url+url,
       data=data,
       headers={
         'Content-Type': 'application/json',
         },
       )
 
+def get_resource(context, url):
+  import requests
+  return requests.get(
+      context.base_url+url,
+      headers={
+        'Accept': 'application/json',
+        },
+      )
+
+class Example(object):
+  def __init__(self, resource_type, value):
+    self.resource_type = resource_type
+    self.value = value
+
+  def get(self, attr):
+    return self.value.get(self.resource_type.lower()).get(attr)
+
+@given('an example "{resource_type}"')
+def example_resource(context, resource_type):
+  resource_factory = factory_for(resource_type)
+  context.example_resource = resource_factory()
+
+@given('a new "{resource_type}" named "{name}"')
+def named_example_resource(context, resource_type, name):
+  resource_factory = factory_for(resource_type)
+  example = Example(resource_type, resource_factory())
+  setattr(context, name, example)
+
+@given('"{name}" is POSTed to "{url}"')
+def post_named_example(context, name, url):
+  example = getattr(context, name)
+  response = post_example(
+      context, example.resource_type, example.value, url)
+  assert response.status_code == 201, \
+      'Expected status code 201, received {}'.format(response.status_code)
+  example = Example(example.resource_type, response.json())
+  setattr(context, name, example)
+
+@when('the example "{resource_type}" is POSTed to the "{collection}"')
+def post_example_resource(context, resource_type, collection):
+  context.response = post_example(
+      context, resource_type, context.example_resource, collection)
+
+@when('GET of the resource "{name}"')
+def get_example_resource(context, name):
+  example = getattr(context, name)
+  url = example.get('selfLink')
+  response = get_resource(context, url)
+  assert response.status_code == 200
+  example = Example(example.resource_type, response.json())
+  setattr(context, name, example)
+
 @then('a 201 status code is received')
 def validate_status_201(context):
-  assert context.response.status_code == 201
+  assert context.response.status_code == 201, \
+      'Expected status code 201, received {}'.format(
+          context.response.status_code)
 
 @then('the response has a Location header')
 def validate_location_header(context):
