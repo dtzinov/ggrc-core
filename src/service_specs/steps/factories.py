@@ -17,14 +17,20 @@ def random_string_attribute(prefix=''):
   return factory.LazyAttribute(lambda m: random_string(prefix))
 
 class FactoryAttributeGenerator(object):
+  '''Use the SQLAlchemy ORM model to generate factory attributes.'''
   @classmethod
   def generate(cls, attrs, model_class, attr):
+    '''Generate a factory attribute for `attr` by inspecting the mapping
+    type of the attribute in `model_class`. Add the attribute to the
+    `attrs` dictionary.
+    '''
     if (hasattr(attr, '__call__')):
       attr_name = attr.attr_name
       value = []
     else:
       attr_name = attr
       class_attr = getattr(model_class, attr_name)
+      #look up the class method to use to generate the attribute
       method = getattr(cls, class_attr.__class__.__name__)
       value = method(attr_name, class_attr)
     attrs[attr_name] = value
@@ -81,6 +87,10 @@ class FactoryAttributeGenerator(object):
 
 class ModelFactoryMetaClass(FactoryMetaClass):
   def __new__(cls, class_name, bases, attrs, extra_attrs=None):
+    '''Use model reflection to build up the list of factory attributes.
+    The default attributes can be overridden by defining a subclass
+    of `ModelFactory` and defining the attribute to be overriden.
+    '''
     model_class = attrs.pop('MODEL', None)
     if model_class:
       attrs['FACTORY_FOR'] = dict
@@ -105,20 +115,26 @@ ModelFactory = ModelFactoryMetaClass(
     """,
     })
 
-class CategoryFactory(ModelFactory):
-  MODEL = models.Category
-
-class ControlFactory(ModelFactory):
-  MODEL = models.Control
-
-class CycleFactory(ModelFactory):
-  MODEL = models.Cycle
-
-class DirectiveFactory(ModelFactory):
-  MODEL = models.Directive
-
-class DataAssetFactory(ModelFactory):
-  MODEL = models.DataAsset
+def factory_for(model_class):
+  '''Get the factory for a model by name or by class.
+  If there is a factory defined for this model in globals() that factory
+  will be used. Otherwise, one will be created and added to globals().
+  '''
+  if type(model_class) is str or type(model_class) is unicode:
+    factory_name = model_class
+    import ggrc.models
+    model_class = getattr(ggrc.models, model_class)
+  else:
+    factory_name = model_class.__name__
+  factory_name = '{}Factory'.format(factory_name)
+  factory = globals().get(factory_name, None)
+  if not factory:
+    class model_factory(ModelFactory):
+      MODEL = model_class
+    model_factory.__name__ = factory_name
+    globals()[factory_name] = model_factory
+    factory = model_factory
+  return factory
 
 class ProgramFactory(ModelFactory):
   MODEL = models.Program

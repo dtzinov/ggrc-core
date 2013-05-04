@@ -26,9 +26,6 @@ def get_json_response(context):
     context.json = context.response.json()
   return context.json
 
-def factory_for(resource_type):
-  return globals()['{}Factory'.format(resource_type)]
-
 def post_example(context, resource_type, example, url):
   #For **some** reason, I can't import this at the module level in a steps file
   import requests
@@ -54,6 +51,7 @@ def get_resource(context, url):
       )
 
 class Example(object):
+  '''An example resource for use in a behave scenario, by name.'''
   def __init__(self, resource_type, value):
     self.resource_type = resource_type
     self.value = value
