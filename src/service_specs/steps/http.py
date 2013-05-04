@@ -110,6 +110,11 @@ def validate_resource_in_response(context, resource_type):
   assert resource_type.lower() in get_json_response(context)
   #FIXME more more more
 
+def dates_within_tolerance(original, response):
+  return original - datetime.datetime.resolution \
+      <= response \
+      <= original + datetime.datetime.resolution
+
 @then('the received "{resource_type}" matches the one we posted')
 def check_resource_equality_for_response(context, resource_type):
   root = unicode(resource_type.lower())
@@ -120,6 +125,10 @@ def check_resource_equality_for_response(context, resource_type):
     response = resp_json[unicode(k)]
     if isinstance(original, datetime.datetime):
       response = parse_date(response)
+      assert dates_within_tolerance(original, response), \
+          'for {}: expected {}, received {}'.format(
+              k, original, response)
+      return
     elif isinstance(original, datetime.date):
       response = datetime.datetime.strptime(response, '%Y-%m-%d').date()
     assert original == response, 'for {}: expected {}, received {}'.format(
