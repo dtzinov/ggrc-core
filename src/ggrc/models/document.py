@@ -14,7 +14,7 @@ class Document(Base, db.Model):
   object_documents = db.relationship('ObjectDocument', backref='document')
   population_worksheets_documented = db.relationship(
       'PopulationSample',
-      foreign_keys='PopulationSample.sample_evidence_document_id',
+      foreign_keys='PopulationSample.population_document_id',
       backref='population_document',
       )
   sample_worksheets_documented = db.relationship(
