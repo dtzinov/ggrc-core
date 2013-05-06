@@ -85,6 +85,10 @@ class FactoryAttributeGenerator(object):
   def AssociationProxy(cls, attr_name, class_attr):
     return []
 
+  @classmethod
+  def property(cls, attr_name, class_atr):
+    return None
+
 class ModelFactoryMetaClass(FactoryMetaClass):
   def __new__(cls, class_name, bases, attrs, extra_attrs=None):
     '''Use model reflection to build up the list of factory attributes.

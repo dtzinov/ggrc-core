@@ -22,7 +22,7 @@ Feature: Basic RESTful CRUD Support
       | Facility           | /api/facilities            |
       | Market             | /api/markets               |
       | Meeting            | /api/meetings              |
-      #| ObjectDocument     | /api/object_documents      |
+      | ObjectDocument     | /api/object_documents      |
       #| ObjectPerson       | /api/object_people         |
       | Option             | /api/options               |
       | OrgGroup           | /api/org_groups            |
@@ -38,7 +38,7 @@ Feature: Basic RESTful CRUD Support
       | Response           | /api/responses             |
       | Risk               | /api/risks                 |
       | RiskyAttribute     | /api/risky_attributes      |
-      #| RiskRiskyAttribute | /api/risk_risky_attributes |
+      | RiskRiskyAttribute | /api/risk_risky_attributes |
       | Section            | /api/sections              |
       | System             | /api/systems               |
       | SystemSystem       | /api/systems_systems       |

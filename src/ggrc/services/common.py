@@ -32,7 +32,7 @@ class UnicodeSafeJsonWrapper(dict):
   '''
   def __getitem__(self, key):
     ret = self.get(key)
-    if not ret:
+    if ret is None:
       raise KeyError(key)
     return ret
 

@@ -5,6 +5,7 @@ from ggrc import db
 from ggrc.models.reflection import AttributeInfo
 from iso8601 import parse_date
 from sqlalchemy.ext.associationproxy import AssociationProxy
+from sqlalchemy.orm.attributes import InstrumentedAttribute
 from sqlalchemy.orm.properties import RelationshipProperty
 
 def url_for(obj):
@@ -111,8 +112,17 @@ class UpdateAttrHandler(object):
   @classmethod
   def AssociationProxy(cls, obj, json_obj, attr_name, class_attr):
     rel_class = class_attr.remote_attr.property.mapper.class_
-    return cls.query_for(
-        rel_class, json_obj, attr_name, True)
+    return cls.query_for(rel_class, json_obj, attr_name, True)
+
+  @classmethod
+  def property(cls, obj, json_obj, attr_name, class_attr):
+    #FIXME need a way to decide this. Require link? Use URNs?
+    #  reflective approaches won't work as this is used for polymorphic
+    #  properties
+    # rel_class = None 
+    # return cls.query_for(rel_class, json_obj, attr_name, True)
+    return None
+
 
 class Builder(AttributeInfo):
   '''JSON Dictionary builder for ggrc.models.* objects and their mixins.
@@ -147,7 +157,8 @@ class Builder(AttributeInfo):
       if isinstance(class_attr, AssociationProxy):
         json_obj[attr_name] = self.publish_link_collection(
             obj, json_obj, attr_name)
-      elif isinstance(class_attr.property, RelationshipProperty):
+      elif isinstance(class_attr, InstrumentedAttribute) and \
+           isinstance(class_attr.property, RelationshipProperty):
         if class_attr.property.uselist:
           json_obj[attr_name] = self.publish_link_collection(
               obj, json_obj, attr_name)
