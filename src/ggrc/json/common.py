@@ -98,9 +98,10 @@ class UpdateAttrHandler(object):
         return []
     else:
       rel_obj = json_obj.get(attr_name)
+      print rel_obj
       if rel_obj:
         return db.session.query(rel_class).filter(
-            rel_class.id == rel_obj.id).one()
+            rel_class.id == rel_obj[u'id']).one()
       return None
 
   @classmethod

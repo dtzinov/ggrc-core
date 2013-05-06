@@ -10,10 +10,11 @@ def set_link_property(
     context, source_resource, property_name, target_resource):
   source = getattr(context, source_resource)
   target = getattr(context, target_resource)
-  source.value[property_name] = {'id': target.get(u'id')}
+  set_property(source, property_name, {'id': target.get(u'id')})
 
 @given(\
-    '"{target_resource}" is added to links property "{property_name}" of "{source_resource}"')
+    '"{target_resource}" is added to links property "{property_name}" of '\
+    '"{source_resource}"')
 def add_link_to_list(context, target_resource, property_name, source_resource):
   source = getattr(context, source_resource)
   target = getattr(context, target_resource)
@@ -62,3 +63,15 @@ def check_link_present_in_list(
       'Expected to find {} in links: {}'.format(
           target.get(u'id'),
           rel_ids)
+
+@then('the "{parent_property}" of "{child_resource}" is a link to "{parent_resource}"')
+def check_link_to_parent(
+    context, parent_property, child_resource, parent_resource):
+  child = getattr(context, child_resource)
+  parent = getattr(context, parent_resource)
+  link = child.get(unicode(parent_property))
+  assert link is not None, \
+      'no {} property was found in {}'.format(parent_property, child_resource)
+  assert parent.get(u'id') == link.get(u'id'), \
+      'Expected to find link to parent, id={}, instead found {}'.format(
+          parent.get(u'id'), link)

@@ -59,6 +59,15 @@ class Example(object):
   def get(self, attr):
     return self.value.get(self.resource_type.lower()).get(attr)
 
+  def set(self, attr, value):
+    self.value[attr] = value
+
+def set_property(obj, attr, value):
+  if isinstance(obj, Example):
+    obj.set(attr, value)
+  else:
+    setattr(obj, attr, value)
+
 @given('an example "{resource_type}"')
 def example_resource(context, resource_type):
   resource_factory = factory_for(resource_type)
