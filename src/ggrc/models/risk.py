@@ -41,7 +41,7 @@ class Risk(
       'financial_impact_rating',
       'reputational_impact_rating',
       'operational_impact_rating',
-      'inerent_risk',
+      'inherent_risk',
       'residual_risk',
       'impact',
       'control_risks',

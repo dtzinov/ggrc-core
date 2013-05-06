@@ -36,7 +36,7 @@ Feature: Basic RESTful CRUD Support
       #| Relationship       | /api/relationships         |
       | Request            | /api/requests              |
       | Response           | /api/responses             |
-      #| Risk               | /api/risks                 |
+      | Risk               | /api/risks                 |
       | RiskyAttribute     | /api/risky_attributes      |
       #| RiskRiskyAttribute | /api/risk_risky_attributes |
       | Section            | /api/sections              |
