@@ -10,7 +10,7 @@ if __name__ == "__main__" and (__package__ is None or __package__ == ""):
   __package__ = "ggrc"
   del os, sys
 
-from . import app
+from .app import app
 
 host = app.config.get("HOST") or "0.0.0.0"
 port = app.config.get("PORT") or 8080

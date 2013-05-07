@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+SCRIPTPATH=$( cd "$(dirname "$0")" ; pwd -P )
+
+cd "${SCRIPTPATH}/../src"
+
+python -c "import ggrc.models; ggrc.models.create_db()"
+

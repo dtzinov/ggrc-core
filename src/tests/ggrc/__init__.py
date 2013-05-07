@@ -1,5 +1,6 @@
 from flask.ext.testing import TestCase as BaseTestCase
-from ggrc import db, app
+from ggrc import db
+from ggrc.app import app
 
 class TestCase(BaseTestCase):
   def setUp(self):

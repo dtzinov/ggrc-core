@@ -1,5 +1,5 @@
 import ggrc
-import ggrc.json
+import ggrc.builder
 import ggrc.services
 import json
 import random
@@ -30,7 +30,7 @@ URL_MOCK_COLLECTION = '/api/mock_resources'
 URL_MOCK_RESOURCE = '/api/mock_resources/{}'
 #MockResourceService.add_to(ggrc.app, URL_MOCK_COLLECTION)
 Resource.add_to(
-    ggrc.app, URL_MOCK_COLLECTION, model_class=ServicesTestMockModel)
+    ggrc.app.app, URL_MOCK_COLLECTION, model_class=ServicesTestMockModel)
 
 COLLECTION_ALLOWED = ['HEAD', 'GET', 'POST', 'OPTIONS']
 RESOURCE_ALLOWED = ['HEAD', 'GET', 'PUT', 'DELETE', 'OPTIONS']

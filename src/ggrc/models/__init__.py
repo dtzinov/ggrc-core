@@ -1,49 +1,9 @@
+from .all_models import *
 
-# TODO: Implement with Authentication
-#from .account import Account
-from .categorization import Categorization
-from .category import Category
-from .control import Control
-from .control_assessment import ControlAssessment
-from .control_control import ControlControl
-from .control_risk import ControlRisk
-from .control_section import ControlSection
-from .cycle import Cycle
-from .data_asset import DataAsset
-from .directive import Directive
-from .document import Document
-from .facility import Facility
-from .help import Help
-from .market import Market
-from .meeting import Meeting
-from .object_document import ObjectDocument
-from .object_person import ObjectPerson
-from .option import Option
-from .org_group import OrgGroup
-from .pbc_list import PbcList
-from .person import Person
-from .population_sample import PopulationSample
-from .product import Product
-from .program import Program
-from .program_directive import ProgramDirective
-from .project import Project
-from .relationship import Relationship
+def create_db():
+  # FIXME: Should not have to import app
+  from ggrc import db, app
+  import ggrc.models.all_models
+  print("Creating database")
+  db.create_all()
 
-#TODO: This isn't currently used
-#from .relationship_type import RelationshipType
-from .request import Request
-from .response import Response
-from .risk import Risk
-from .risk_risky_attribute import RiskRiskyAttribute
-from .risky_attribute import RiskyAttribute
-from .section import Section
-from .system import System
-from .system_control import SystemControl
-
-# TODO: Is this used?
-#from .system_section import SystemSection
-from .system_system import SystemSystem
-from .transaction import Transaction
-
-# TODO: Include?
-from .version import Version

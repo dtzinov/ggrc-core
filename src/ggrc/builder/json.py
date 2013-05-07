@@ -1,4 +1,4 @@
-import ggrc.json
+import ggrc.builder
 import ggrc.services
 from datetime import datetime
 from ggrc import db
@@ -17,10 +17,10 @@ def get_json_builder(obj):
     cls = obj
   else:
     cls = obj.__class__
-  builder = getattr(ggrc.json, cls.__name__, None)
+  builder = getattr(ggrc.builder, cls.__name__, None)
   if not builder:
     builder = Builder(cls)
-    setattr(ggrc.json, cls.__name__, builder)
+    setattr(ggrc.builder, cls.__name__, builder)
   return builder
 
 def publish(obj):
@@ -119,7 +119,7 @@ class UpdateAttrHandler(object):
     #FIXME need a way to decide this. Require link? Use URNs?
     #  reflective approaches won't work as this is used for polymorphic
     #  properties
-    # rel_class = None 
+    # rel_class = None
     # return cls.query_for(rel_class, json_obj, attr_name, True)
     return None
 
@@ -188,4 +188,3 @@ class Builder(AttributeInfo):
 
   def create(self, obj, json_obj):
     self.create_attrs(obj, json_obj)
-

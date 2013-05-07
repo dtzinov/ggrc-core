@@ -1,4 +1,4 @@
-from ggrc import db, app
+from ggrc import settings, db
 from sqlalchemy.ext.declarative import declared_attr
 from sqlalchemy.orm import relationship
 
@@ -23,13 +23,13 @@ class Identifiable(object):
 
 def created_at_args():
   '''Sqlite doesn't have a server, per se, so the server_* args are useless.'''
-  if app.config['SQLALCHEMY_DATABASE_URI'].startswith('sqlite'):
+  if settings.SQLALCHEMY_DATABASE_URI.startswith('sqlite'):
     return {'default': db.text('current_timestamp'),}
   return {'server_default': db.text('current_timestamp'),}
 
 def updated_at_args():
   '''Sqlite doesn't have a server, per se, so the server_* args are useless.'''
-  if app.config['SQLALCHEMY_DATABASE_URI'].startswith('sqlite'):
+  if settings.SQLALCHEMY_DATABASE_URI.startswith('sqlite'):
     return {
         'default': db.text('current_timestamp'),
         'onupdate': db.text('current_timestamp'),

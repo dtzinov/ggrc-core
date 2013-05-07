@@ -1,5 +1,5 @@
 import datetime
-import ggrc.json
+import ggrc.builder.json
 import hashlib
 import json
 import time
@@ -138,7 +138,7 @@ class Resource(View):
     if header_error:
       return header_error
     src = self.request.json[self.model_name]
-    ggrc.json.update(obj, src)
+    ggrc.builder.json.update(obj, src)
     #FIXME Fake the modified_by_id until we have that information in session.
     obj.modified_by_id = 1
     db.session.add(obj)
@@ -182,7 +182,7 @@ class Resource(View):
     obj = self.model()
     src = UnicodeSafeJsonWrapper(self.request.json)
     src = src[self.model_name]
-    ggrc.json.create(obj, src)
+    ggrc.builder.json.create(obj, src)
     #FIXME Fake the modified_by_id until we have that information in session.
     obj.modified_by_id = 1
     db.session.add(obj)
@@ -265,7 +265,7 @@ class Resource(View):
 
   def object_for_json(self, obj, model_name=None):
     model_name = model_name or self.model_name
-    return { model_name: ggrc.json.publish(obj) }
+    return { model_name: ggrc.builder.json.publish(obj) }
 
   def collection_for_json(
       self, objects, model_plural=None, collection_name=None):
@@ -274,7 +274,7 @@ class Resource(View):
 
     objects_json = []
     for object in objects:
-      object_for_json = ggrc.json.publish(object)
+      object_for_json = ggrc.builder.json.publish(object)
       objects_json.append(object_for_json)
 
     collection_json = {

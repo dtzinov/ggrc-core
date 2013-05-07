@@ -1,6 +1,6 @@
-import ggrc.json
+import ggrc.builder
 import ggrc.models
-from ggrc.json import publish
+from ggrc.builder.json import publish
 from ggrc.services.common import Resource
 from mock import MagicMock
 from tests.ggrc import TestCase
@@ -42,7 +42,7 @@ class TestBuilder(TestCase):
     for k in self.mock_services.keys():
       delattr(ggrc.services, k)
     for k in self.mock_builders:
-      delattr(ggrc.json, k) if hasattr(ggrc.json, k) else None
+      delattr(ggrc.builder.json, k) if hasattr(ggrc.builder.json, k) else None
     super(TestBuilder, self).tearDown()
 
   def test_simple_builder(self):

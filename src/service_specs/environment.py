@@ -1,5 +1,7 @@
 import threading
-from ggrc import app, db
+from ggrc import db
+from ggrc.app import app
+
 from wsgiref.simple_server import make_server
 
 def before_all(context):

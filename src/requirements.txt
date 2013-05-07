@@ -10,6 +10,7 @@ Flask==0.9
 webassets==0.8
 Flask-Assets==0.8
 HamlPy==0.82.2
+jinja2_hamlpy
 iso8601
 SQLAlchemy==0.8.0
 # Flask-SQLAlchemy must be last - it somehow mangles `distribute` / `setuptools`

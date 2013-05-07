@@ -4,7 +4,9 @@ SCRIPTPATH="$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )"
 
 PREFIX=$( cd "${SCRIPTPATH}/.." ; pwd -P )
 
-DEV_PREFIX="${DEV_PREFIX}" || "${PREFIX}"
+export DEV_PREFIX="${DEV_PREFIX}" || "${PREFIX}"
+
+export GGRC_SETTINGS_MODULE="development"
 
 source "${DEV_PREFIX}/opt/dev_virtualenv/bin/activate"
 
