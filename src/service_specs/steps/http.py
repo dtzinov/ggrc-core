@@ -94,6 +94,12 @@ def post_example_resource(context, resource_type, collection):
   context.response = post_example(
       context, resource_type, context.example_resource, collection)
 
+@when('GET of "{url}" as "{name}"')
+def get_resource_and_name_it(context, url, name):
+  response = get_resource(context, url)
+  assert response.status_code == 200
+  setattr(context, name, response.json())
+
 @when('GET of the resource "{name}"')
 def get_example_resource(context, name):
   example = getattr(context, name)

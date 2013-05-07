@@ -6,8 +6,9 @@ db.create_all()
 #from ggrc import models
 from .models import *
 from .services import Resource
+from .services.description import ServiceDescription
 
-for k,v in [
+collections = [
     ('categorizations', Categorization),
     ('categories', Category),
     ('controls', Control),
@@ -42,8 +43,13 @@ for k,v in [
     ('systems_systems', SystemSystem),
     ('system_controls', SystemControl),
     ('transactions', Transaction),
-    ]:
+    ]
+
+for k,v in collections:
   Resource.add_to(app, '/api/{}'.format(k), v)
+
+app.add_url_rule(
+  '/api', view_func=ServiceDescription.as_view('ServiceDescription'))
 
 @app.route("/")
 def hello():

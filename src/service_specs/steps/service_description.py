@@ -1,0 +1,27 @@
+@then('all expected endpoints are listed and GETtable in "{resource_name}"')
+def validate_service_description(context, resource_name):
+  service_description = getattr(context, resource_name)
+  service_description_obj = service_description.get(
+      u'service_description', None)
+  assert service_description_obj is not None, \
+      'Expected to find a service_description object in {}\n{}'.format(
+          resource_name, service_description)
+  endpoints = service_description_obj.get(u'endpoints', None)
+  assert endpoints is not None, \
+      'Expected to find service_description.endpoints in {}\n{}'.format(
+          resource_name, service_description_obj)
+  for endpoint_row in context.table:
+    endpoint_name = endpoint_row['endpoint']
+    endpoint_obj = endpoints.get(unicode(endpoint_name), None)
+    assert endpoint_obj is not None, \
+        'Expected to find service_description.endpoints.{} in {}\n{}'.format(
+            endpoint_name, resource_name, service_description)
+    href = endpoint_obj.get('href', None)
+    assert href is not None, \
+        'Expected endpoint {} to contain "href" value'.format(
+            endpoint_name)
+    print href, endpoint_name, endpoint_obj
+    response = get_resource(context, href)
+    assert response.status_code == 200, \
+        'Expected status code 200 on GET of endpoint {} URL {}, received {}'\
+          .format(response.status_code)
