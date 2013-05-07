@@ -1,0 +1,23 @@
+changeset:   9325:1703b515418d
+tag:         tip
+user:        Dan Ring <dfring@gmail.com>
+date:        Fri Apr 19 18:01:39 2013 -0700
+summary:     Fix mysql+gaerdbms dialect for changed exception format
+
+diff -r b0eca5b116d1 -r 1703b515418d lib/sqlalchemy/dialects/mysql/gaerdbms.py
+--- a/lib/sqlalchemy/dialects/mysql/gaerdbms.py	Thu Apr 18 20:11:08 2013 -0400
++++ b/lib/sqlalchemy/dialects/mysql/gaerdbms.py	Fri Apr 19 18:01:39 2013 -0700
+@@ -65,10 +65,10 @@
+         return [], opts
+ 
+     def _extract_error_code(self, exception):
+-        match = re.compile(r"^(\d+):").match(str(exception))
++        match = re.compile(r"^(\d+):|^\((\d+),").match(str(exception))
+         # The rdbms api will wrap then re-raise some types of errors
+         # making this regex return no matches.
+-        code = match.group(1) if match else None
++        code = match.group(1) or match.group(2) if match else None
+         if code:
+             return int(code)
+ 
+

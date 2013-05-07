@@ -1,0 +1,14 @@
+#!/bin/bash
+
+SCRIPTPATH="$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )"
+
+PREFIX=$( cd "${SCRIPTPATH}/.." ; pwd -P )
+
+DEV_PREFIX="${DEV_PREFIX}" || "${PREFIX}"
+
+source "${DEV_PREFIX}/opt/dev_virtualenv/bin/activate"
+
+export PYTHONPATH="${PREFIX}/src:${DEV_PREFIX}/opt/linked_packages:${PYTHONPATH}"
+
+export PATH="${PREFIX}/bin:${DEV_PREFIX}/opt/google_appengine:$PATH"
+

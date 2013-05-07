@@ -1,60 +1,106 @@
 # install all prerequisites for GGRC-Core development within a Vagrant VM.
 
+base_dir = '/vagrant/'
+opt_dir = "#{base_dir}opt/"
+src_dir = "#{base_dir}src/"
+
 include_recipe "apt"
 
-package "unzip" do
-  action :install
+apt_packages = %w(unzip zip make python-virtualenv fabric python-mysqldb python-imaging git)
+
+apt_packages.each do |package_name|
+  package package_name do
+    action :install
+  end
 end
 
-package "zip" do
-  action :install
-end
+# Create default directories
+directories = %w(/vagrant-dev /vagrant-dev/opt /vagrant-dev/tmp /vagrant/tmp)
 
-package "python-virtualenv" do
-  action :install
-end
-
-package "git" do
-  action :install
-end
-
-version = node[:ggrc][:app_engine_version]
-zipfile = "google_appengine_#{version}.zip"
-
-unless File.exists?("/opt/#{zipfile}")
-  remote_file "/opt/#{zipfile}" do
-    source "http://googleappengine.googlecode.com/files/#{zipfile}"
+directories.each do |directory_name|
+  directory directory_name do
+    owner "vagrant"
+    group "vagrant"
     action :create
   end
-
-  execute "Unzip Google App Engine SDK" do
-    command "unzip /opt/#{zipfile}"
-    cwd "/opt"
-    action :run
-  end
-
-  execute "Add Google App Engine SDK to the PATH" do
-    command "sed -i -e 's/PATH=\"/PATH=\"\\/opt\\/google_appengine:/' /etc/environment"
-    action :run
-  end
 end
 
-directory "/vagrant/src/instance" do
+# Initialize development virtual environment
+# ..
+#   mkdir -p /vagrant-dev/opt
+#   chown vagrant:vagrant /vagrant-dev/opt
+#   virtualenv /vagrant-dev/opt/dev_virtualenv
+python_virtualenv "/vagrant-dev/opt/dev_virtualenv" do
+  interpreter "python2.7"
   owner "vagrant"
   group "vagrant"
   action :create
 end
 
-execute "Copy development settings to instance directory" do
-  command "ln -s /vagrant/src/ggrc/settings/development.py /vagrant/src/instance/settings.cfg"
+execute "Prepare initial dev virtualenv" do
+  command "/bin/bash -c '"\
+          "source /vagrant-dev/opt/dev_virtualenv/bin/activate;"\
+          "pip install -U pip;"\
+          "pip install -r /vagrant/src/dev-requirements.txt'"
   user "vagrant"
   group "vagrant"
-  creates "/vagrant/src/instance/settings.cfg"
   action :run
 end
 
-include_recipe "ggrc::package_env"
-include_recipe "ggrc::test_env"
+# `compass` gem is required for building CSS assets
+# ..
+#   sudo gem install compass --version '= 0.12.2'
+gem_package "compass" do
+  version "0.12.2"
+  action :install
+end
+
+execute "Run Makefile for first time" do
+  command "/bin/bash -c '"\
+          "cd /vagrant; make DEV_PREFIX=/vagrant-dev'"
+  user "vagrant"
+  group "vagrant"
+  action :run
+end
+
+# Helper to add sections to files wrapped in "# BEGIN" and "# END"
+
+def add_file_section(path, identifier, content)
+  puts "Handling #{identifier} for #{path}"
+
+  require 'digest/md5'
+
+  digest = Digest::MD5.hexdigest(content)
+  data = File.read(path)
+  begin_line = "# BEGIN #{identifier}"
+  end_line = "# END #{identifier}"
+
+  # Check for line with matching md5
+  if data.grep(/#{begin_line} #{digest}/).empty?
+    # Remove old additions
+    data = data.gsub(/\s*#{begin_line}.*#{end_line}\s?[0-9a-f]*\s*/m, '')
+
+    # Add new additions
+    data << "\n"
+    data << "\n#{begin_line} #{digest}\n"
+    data << content
+    data << "\n#{end_line} #{digest}\n"
+    data << "\n"
+
+    file = File.open(path, 'w')
+    file.write(data)
+    file.close
+  end
+end
+
+add_file_section("/home/vagrant/.bashrc", "init_env", <<-END)
+export DEV_PREFIX=/vagrant-dev
+
+[ -n "$PS1" ] &&
+  echo "Initializing environment" &&
+  cd /vagrant &&
+  source /vagrant/bin/init_env
+END
 
 # Attempt to include custom local additions to the environment
 begin

@@ -1,4 +1,16 @@
+# These are installed with --no-deps, due to undesired dependencies, so
+# be explicit about desired dependencies.
+#
+# Avoided dependencies:
+# - from HamlPy: Jinja2, django, pygments, markdown
+# - from Flask-SQLAlchemy: distribute
+#
+Werkzeug==0.8.3
 Flask==0.9
-SQLAlchemy==0.8.0
-Flask-SQLAlchemy==0.16
+webassets==0.8
+Flask-Assets==0.8
+HamlPy==0.82.2
 iso8601
+SQLAlchemy==0.8.0
+# Flask-SQLAlchemy must be last - it somehow mangles `distribute` / `setuptools`
+Flask-SQLAlchemy==0.16

@@ -1,0 +1,12 @@
+diff -r -u google_appengine/google/appengine/tools/devappserver2/python/sandbox.py google_appengine_patched/google/appengine/tools/devappserver2/python/sandbox.py
+--- google_appengine/google/appengine/tools/devappserver2/python/sandbox.py	2013-03-15 17:48:00.000000000 +0000
++++ google_appengine_patched/google/appengine/tools/devappserver2/python/sandbox.py	2013-04-16 23:53:47.340796789 +0000
+@@ -806,6 +806,8 @@
+     '_weakref',
+     'zipimport',
+     'zlib',
++
++    '_sqlite3',
+ ]
+ 
+ 
