@@ -1,0 +1,6 @@
+[submodule "src/ggrc/assets/vendor/remoteipart"]
+	path = src/ggrc/assets/vendor/remoteipart
+	url = https://github.com/JangoSteve/remotipart.git
+[submodule "src/ggrc/assets/vendor/bootstrap-sass"]
+	path = src/ggrc/assets/vendor/bootstrap-sass
+	url = https://github.com/thomas-mcdonald/bootstrap-sass.git
