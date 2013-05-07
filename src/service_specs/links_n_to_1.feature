@@ -41,6 +41,6 @@ Feature: Many resources have links to other resources. This feature will
     Then the "<parent_property>" of "child" is a link to "parent"
     And the "<child_property>" of "parent" is a link to "child"
 
-  Examples: 1-ary Link Resources
+  Examples: 1-to-1 Link Resources
     | parent_type | parent_collection | child_type        | child_collection         | parent_property | child_property      |
     | Response    | /api/responses    | PopulationSample  | /api/population_samples  | response        | population_sample   |
