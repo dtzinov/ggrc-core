@@ -79,6 +79,13 @@ def named_example_resource(context, resource_type, name):
   example = Example(resource_type, resource_factory())
   setattr(context, name, example)
 
+def get_service_endpoint_url(context, endpoint_name):
+  '''Return the URL for the `endpoint_name`. This assumes that there is a
+  `service_description` in the `context` to ues to lookup the endpoint url.
+  '''
+  return context.service_description.get(u'service_description')\
+      .get(u'endpoints').get(unicode(endpoint_name)).get(u'href')
+
 @given('"{name}" is POSTed to its collection')
 def post_named_example_to_collection_endpoint(context, name):
   '''Create a new resource for the given example. Expects that there is a
@@ -87,8 +94,7 @@ def post_named_example_to_collection_endpoint(context, name):
   `name`.
   '''
   example = getattr(context, name)
-  url = context.service_description.get(u'service_description')\
-      .get(u'endpoints').get(unicode(example.resource_type)).get(u'href')
+  url = get_service_endpoint_url(context, example.resource_type)
   post_named_example(context, name, url)
 
 @given('"{name}" is POSTed to "{url}"')
@@ -100,6 +106,11 @@ def post_named_example(context, name, url):
       'Expected status code 201, received {}'.format(response.status_code)
   example = Example(example.resource_type, response.json())
   setattr(context, name, example)
+
+@when('the example "{resource_type}" is POSTed to its collection')
+def post_example_resource_to_its_collection(context, resource_type):
+  endpoint_url = get_service_endpoint_url(context, resource_type)
+  post_example_resource(context, resource_type, endpoint_url)
 
 @when('the example "{resource_type}" is POSTed to the "{collection}"')
 def post_example_resource(context, resource_type, collection):
