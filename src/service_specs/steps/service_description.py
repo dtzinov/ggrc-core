@@ -20,8 +20,11 @@ def validate_service_description(context, resource_name):
     assert href is not None, \
         'Expected endpoint {} to contain "href" value'.format(
             endpoint_name)
-    print href, endpoint_name, endpoint_obj
     response = get_resource(context, href)
     assert response.status_code == 200, \
         'Expected status code 200 on GET of endpoint {} URL {}, received {}'\
           .format(response.status_code)
+
+@given('service description')
+def place_service_description_into_context(context):
+  context.execute_steps(u'When GET of "/api" as "service_description"')

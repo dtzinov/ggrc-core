@@ -79,6 +79,18 @@ def named_example_resource(context, resource_type, name):
   example = Example(resource_type, resource_factory())
   setattr(context, name, example)
 
+@given('"{name}" is POSTed to its collection')
+def post_named_example_to_collection_endpoint(context, name):
+  '''Create a new resource for the given example. Expects that there is a
+  `service_description` in `context` to use to lookup the endpoint url. The
+  created resource is added to the context as the attribute name given by
+  `name`.
+  '''
+  example = getattr(context, name)
+  url = context.service_description.get(u'service_description')\
+      .get(u'endpoints').get(unicode(example.resource_type)).get(u'href')
+  post_named_example(context, name, url)
+
 @given('"{name}" is POSTed to "{url}"')
 def post_named_example(context, name, url):
   example = getattr(context, name)
@@ -108,6 +120,12 @@ def get_example_resource(context, name):
   assert response.status_code == 200
   example = Example(example.resource_type, response.json())
   setattr(context, name, example)
+
+@then('a "{status_code}" status code is received')
+def validate_status_code(context, status_code):
+  assert context.response.status_code == int(status_code), \
+      'Expecxted status code {}, received {}'.format(
+          status_code, context.response.status_code)
 
 @then('a 201 status code is received')
 def validate_status_201(context):
