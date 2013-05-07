@@ -1,8 +1,9 @@
 Feature: Program resources and relationships
 
   Background:
-    Given a new "Program" named "example_program"
-    And "example_program" is POSTed to "/api/programs"
+    Given service description
+    And a new "Program" named "example_program"
+    And "example_program" is POSTed to its collection
 
   Scenario: The program directives are empty
     Given nothing new
