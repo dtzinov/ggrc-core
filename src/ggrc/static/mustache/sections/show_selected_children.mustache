@@ -1,0 +1,20 @@
+<div>
+  <span class="title">
+	  {{title}}
+	</span>
+	<span class="code">
+	  {{prefix}} {{slug}}
+	</span>
+  <div class="rtf">
+    {{{with_line_breaks description}}}
+  </div>
+</div>
+<div class="item-content in">
+  <ul class="tree-structure" id="children_{{slug}}">
+  	{{#children}}
+  	<li id="content_{{slug}}">
+  		{{> /assets/sections/show_selected_children.mustache}}
+  	</li>
+  	{{/children}}
+  </ul>
+</div>

@@ -1,0 +1,703 @@
+
+// widgets styles
+.widget {
+  margin-bottom: 20px;
+  overflow-y:hidden;
+  background:$white;
+  border:1px solid $widgetBorder;
+  @include transition(box-shadow 0.2s,border-color 0.2s);
+  ul.tree-structure {
+    li {
+      &:hover {
+        border-bottom: 1px solid $gray;
+      }
+      &:last-child {
+        &:hover {
+          border-bottom: none;
+        }
+      }
+    }
+  }
+  &.governance {
+    .header {
+      background: $governance;
+      .widget-action {
+        background: darken($governance, 7%);
+      }
+    }
+  }
+  &.compliance {
+    .header {
+      background: $compliance;
+      .widget-action {
+        background: darken($compliance, 7%);
+      }
+    }
+  }
+  &.risk {
+    .header {
+      background: $risk;
+      .widget-action {
+        background: darken($risk, 7%);
+      }
+    }
+  }
+  &.business {
+    .header {
+      background: $business;
+      .widget-action {
+        background: darken($business, 7%);
+      }
+    }
+  }
+  &.widget-tabs {
+    &.widget-tabs-horizontal {
+      .content {
+        overflow-y: auto;
+      }
+      .tab-content {
+        padding: 9px;
+      }
+      .nav-tabs {
+        padding-left: 10px;
+        margin-right: 0;
+        li {
+          margin-bottom: 0;
+          a {
+            min-width: auto;
+            border-bottom: none;
+            padding-left: 10px;
+            padding-right: 10px;
+            margin-right: 0;
+            color: $darkText;
+            span {
+              color: $text;
+              font-size: $f-small;
+            }
+            i {
+              margin-right: 4px;
+            }
+          }
+          &.active {
+            a {
+              color: $widgetTitle;
+              span {
+                color: $widgetTitle;
+                font-size:$f-small;
+              }
+            }
+          }
+          &.text-compliance,
+          &.text-system,
+          &.text-process,
+          &.text-businessprocess,
+          &.text-control {
+            a {
+              color:$compliance;  
+            }
+          }
+          &.text-risk,
+          &.text-attribute {
+            a {
+              color:$risk;  
+            }
+          }
+          &.text-business,
+          &.text-dataasset,
+          &.text-project,
+          &.text-facility,
+          &.text-market,
+          &.text-product,
+          &.text-orggroup {
+            a {
+              color:$business;  
+            }
+          }
+          &.text-governance,
+          &.text-program,
+          &.text-section,
+          &.text-clause,
+          &.text-policy,
+          &.text-directive,
+          &.text-contract,
+          &.text-regulation {
+            a {
+              color:$governance;  
+            }
+          }
+        }
+      }
+    }
+    .content {
+      padding: 0;
+      overflow-y: visible;
+    }
+    .tabs-left {
+      padding-bottom: 26px;
+    }
+    .tab-content {
+      padding-top: 10px;
+    }
+    .nav-tabs {
+      background: $lightGray;
+      margin-right: 7px;
+      padding: 9px 0 0 2px;
+      border: none;
+      margin-bottom: 0;
+      margin-left: 0;
+      white-space: nowrap;
+      li {
+        a {
+          color: $text;
+          @include transition(color 0.3s ease);
+          min-width: 105px;
+          .item-count {
+            font-size:$f-small;
+          }
+          i {
+            @include opacity(0.3);
+            margin-right: 7px;
+            @include transition(opacity 0.3s ease);
+          }
+          &:hover {
+            color: $black;
+            i {
+              @include opacity(1);
+            }
+          }
+        }
+        &.active {
+          a {
+            color: $infoWidgetHeader;
+            i {
+              @include opacity(1);
+            }
+          }
+        }
+      }
+    }
+  }
+  .inline-info {
+    color:$text;
+    i {
+      @include opacity(0.3);
+      margin-top:7px;
+    }
+    &.blank {
+      color:$disabled;
+      i {
+        @include opacity(0.1);
+      }
+    }
+  }
+  
+  .header {
+    background:$defaultWidget;
+    @include transition(background-color 0.2s);
+    color:$white;
+    height: 30px;
+    padding-left: 16px;
+    &:hover {
+      background-image: image-url("grcicons/icons.png");
+      background-repeat: no-repeat;
+      @include background-size(296px 344px);
+      background-position: -270px -169px;
+      cursor: move;
+    }
+    .widget-action {
+      height: 30px;
+      width: 30px;
+      background: darken($defaultWidget, 7%);
+      @include box-shadow(inset 0 0 3px rgba(0, 0, 0, 0.5));
+      i {
+        @include opacity(0.5);
+        @include transition(opacity 0.3s ease);
+      }
+      a {
+        display: block;
+        width: 20px;
+        height: 16px;
+        padding: 7px 5px;
+        &:hover {
+          i {
+            @include opacity(1);
+          }
+        }
+      }
+      &.widget-action-help {
+        @include box-shadow(none);
+        background: transparent;
+      }
+      &.widget-showhide {
+        @include transition(background 0.3s ease);
+        a {
+          width: 30px;
+          height: 30px;
+          padding: 0;
+          @include opacity(0.5);
+          @include transition(opacity 0.3s ease);
+          &:hover {
+            @include opacity(1);
+          }
+        }
+        &:hover {
+          @include box-shadow(none);
+          background: transparent;
+        }
+      }
+    }
+    h2 {
+      font-weight:normal;
+      line-height: 28px;
+      color: $white;
+      margin-bottom:0;
+      @include oneline();
+      span {
+        font-size: $f-small;
+        font-weight:normal;
+      }
+      span.subtitle {
+        font-size: $f-regular;
+        font-style: italic;
+      }
+      i {
+        margin-top: 7px;
+        margin-right: 7px;
+      }
+    }
+    .btn-mini {
+      margin-left:6px;
+      padding-left:2px;
+      padding-right:2px;
+      i {
+        @include opacity(0.4);
+      }
+      &:hover {
+        border-color:$white;
+        i {
+          @include opacity(1);
+        }
+      }
+    }
+    @include row-fluid-fix();
+  }
+  .info {
+    padding:0 6px;
+    color:$text;
+    .rtf {
+      margin:0 20% 10px 0;
+    }
+  }
+  .filter {
+    padding:3px 2px;
+    background: $filterBgnd;
+    a.secondary-link {
+      margin-top:4px;
+      margin-right:2px;
+      @include opacity(0.5);
+      &:hover {
+        @include opacity(1);
+      }
+    }
+    &.pbc-read-only {
+      background:$lightGray;
+      padding-right:12px;
+      padding-left:12px;
+      .btn {
+        padding-right:6px;
+        padding-left:6px;      
+      }
+    }
+    .form-inline {
+      margin-bottom: 0;
+    }
+    input {
+      margin-bottom: 0;
+      border: 1px solid $popOverBorder;
+      background-image: image-url("grcicons/icons.png");
+      background-repeat: no-repeat;
+      @include background-size(296px 344px);
+      background-position:-259px -195px;
+      padding-left: 40px;
+    }
+    .btn {
+      font-size: $f-small;
+      font-weight:normal;
+      padding: 2px;
+      margin-top: 2px;
+      &.btn-add {
+        padding: 2px 6px 2px 4px;
+      }
+      &.btn-mini {
+        margin-top: 3px;
+        padding-left: 0;
+        padding-right: 0;
+        i {
+          margin-top: 0;
+        }
+      }
+    }
+    input[type="text"] {
+      @include input-block-level();
+    }
+  }
+  .content {
+    padding:6px;
+    border-top: none;
+    background:$white;
+    height:85%; //needs to be removed
+    overflow-y:auto;
+    > .tabs-left {
+      height:100%;
+      overflow-y:hidden;
+      > .tab-content {
+        height:100%;
+      }
+      > .nav-tabs {
+        height:100%;
+        overflow-y: auto;
+        overflow-x: hidden;
+      }
+    }
+  }
+  .footer {
+    color:$text;
+    padding:6px;
+    height: auto;
+    @include default-border-top();
+    p {
+      font-weight:normal;
+      margin: 0;
+      color:$text;
+      line-height: 20px;
+      &.footer-right {
+        text-align: right;
+      }
+      &.footer-left {
+        text-align: left;
+      }
+    }
+  }
+  .items {
+    @include reset-list();
+    h3 {
+      font-weight:normal;
+      font-size:$f-regular;
+    }
+    li.main {
+      h4 {
+        font-size: $f-regular;
+        color:$text;
+      }
+      a {
+        color: $headerTitle;
+        text-decoration: none;
+      }
+      padding:10px 0;
+      @include default-border-bottom();
+      .progress {
+        margin: 0;
+      }
+      &:hover {
+        @include background-image(linear-gradient(left, $white, $lightGray, $white));
+        border-bottom: 1px solid darken($lightGray,10%);
+        h3 {
+          color:$darkBlue;
+        }
+      }
+    }
+  }
+  .action-items {
+    margin-bottom: 5px;
+    text-align: right;
+    a {
+      @include transition(color 0.2s ease-in-out);
+      i {
+        @include opacity(0.4);
+        @include transition(opacity 0.2s ease-in-out);
+      }
+      &:hover {
+        i {
+          @include opacity(1);
+        }
+      }
+      &.btn-mini {
+        padding: 2px;
+      }
+    }
+  }
+  .tabbable {
+    position: relative;
+    .action-items {
+      margin: 4px 6px 5px 0;
+      &.action-below {
+        position: static;
+        margin-bottom: 10px;
+        text-align: right;
+      }
+    }
+  }
+  &:hover {
+    @include box-shadow(0 0 12px $gray);
+  }
+  .related-button {
+    li {
+      a {
+        color: $black;
+        padding: 5px 9px;
+      }
+      &.active {
+        a {
+          color: $white;
+        }
+      }
+    }
+  }
+  .info-list {
+    @include reset-list();
+    margin-bottom: 20px;
+    li {
+      padding: 4px 0 2px 7px;
+      &:last-child {
+        border-bottom: none;
+      }
+      label {
+        font-weight: normal;
+        text-transform:uppercase;
+        color: $darkGray;
+      }
+      .rtf {
+        border:1px solid darken($lightGray,5%);
+        @include border-radius();
+        padding:6px 16px 6px 6px;
+        margin-left: 0;
+        font-size: $f-small !important;
+        ul,
+        ol {
+          margin-top:0;
+          padding-top:0;
+          li {
+            border: none;
+            padding: 0 0 6px 0;
+          }
+        }
+        p.no-data {
+          margin-bottom:0;
+        }
+      }
+      &.float-element {
+        @include clearfix();
+        label {
+          float: left;
+          width: 35%;
+          margin: 0 10px 0 0;
+          color:$text;
+        }
+        span {
+          float: left;
+          width: 60%;
+        }
+      }
+    }
+  }
+  .risk-content {
+    h3 {
+      font-weight: normal;
+      padding-bottom: 5px;
+      margin-top:10px;
+      color: $headerTitle;
+      @include default-border-bottom();
+    }
+    h4 {
+      //@include default-border-top();
+      padding-top: 10px;
+      font-weight:bold;
+      margin-bottom: 4px;
+      color: $headerTitle;
+    }
+    .rtf {
+      color: $text;
+      font-size:$f-regular;
+    }
+    .risk-level {
+      float: right;
+      font-size: $f-subTitle;
+      border:1px solid $lightGray;
+      @include border-radius();
+      padding:0 6px;
+      color: $red;
+      cursor:pointer;
+      margin-top: 10px;
+      &.risk-level-1 {
+        color:$white;
+        background:$green;
+        border-color:darken($green,5%);
+
+      }
+      &.risk-level-2,
+      &.risk-level-3 {
+         color:$white;
+         background:$warning;
+         border-color:darken($warning,5%);
+
+      }
+      &.risk-level-4,
+      &.risk-level-5 {
+        color:$white;
+        background:$error;
+        border-color:darken($error,5%);
+      }
+
+    }
+  }
+  ul.single-row-tabs {
+    li {
+      float: none;
+      clear: both;
+      padding: 0;
+      margin: 0;
+      a {
+        padding: 0;
+        border: none;
+        &:hover {
+          background: none;
+          @include border-radius(0);
+          border: none;
+        }
+      }
+    }
+  }
+  .inner-element {
+    display: block;
+    @include oneline();
+  }
+  .import-help {
+    display: inline-block;
+    margin: 0 0 0 10px;
+  }
+}
+
+.widget-filters {
+  @include background-image(linear-gradient(top, #eee, $white));
+  @include border-radius(4px 0 4px 4px);
+  border:1px solid $widgetHeader;
+  margin-bottom:10px;
+  padding:6px;
+  form.form-inline {
+    margin-bottom:0;
+  }
+  select {
+    width:auto;
+  }
+  input {
+    width:auto;
+  }
+  .btn-reset {
+    float: right;
+  }
+  label {
+    text-transform:uppercase;
+    color:$text;
+    @include text-shadow(0 1px 1px $white);
+    display: block;
+    &.label-title {
+      margin-right:30px;
+      float: left;
+      padding-bottom: 20px;
+    }
+  }
+}
+
+.filter-trigger {
+  position:absolute;
+  bottom:0;
+  right:0;
+  @include border-radius(4px 4px 0 0);
+  &:focus {
+    @include outline-fix();
+  }
+
+}
+
+.widget-add-placeholder {
+  background: $popOverHeaderBgnd;
+  border: 1px solid $popOverHeaderBorder;
+  @include border-radius($default-border-radius);
+  padding: 51px 0 49px 0;
+  margin-bottom: 20px;
+  text-align: center;
+  .btn-group {
+    display: inline-block;
+    .btn {
+      color: $black;
+      @include transition(color 0.3s ease);
+      @include box-shadow(none);
+      font-weight: bold;
+      padding: 0;
+      display: inline-block;
+      padding: 10px;
+      position: relative;
+      @include opacity(0.4);
+      @include transition(opacity 0.3s ease);
+      &:active {
+        @include opacity(1);
+        &:hover {
+          background-image: none;
+          background-color: $btnActive;
+          outline: 0;
+          @include box-shadow(inset 0 2px 4px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05));
+        }
+      }
+      i {
+        &.grcicon-carot {
+          margin-top: 1px;
+          display: inline-block;
+        }
+      }
+    }
+  }
+  &:hover {
+    @include opacity(1);
+    @include gradient-vertical($white, #e6e6e6);
+    .btn-group .btn {
+      &:hover {
+        @include opacity(1);
+      }
+      color: $blue;
+      text-decoration: none;
+      @include opacity(0.7);
+      @include gradient-vertical($white, #e6e6e6);
+      background-position: 0 0;
+      i {
+        @include opacity(0.7);
+      }
+    }
+  }
+  .open {
+    .btn {
+      @include opacity(1);
+      background-image: none;
+      background-color: $btnActive;
+      outline: 0;
+      @include box-shadow(inset 0 2px 4px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05));
+      color: $blue;
+      &:hover {
+        background-image: none;
+        background-color: $btnActive;
+        outline: 0;
+        @include box-shadow(inset 0 2px 4px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05));
+      }
+    }
+  }
+  .dropdown-menu {
+    left: auto;
+    right: 137px;
+    bottom: -1px;
+    text-align: left;
+    .title {
+      padding: 0 7px 0 7px;
+      font-weight: bold;
+      line-height: 20px;
+    }
+  }
+}

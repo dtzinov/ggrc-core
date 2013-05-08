@@ -1,0 +1,31 @@
+-extends "layouts/dashboard.haml"
+
+-block title
+  Dashboard
+
+-block page_help
+  dashboard
+
+-block header
+  %ul.breadcrumbs
+    &nbsp;
+
+  %h1.dashboard-title
+    %i.grciconlarge-dashboard
+    Dashboard
+
+-block main
+  .container-fluid
+    #columns.row-fluid{ 'data-resize': "true" }
+      #left_column.span6.widget-area
+        -with widget_class = 'widget-tabs'
+          -include 'programs_dash/_governance.haml'
+          -#include 'programs_dash/_business_objects.haml'
+        -include 'shared/_add_widget_section.haml'
+
+      #right_column.span6.widget-area
+        -with widget_class = 'widget-tags'
+          -#include 'programs_dash/_programs.haml'
+          -# if current_user.can_manage_risk?
+            -#include 'programs_dash/_risk.haml'
+        -include 'shared/_add_widget_section.haml'

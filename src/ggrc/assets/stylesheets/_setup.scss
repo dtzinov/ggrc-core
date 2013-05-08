@@ -1,0 +1,144 @@
+// defaults
+  
+  $default-border-radius: 4px;
+  $topBorderRadius: 4px 4px 0 0;
+  $bottomBorderRadius: 0 0 4px 4px;
+
+// colors
+
+  // font-sizes
+  
+    $f-regular:90%; // equals 16px
+    $f-medium:85%;
+    $f-small:75%;
+    $f-subTitle:120%;
+    $f-headline:170%;
+
+  // widget
+    $widgetBorder: #aaa;
+    $widgetHeader: #ddd;
+    $widgetTitle: #111;
+    $filterBgnd: #bebebe;
+      // widget info
+      $infoWidgetHeader: #111;
+      
+
+  // texts
+    $darkText:#333; // WCAG AAA
+    $text:#666; // WCAG AAA
+    $error:#e00; // WCAG AA
+    $disabled: #777; // WCAG AA
+    $warning:#f60; // WCAG AAA
+
+  // compliance
+    $defaultWidget: #444; // WCAG AAA
+    $compliance: #936;  // WCAG AAA
+    $governance: #005580;  // WCAG AAA
+    $business: #336;  // WCAG AAA
+    $risk: #8e0000;  // WCAG AAA
+
+  // default colors
+    $white: #fff;
+    $black: #000;
+    $gray: #999;
+    $darkGray: #7c7c7c;
+    $lightGray: #eee;
+    $red: #ce3e3e;
+    $lightRed: #ff9d9d;
+    $green: #1d8d15;
+    $darkBlue: #369;
+    $warmGray: #ccc;
+  
+  // quick search
+    $topBarSearchText: #bbbdc1;
+    $topBarSearchBorder: #282a2c;
+    $topBarSearchBgnd: #6a6b6d;
+    $quickSearchOpen: #cbcbcb;
+  
+  // modal
+    $modalHeader: #0071cc;
+    $modalHeaderBorder: #074fb2;
+    $modalHeaderShadow: #9ac5ff;
+    $modalDarkBlue: #0055cc;
+    $modalLightBlue: #0088cc;
+    
+  //popover
+    $popOverHeaderBgnd: #f7f7f7;
+    $popOverHeaderBorder: #ebebeb;
+    $popOverBorder: #b0b0b0;
+    
+  // PBC
+    $btnGreen: #51a351;
+    $btnOrange: #f9a732;
+    $responsBgnd: #e8fdd6;
+    $responsBorder: #cdecb4;
+    $pbcListGray: #f0f0f0;
+    $responsTitle: #333;
+  
+  $headerBgnd: #3f4145;
+  $menuLink: #d7dce8;
+  $screenBgnd: #323438;
+  $link: #049cdb;
+  $headerTitle: #444;
+  $demoHide: #f99c18;
+  $demoShow: #55ab55;
+  $widgetHeaderBgnd: #efefef;
+  $dropPlaceholder: #ddd;
+  $subTitle: #111;
+  $widgetFooteBgnd: #e1e1e1;
+  $riskActive: #a46203;
+  $gov: #44aac8;
+  $govActive: #026b8a;
+  $addBtn: #5ab45a;
+  $addBtnBorder: #399a39;
+  $sidenavBorder: #e5e5e5;
+  $sidenavHover: #f5f5f5;
+  $treeListBgnd: #fafafa;
+  $btnActive: #e6e6e6;
+  $tabTitle: #777;
+  $btnAddShadow: #296029;
+  $ajaxBtnDisabled: #e0e0e0;
+  $ajaxGray: #7b7b7b;
+  $footerBorder: #ddd;
+
+// mixins
+
+  @mixin reset-list() {
+    margin:0;
+    padding:0;
+    list-style:none;
+  }
+  
+  @mixin outline-fix() {
+    outline:0;
+  }
+
+  @mixin oneline() {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width:100%;
+  }
+
+  @mixin row-fluid-fix() {
+    [class*="span"] {
+      padding-bottom:0;
+      margin-bottom:0;
+      min-height:0;
+    }
+  }
+  
+  @mixin input-block-level() {
+    display: block;
+    width: 100%;
+    @include box-sizing(border-box);
+    min-height: 28px;
+  }
+  
+  @mixin default-border-bottom() {
+    border-bottom: 1px solid $lightGray;
+  }
+  
+  @mixin default-border-top() {
+    border-top: 1px solid $lightGray;
+  }

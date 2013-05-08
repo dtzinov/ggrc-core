@@ -1,0 +1,9 @@
+<ul class="tree-structure slugtree items">
+  {{#list}}
+    <li {{data 'model'}} data-model="true" class="main">
+      <div class="row-fluid" content_id="{{content_id}}">
+        {{{render show}}}
+      </div>
+    </li>
+  {{/list}}
+</ul>

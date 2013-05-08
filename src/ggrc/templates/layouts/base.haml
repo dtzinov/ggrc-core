@@ -1,0 +1,35 @@
+!!! Strict
+
+%html{ lang:"en", xmlns:"http://www.w3.org/1999/xhtml" }
+  %head
+    %meta{ content:"text/html; charset=utf-8", 'http-equiv':"Content-Type" }
+    %meta{ charset:"utf-8" }
+    %meta{ content: "width=device-width, initial-scale=1.0", name: "viewport" }
+    -#FIXME: (?) META tags for author, description
+
+    %title
+      -block title
+        Governance, Risk and Compliance
+
+    -assets "dashboard-css"
+      %link{ rel:'stylesheet', type:'text/css', href:"#{ASSET_URL}" }
+    -endassets
+
+    -assets "dashboard-js"
+      %script{ type:'text/javascript', src:"#{ASSET_URL}" }
+    -endassets
+
+    -#FIXME: (?) HTML5 shim?
+
+    -#csrf_meta_tag
+
+    %link{ 'href':'/favicon.ico', 'rel':'icon', 'type':'image/x-icon' }
+
+    -# Google Web Font(s)
+    -#NOTE: This resource occasionally hangs and prevents page from rendering, so loaded after the fact via jquery
+    :javascript
+      jQuery(function($) { $('head').append("<link href='https://fonts.googleapis.com/css?family=Titillium+Web' rel='stylesheet' type='text/css'></link>"); });
+
+    -#%link{ 'href': "http://fonts.googleapis.com/css?family=PT+Sans", :rel => "stylesheet", :type => "text/css" }
+
+  -block body

@@ -1,0 +1,211 @@
+{{!<div class="control_assessment-32-request-{{request_id}} pbc-responses-container responses">}}
+<div class="bg-caret"></div>
+<h4 class="pbc-title response-title-bar">
+  Responses ({{type_name}})
+  <a class="btn btn-mini btn-add" data-toggle="modal" href="#newResponse" data-target="#request-{{request_id}}-response-new"  data-placement="top" data-toggle="collapse" rel="tooltip" title="Add new response">
+    <i class="grcicon-add"></i>
+  </a>
+  <span class="inline-help">
+    {{^one_created}}
+    «
+    click here to add a response
+    {{/one_created}}
+  </span>
+</h4>
+
+<ul class="tree-structure items-list pbc-responses cms_controllers_responses" id="request-{{request_id}}-responses">
+
+{{#list}}
+  <li class="item" {{data 'model'}} data-model="true" data-id="{{id}}">
+    <div class="item-main">
+      <div class="openclose active"></div>
+      <div class="item-title">
+        <div class="row-fluid">
+          <div class="span10">
+            <span class="normal-font">Response:&nbsp;</span>
+            {{#if_null system}}
+              <i rel="tooltip" class="grcicon-system-color process-icon" title=""></i>
+              <span class="text-compliance">[no system]</span>
+            {{else}}
+              <i rel="tooltip" class="grcicon-{{system.system_or_process}}-color process-icon" title="{{system.system_or_process_capitalized}}"></i>  
+              {{#if system.absolute_url}}
+                <span class="text-compliance"><a href="{{system.absolute_url}}" target="_blank">{{system.title}}</a></span>
+              {{else}}
+                <span class="text-compliance">{{system.title}}</span>
+              {{/if}}
+
+            {{/if_null}}
+          </div>
+          <div class="span2">
+            <a class="btn btn-mini delete-response pull-right" href="/responses/{{id}}/delete" data-toggle="modal-ajax-form" title="Delete response" rel="tooltip" data-placement="left" data-id="{{id}}">
+              <i class="grcicon-x-grey"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="item-content response-items" style="display: block;">
+      <div class="row-fluid">
+        <div class="span6">
+          <div class="inner-response">
+            <div class="row-fluid response-title-bar">
+              <div class="span12">
+                <h4>Evidence: {{type_name}}</h4>
+              </div>
+            </div>
+            <div class="row-fluid">
+              <div class="span12">
+                {{#if_equals type_name 'Documentation'}}
+                  <ul class="items pbc-item-list">
+                    {{> /assets/pbc/documents_list.mustache}}
+                    <li class="toggle-add-document add-new">
+                      <span>
+                        <a class="btn btn-mini btn-add" href="javascript://">
+                          <i class="grcicon-add"></i>
+                          Document
+                        </a>
+                      </span>
+                    </li>
+                  </ul>
+                {{/if_equals}}
+                {{#if_equals type_name 'Interview'}}
+                  <h5>
+                    Meeting participants including interviewees
+                  </h5>
+                  <ul class="items pbc-item-list">
+                    {{#object_people}}
+                      <li {{data 'model'}} data-model="true">
+                        <div class="span7">
+                          <a class="inner-element" target="_blank" href="mailto:{{firstnonempty person.email}}">
+                            <span title="{{person.email}}" rel="tooltip">
+                            {{firstnonempty person.name person.email}}
+                            </span>
+                          </a>
+                        </div>
+                        <div class="span4">
+                          <select class="edit-person-role">
+                            <option value="responsible" {{#if_equals role 'responsible'}}selected="true"{{/if_equals}}>Responsible</option>
+                            <option value="accountable" {{#if_equals role 'accountable'}}selected="true"{{/if_equals}}>Accountable</option>
+                          </select>
+                        </div>
+                        <div class="span1">
+                          <a class="btn btn-mini remove_person" data-placement="bottom" title="Remove from response" rel="tooltip" href="javascript://">
+                            <i class="grcicon-x-grey"></i>
+                          </a>                        
+                        </div>
+                      </li>
+                    {{/object_people}}
+                    <li class="inline-editing inline-add-person hide">
+                      <form>
+                        <div class="row-fluid">
+                          <div class="span7">
+                            <input class="input-block-level input-ldap" name="ldap" placeholder="LDAP or name" type="text" {{ (el) -> el.pbc_autocomplete_people() }}>
+                          </div>
+                          <div class="span5">
+                            <a class="btn btn-mini pull-left add-person" data-modal-reset="reset" data-toggle="modal-ajax-form" href="/people/new" data-target="#ajax-modal-people-new">
+                              <i class="grcicon-add-black"></i>
+                            </a>
+                          </div>
+                        </div>
+                      </form>
+                    </li>
+                    <li class="toggle-add-person add-new">
+                      <a class="btn btn-mini btn-add" href="javascript://">
+                        <i class="grcicon-add"></i>
+                        Participant
+                      </a>
+                    </li>
+                  </ul>
+                  <h5>
+                    Meetings
+                  </h5>
+                  <ul class="items pbc-item-list">
+                  {{#meetings}}
+                    <li {{data 'model'}} data-model="true">
+                      <div class="span11">
+                        <a class="inner-element" href="{{calendar_url}}" target="_blank">{{calendar_url}}</a>
+                      </div>
+                      <div class="span1">
+                        <a class="btn btn-mini remove_person" href="javascript://">
+                          <i class="grcicon-x-grey"></i>
+                        </a>
+                      </div>
+                    </li>
+                  {{/meetings}}
+                  <li class="add-meeting add-new">
+                    <div class="alert alert-error collapse" {{ (el) -> el.hide(); }}>
+                      <strong>Notice!</strong> Remove meeting manually from Google Calendar
+                    </div>
+                    <a class="btn btn-mini btn-add" data-modal-reset="reset" data-toggle="modal-ajax-form" data-modal-class="modal-wide" href="/meetings/new?meeting[response_id]={{id}}">
+                      <i class="grcicon-add"></i>
+                      Meeting
+                    </a>
+                  </li>
+                </ul>
+              {{/if_equals}}
+              {{#if_equals type_name 'Population Sample'}}
+                {{#population_sample}}
+                <div class="evidence">
+                  {{> /assets/pbc/population_sample.mustache}}
+                </div>
+                {{/population_sample}}
+              {{/if_equals}}
+            </div>
+          </div>
+        </div>
+      </div>
+      {{#if system}}
+        {{> /assets/pbc/system.mustache}}
+      {{/if}}
+      {{#if_null system}}
+        <div class="span6">
+          <div class="inner-system">
+            <div class="row-fluid response-title-bar">
+              <div class="span12">
+                <h4 class="pbc-add-system-process">Add &nbsp; <i class="grcicon-system-color"></i>system or &nbsp; <i class="grcicon-process-color"></i>process</h4>
+              </div>
+            </div>
+            <div class="item-main add-response">
+              <div class="system-add">
+                <div class="row-fluid">
+                  <div class="span6 pbc-add-response next-each-other">
+                    <input class="pbc-system-search input-block-level" placeholder="Type to search systems/processes" type="text" autocomplete="off" {{ (el) -> el.pbc_autocomplete() }}>
+                  </div>
+                  <div class="span6">
+                    <!--
+                      <a class="btn btn-add btn-mini top-button" data-modal-class="modal-wide" data-modal-reset="reset" data-placement="top" data-toggle="modal-ajax-form" href="/systems/new" id="tooltip11" rel="tooltip" title="Add new system/process">
+                        <i class="grcicon-add"></i>
+                      </a>
+                    -->
+                    <div class="btn-group">
+                      <a class="btn btn-add btn-mini dropdown-toggle" data-toggle="dropdown" rel="tooltip" title="Add new system/process">
+                        <i class="grcicon-add"></i>
+                      </a>
+                      <ul class="dropdown-menu">
+                        <li class="add-new-item text-compliance">
+                          <a href="/systems/new?system[is_biz_process]=false" data-modal-class="modal-wide" data-modal-reset="reset" data-toggle="modal-ajax-form">
+                            <i class="grcicon-system-color"></i>
+                            <strong class="text-compliance">System</strong>
+                          </a>
+                        </li>
+                        <li class="add-new-item text-compliance">
+                          <a href="/systems/new?system[is_biz_process]=true" data-modal-class="modal-wide" data-modal-reset="reset" data-toggle="modal-ajax-form">
+                            <i class="grcicon-process-color"></i>
+                            <strong class="text-compliance">Process</strong>
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      {{/if_null}}
+
+    </div>
+  </li>
+{{/list}}
+</ul>
+{{!</div>}}

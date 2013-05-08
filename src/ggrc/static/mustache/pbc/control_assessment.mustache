@@ -1,0 +1,45 @@
+<li class="pbc-ca" data-control-id="{{id}}" data-id="{{control_assessment_id}}" data-sort-control-code="{{slug}}" data-type="ControlAssessment">
+    <div class="item-main">
+      <div class="openclose active"></div>
+      <div class="item-title">
+        <div class="row-fluid">
+          <div class="span8">
+            <span class="tiny-title">Grouped by:</span>
+            <i class="grcicon-control-color"></i>
+            <strong>{{slug}}</strong>
+            {{title}}
+          </div>
+          <div class="span2">
+            <div class="ca-fields">
+              <a class="btn btn-mini rotate_control_assessment" data-method="post" data-placement="top" data-remote="" href="/control_assessments/{{control_assessment_id}}/rotate?control_assessment%5Binternal_toe%5D=toggle" rel="tooltip" title="Internal: Test of Effectiveness">
+                <i class="grcicon-blank"></i>
+              </a>
+              <span>Design</span>
+              &nbsp;&nbsp;
+              <a class="btn btn-mini rotate_control_assessment" data-method="post" data-placement="top" data-remote="" href="/control_assessments/{{control_assessment_id}}/rotate?control_assessment%5Binternal_tod%5D=toggle" rel="tooltip" title="Internal: Test of Design">
+                <i class="grcicon-blank"></i>
+              </a>
+              <span>Effectiveness</span>
+            </div>
+          </div>
+          <div class="span2">
+            <div class="ca-fields">
+              <a class="btn btn-mini rotate_control_assessment" data-method="post" data-placement="top" data-remote="" href="/control_assessments/{{control_assessment_id}}/rotate?control_assessment%5Bexternal_toe%5D=toggle" rel="tooltip" title="External: Test of Effectiveness">
+                <i class="grcicon-blank"></i>
+              </a>
+              <span>Design</span>
+              &nbsp;&nbsp;
+              <a class="btn btn-mini rotate_control_assessment" data-method="post" data-placement="top" data-remote="" href="/control_assessments/{{control_assessment_id}}/rotate?control_assessment%5Bexternal_tod%5D=toggle" rel="tooltip" title="External: Test of Design">
+                <i class="grcicon-blank"></i>
+              </a>
+              <span>Effectiveness</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="item-content block-element">
+      <ul class="tree-structure requests pbc-requests">
+      </ul>
+    </div>
+  </li>

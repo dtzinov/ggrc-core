@@ -1,0 +1,59 @@
+-extends 'layouts/_widget_box.haml'
+
+-block widget_help
+  governance
+
+-block widget_id
+  governance_widget
+
+-block widget_class
+  governance
+
+-block widget_title
+  Governance / Compliance
+
+-block widget_buttons
+  .filter
+    .row-fluid
+      .span10
+        %input.ui-corner-all.widgetsearch.clear-value{ 'type': 'text', 'placeholder': 'Search' }
+      .span2
+        %a.btn.btn-add{ 'href': 'new_flow_control_path', 'data-toggle': 'modal-ajax-form', 'data-modal-reset': 'reset', 'data-form-target': 'refresh', 'data-modal-class': 'modal-wide' } 
+          %i.grcicon-add
+          New
+          %span.object-type Control
+
+-set quick_result = quick_result if quick_result is defined else None
+-set prefix = "qf" if quick_result else "dash"
+-set tabbable_id = '' if quick_result is defined else 'quick_find'
+
+-block main
+  .tabbable.tabs-left{ 'id': '{{ tabbable_id }}' }
+    -# FIXME: Fix all `data-tab-href` and `data-new-href` attribute paths
+    %ul.nav.nav-tabs
+      %li
+        %a{ 'href': "#{{ prefix }}_regulations", 'data-tab-href': 'flow_directives_path(:quick => true, :qr => quick_result, :meta_kind => "regulation")', 'data-toggle': 'tab', 'data-new-href': 'new_flow_directive_path(:meta_kind => "regulation")' }
+          %i.grcicon-regulation-color
+          %span.text-governance Regulations
+          %span.item-count
+      %li
+        %a{ 'href': "#{{ prefix }}_policies", 'data-tab-href': 'flow_directives_path(:quick => true, :qr => quick_result, :meta_kind => "policy")', 'data-toggle': 'tab', 'data-new-href': 'new_flow_directive_path(:meta_kind => "policy")' }
+          %i.grcicon-policy-color
+          %span.text-governance Policies
+          %span.item-count
+      %li
+        %a{ 'href': "#{{ prefix }}_contracts", 'data-tab-href': 'flow_directives_path(:quick => true, :qr => quick_result, :meta_kind => "contract")', 'data-toggle': 'tab', 'data-new-href': 'new_flow_directive_path(:meta_kind => "contract")' }
+          %i.grcicon-contract-color
+          %span.text-governance Contracts
+          %span.item-count
+      %li
+        %a{ 'href': "#{{ prefix }}_controls", 'data-tab-href': 'FIXME:flow_controls_path(:quick => true, :qr => quick_result)', 'data-toggle': 'tab', 'data-new-href': 'FIXME:new_flow_control_path' }
+          %i.grcicon-control-color
+          %span.text-governance Controls
+          %span.item-count
+
+    .tab-content
+      .tab-pane{ :id => "#{prefix}_regulations" }
+      .tab-pane{ :id => "#{prefix}_policies" }
+      .tab-pane{ :id => "#{prefix}_contracts" }
+      .tab-pane{ :id => "#{prefix}_controls" }

@@ -1,0 +1,25 @@
+<div class="item-title">
+  <div class="row-fluid">     
+  <div class="span11">
+    <div class="oneline">
+      <a href="javascript://">
+        {{#unless mapped_section_ids.length}}
+          <i class="grcicon-control-danger"></i>
+          <span class="error">NOT MAPPED&nbsp;</span>
+        {{/unless}}
+        <span class="title">{{title}}</span>           
+        <span class="code">{{slug}}</span>
+      </a>
+    </div>
+  </div>
+  <div class="span1 actions">
+    <div class="pull-right">
+      <!--
+      <a class="widgetbtn btn btn-mini edit-control" data-modal-class="modal-wide" data-toggle="modal-ajax-listeditform" href="/controls/{{id}}/edit">             
+        <i class="grcicon-edit"></i>           
+      </a>
+      -->           
+      <input type="checkbox" class="map-control" name="control[{{id}}]" />
+    </div>       
+  </div>     
+

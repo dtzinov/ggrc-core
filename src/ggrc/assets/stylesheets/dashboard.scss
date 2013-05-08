@@ -1,0 +1,91 @@
+/* FIXME: Fix for https://github.com/rails/rails/issues/3686
+ * - Bump this counter if asset dependencies aren't re-compiled on change
+ * counter: 0
+ */
+
+// NOTE! Don't use Sprockets `require` statements inside SASS files
+
+// Required external stylesheets
+
+// FIXME: (?) This doesn't play nice with compass, so include it separately into assets.yaml
+//@import "jquery-ui.css";
+
+@import "bootstrap";
+@import "bootstrap-responsive";
+
+@import "compass/css3";
+
+// FIXME: (?) This doesn't play nice with compass, so include it separately into assets.yaml
+//@import "bootstrap-wysihtml5-0.0.2.css";
+
+@import "setup";
+@import "common";
+@import "layout";
+@import "widget";
+@import "tree";
+@import "header";
+@import "footer";
+@import "flash";
+@import "styleguide";
+
+// page specific scss
+@import "reg-mapper";
+@import "pbc";
+
+@import "quick-search";
+@import "modal";
+
+@import "popover";
+@import "login";
+
+@import "icons";
+
+
+@import "responsive";
+@import "js-helpers";
+
+@import "import-export";
+/*
+
+// editable styles start here
+
+  // variables, overrides, mixins
+  @import "setup";
+
+  // bootstrap rewrites
+  @import "rewrite";
+  
+  // global definitions
+  @import "global";
+
+  // everything
+  @import "gcms";
+
+  // modals aka dialogs
+  @import "progressbars";
+
+
+  // modals aka dialogs
+  @import "modals";
+
+  // modals aka dialogs
+  @import "widgets";
+
+  // SVG graphing
+  @import "graph";
+  
+  // icons
+  @import "icons";
+
+  // tables
+  @import "tables";
+
+
+  // new page structure and elements
+  @import "page-structure";
+
+  // fluid-layout styles
+  @import "fluid";
+
+
+*/

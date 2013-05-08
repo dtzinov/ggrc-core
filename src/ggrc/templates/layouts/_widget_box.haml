@@ -1,0 +1,35 @@
+-# Set `widget_class` and `widget_id` based on context and inheritance
+-#   (e.g. `block` in the template containing `extends`
+-#   or `with` around the template containing the `include` )
+
+-set widget_class = (widget_class|default('') + ' ' + (self.widget_class()|trim if self.widget_class is defined else ''))|trim
+
+-set widget_id = (widget_id|default('') + ' ' + (self.widget_id()|trim if self.widget_id is defined else ''))|trim
+
+-set widget_help = (self.widget_help()|trim if self.widget_help is defined else None)
+
+-#FIXME: prevent risk view if not allowed
+  -if widget_class != 'risk' || current_user.can_manage_risk?
+
+-block widget
+  %section{ 'class': "widget {{ widget_class }}", 'id': '{{ widget_id }}' }
+    %header.header
+      .row-fluid
+        .span8
+          %h2
+            -block widget_title
+
+        .span4
+          .widget-action.pull-right.widget-showhide
+            %a.active{ 'href': "javascript://" }
+          -if widget_help is not none
+            .widget-action.pull-right.widget-action-help
+              %a{ 'href': "/help/{{ widget_help }}", 'data-toggle': 'modal-ajax', 'rel': "tooltip", 'title': "Help", 'data-placement': "top" }
+                %i.grcicon-help
+
+    -block widget_buttons
+
+    %section.content
+      -block main
+
+    -block widget_footer

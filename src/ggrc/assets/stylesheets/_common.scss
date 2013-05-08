@@ -1,0 +1,512 @@
+body {
+  font-size:$f-regular;
+}
+
+// typography
+h1 {
+  color:$headerTitle;
+  font-size:$f-headline;
+  line-height:36px;
+  span {
+    color: $disabled;
+    font-weight: normal;
+  }
+  @include oneline();
+}
+
+h2 {
+  font-size: $f-subTitle;
+  line-height: 26px;
+  font-weight: bold;
+  color: $subTitle;
+  margin-right: 8px;
+}
+
+h3 {
+  font-size: $f-subTitle;
+  line-height: 24px;
+  font-weight: bold;
+  color: $subTitle;
+}
+
+h4 {
+  font-size: $f-regular;
+  line-height: 20px;
+  font-weight: normal;
+  color: $subTitle;
+  span {
+    color: $disabled;
+  }
+}
+
+h1, h2, h3, h4, h5, h6 {
+  &.compliance {
+    color:$compliance;
+  }
+  &.governance {
+    color:$governance;
+  }
+  &.business {
+    color:$business;
+  }
+  &.risk {
+    color:$risk;
+  }
+}
+
+span.error {
+  color:$warning;
+  font-size:$f-small;
+  font-weight:bold;
+}
+
+blockquote {
+  border:none;
+}
+
+// helpers
+.centered {
+  text-align: center;
+}
+
+.no-results {
+  margin-top:20px;
+  h3, p {
+    color:$subTitle;
+    margin-bottom:6px;
+  }
+}
+
+.inline {
+  display:inline;
+}
+
+.button-space {
+  margin-right: 4px;
+}
+
+.no-float {
+  clear: both;
+}
+
+.normal-font {
+  font-weight: normal;
+}
+
+.top-button {
+  vertical-align: top;
+}
+
+.block-element {
+  display: block;
+}
+
+.no-control {
+  display: inline;
+}
+
+.parent-position {
+  position: relative;
+}
+
+.not-assigned {
+  color: $tabTitle;
+}
+
+.assignee-dark {
+  color: $subTitle;
+}
+
+.tab-position {
+  position: relative;
+  overflow: visible;
+}
+
+// progress bar
+.bar {
+  float:left;
+  &.bar-success {
+    @include gradient-vertical(lighten($addBtn, 15%), $addBtn);
+  }
+  &.bar-danger {
+    @include gradient-vertical(lighten($orange, 15%), $orange);
+  }
+  &.bar-warning {
+    @include gradient-vertical(lighten($red, 15%), $red);
+  }
+}
+
+.progress {
+  &.progress-higher {
+    margin-top:2px;  
+    margin-bottom:0;
+    height:23px;
+    .bar {
+      height:23px;
+      line-height:23px;
+    }
+  }
+  .empty-progress {
+    text-align:center;
+    color:$gray;
+    font-weight:normal;
+  }
+}
+
+// buttons
+.btn {
+  font-size: $f-regular;
+  font-weight: bold;
+  @include box-shadow(none);
+  i {
+    margin-top: 1px;
+  }
+  &:hover {
+    @include box-shadow(inset 0 0 2px rgba(0,0,0,0.3));
+  }
+  &.btn-add {
+    color:$white;
+    background: $addBtn;
+    @include background-image(linear-gradient(center top, lighten($addBtn, 5%) 5%, darken($addBtn, 5%) 100% ));
+    text-shadow: 1px 1px 1px $btnAddShadow;
+    border: 1px solid $addBtnBorder;
+    &:active {
+      @include box-shadow(inset 0 0 3px $darkGray);
+      @include background-image(linear-gradient(center top, darken($addBtn, 5%) 5%, lighten($addBtn, 5%) 100% ));
+    }
+    &:hover {
+      color:$white;
+    }
+  }
+  .open & {
+    &.btn-add {
+      color:$white;
+      background: $addBtn;
+      @include background-image(linear-gradient(center top, lighten($addBtn, 5%) 5%, darken($addBtn, 5%) 100% ));
+      text-shadow: 1px 1px 1px $btnAddShadow;
+      border: 1px solid $addBtnBorder;
+      &:hover {
+        color:$white;
+      }
+    }
+  }
+  &.pending-ajax {
+    cursor: default;
+    background:$widgetHeaderBgnd image-url('ajax-loader.gif') no-repeat 5px 5px;
+    @include box-shadow(none);
+    border: 1px solid $ajaxBtnDisabled;
+    color: $ajaxGray;
+    text-shadow: none;
+    padding-left: 28px;
+    &:hover {
+      color: $ajaxGray;
+    }
+    &:active {
+      background:$widgetHeaderBgnd image-url('ajax-loader.gif') no-repeat 5px 5px;
+      border: 1px solid $ajaxBtnDisabled;
+      @include box-shadow(none);
+    }
+  }
+  &.btn-mini {
+    &.pending-ajax {
+      background:$widgetHeaderBgnd image-url('ajax-loader.gif') no-repeat 5px 1px;
+    }
+  }
+  &.btn-large {
+    &.pending-ajax {
+      background:$widgetHeaderBgnd image-url('ajax-loader.gif') no-repeat 5px 8px;
+    }
+  }
+}
+
+.btn-add,
+.btn-warning,
+.btn-danger {
+  &.disabled {
+    cursor: default;
+    background-color: $btnActive;
+    background-image: none;
+    @include opacity(0.65);
+    @include box-shadow(none);
+    text-shadow: none;
+    color: $responsTitle;
+    border: 1px solid $warmGray;
+    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+    &:active,
+    &:hover {
+      @include box-shadow(none);
+      color: $responsTitle;
+    }
+  }
+}
+
+// removing outline on anchor element
+.nav-tabs,
+.menu,
+.btn,
+.program-list {
+  a {
+    @include outline-fix();
+  }
+}
+
+// show hide
+.showhide {
+  float:left;
+  margin-top:8px;
+}
+
+// one line display of paragraphs
+.oneline {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  width:100%;
+  &.expandable {
+    cursor:pointer;
+  }
+  &.expand-on-hover {
+    cursor:pointer;
+  }
+}
+
+.inhover {
+  cursor:pointer;
+}
+
+// RTF
+.rtf {
+  margin-bottom: 10px;
+  line-height:1.2em;
+  ul,
+  ol {
+    margin-bottom: 10px;
+    margin-top: 10px;
+    li {
+      border: none !important;
+      padding: 0;
+      line-height:1.2em !important;
+    }
+  }
+  blockquote {
+    border:none;
+  }
+  p.no-data {
+    color:$disabled;
+    text-align:center;
+  }
+}
+
+// Date input field - To see date icon just add class .date to input field
+input.date {
+  padding-left: 26px;
+  @include background-size(296px 344px);
+  background-image: image-url("grcicons/icons.png");
+  background-repeat: no-repeat;
+  background-position: -4px -244px;
+}
+
+//Making input 100% width of his parent element
+input.input-block-level,
+select.input-block-level {
+  display: block;
+  width: 100%;
+  @include box-sizing(border-box);
+  min-height: 28px;
+}
+
+//tree-structure no results
+.no-result {
+  text-align: center;
+  font-weight: bold;
+  color: $darkGray;
+  line-height: 20px;
+  font-size: $f-small;
+  &.object-no-result {
+    font-size: $f-regular;
+    padding-top: 8px;
+  }
+}
+
+// resizible widget functionality
+.widget:hover {
+  .ui-resizable-handle {
+    height:12px;
+    border-top:1px solid darken($lightGray,5%);
+    background-color: lighten($lightGray,5%);
+    background-repeat:no-repeat;
+    background-image: image-url("grcicons/icons.png");
+    @include background-size(296px 344px);
+    background-position:50% -157px;
+    @include opacity(0.8);
+  }
+}
+
+// always visible tip
+.inline-help {
+  color:$green;
+  font-weight:normal;
+  margin-left:10px;
+}
+
+// input error
+.field-failure {
+  input {
+    border: 1px solid $red;
+    @include placeholder($lightRed);
+  }
+  label {
+    color: $red;
+  }
+  .help-inline {
+    margin: -8px 0 8px 0;
+    display: block;
+    font-size: $f-small;
+    font-weight: bold;
+    color: $red;
+    padding: 0;
+  }
+}
+
+// AJAX loading gif
+input.disabled.pending-ajax{
+  background: $lightGray image-url("ajax-loader.gif") no-repeat right center;
+}
+
+// Left dropdown positioning
+.left-dropdown {
+  .dropdown-menu {
+    right: 0;
+    left: auto;
+  }
+}
+
+.widget .wysiwyg-area {
+  border: 1px solid $widgetBorder;
+  @include border-radius($default-border-radius);
+  padding: 4px;
+  background: $lightGray;
+  margin-bottom: 10px;
+  .double {
+    height: 70px;
+    @include input-block-level();
+  }
+  iframe {
+    width: 97.5% !important;
+    margin-bottom:0 !important;
+  }
+  .wysiwyg-action {
+    .btn {
+      @include opacity(1);
+    }
+  }
+  select {
+    float: right;
+    width: auto;
+    margin: 4px 0 0 0;
+    height: 22px;
+    line-height: 22px;
+    padding: 0;
+  }
+  // smaller buttons in wysiwyg editor
+  .btn {
+    padding:0px 5px 2px 5px;
+    font-size:$f-small;
+    @include opacity(0.5);
+    &:hover {
+      @include opacity(1);
+    }
+  }
+  .help-inline {
+    display:none;
+  }
+  ul.wysihtml5-toolbar > li {
+    margin-bottom:4px;
+    margin-top:4px;
+    border-bottom:none;
+    line-height:18px;
+    &:hover {
+      border-bottom:none !important;
+    }
+  }
+}
+
+// backdrop
+
+.modal-backdrop {
+  @include opacity(0.4);
+}
+
+// additional styles
+li.text-compliance,
+span.text-compliance,
+strong.text-compliance {
+  color:$compliance;
+  a {
+    color:$compliance !important;
+  }
+}
+
+li.text-governance,
+span.text-governance,
+strong.text-governance {
+  color:$governance;
+  a {
+    color:$governance !important;
+  }
+}
+
+
+span,
+strong {
+  &.text-compliance {
+    color:$compliance;    
+    a {
+      color:$compliance !important;
+    }
+  }
+  &.text-risk {
+    color:$risk;    
+  }
+  &.text-governance {
+    color:$governance;    
+  }
+  &.text-business {
+    color:$business;    
+  }
+
+}
+
+.description {
+  .content {
+    .code {
+      font-size: $f-small;
+    }
+  }
+}
+
+.key-p {
+  margin-right:40px;
+}
+
+.flash {
+  margin-bottom:10px;
+  .close {
+    margin-top:9px;
+    margin-right:16px;
+  }
+  .notice {
+    @include border-radius();
+    p {
+      color:$green;
+      font-weight:bold;
+      text-align:center;
+      margin:0;
+      padding:0;
+      line-height:40px;
+      i {
+        margin-top:12px;
+      }
+    }
+  }
+}

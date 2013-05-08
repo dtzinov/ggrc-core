@@ -1,0 +1,175 @@
+-extends 'layouts/base.haml'
+
+-macro dropup_create_new(type, path)
+  %li
+    %a{ 'href': "{{ path }}", 'data-toggle': 'modal-ajax-form', 'data-modal-reset': 'reset', 'data-form-target': 'redirect', 'data-modal-class': 'modal-wide' }
+      {{ type }}
+-endmacro
+
+-block body
+  -# FIXME: Fix page_type_attributes, etc
+  -#{ page_type_attributes, :class => "#{has_feature?(:BETA) ? 'BETA' : ''}" }
+  %body{ 'data-target': '.bs-docs-sidebar', 'data-spy': 'scroll' }
+
+    %header.header.main
+      .header-bar
+        .container-fluid
+          .row-fluid
+            .span12
+              .logo.pull-left
+                %a{ 'href': "/" }
+                  -#FIXME: Company logo/name
+                  -#if CMS_CONFIG["COMPANY_LOGO"].present?
+                    =image_tag(CMS_CONFIG['COMPANY_LOGO'], :alt => 'GRC', :title => 'GRC')
+                  -#elsif CMS_CONFIG["COMPANY_LOGO_TEXT"].present?
+                    =CMS_CONFIG["COMPANY_LOGO_TEXT"]
+                  -#else
+                  Google GRC
+              %ul.menu
+                %li.quick-search
+                  .quick-search-holder
+                    %button{'type':'submit'}
+                      %i.grcicon-search-white
+                    %input.ui-corner-all.widgetsearch.clear-value{ 'type':'text', 'placeholder':'Type to Search / Create' }
+                  .quick-search-results
+                    %a.remove{ 'href': "#", 'class': "btn btn-mini pull-right", 'rel': "tooltip", 'title': "Hide", 'data-placement': "left"}
+                      %i.grcicon-x-grey
+                    %p.title
+                      Search Results
+                      -with quick_result = True
+                        -#include 'programs_dash/_quick_find.haml'
+
+                    .quick-find-add
+                      Didn't find it in results?
+                      .btn-group.pull-right.dropup
+                        %a.btn.btn-mini.dropdown-toggle{ 'href': '#', 'data-toggle': 'dropdown'}
+                          %i.grcicon-add-black
+                          Object
+                          %i.grcicon-carot
+                        %ul.dropdown-menu
+                          %li.divider
+                          %li.title Create New ...
+                          =dropup_create_new("Program", "new_flow_program_path")
+                          =dropup_create_new("Regulation", "new_flow_directive_path(:meta_kind => :regulation)")
+                          =dropup_create_new("Contract", "new_flow_directive_path(:meta_kind => :contract)")
+                          =dropup_create_new("Policy", "new_flow_directive_path(:meta_kind => :policy)")
+                          -# FIXME: Limit view to risk managers
+                          -#if current_user.can_manage_risk
+                          =dropup_create_new("Risky Attribute", "new_flow_risky_attribute_path")
+                          =dropup_create_new("Risk", "new_flow_risk_path")
+                          =dropup_create_new("Control", "new_flow_control_path")
+                          %li.divider
+                          =dropup_create_new("Process", 'new_flow_system_path(:"system[is_biz_process]" => 1)')
+                          =dropup_create_new("System", "new_flow_system_path")
+                          %li.divider
+                          =dropup_create_new("Org Group", "new_flow_org_group_path")
+                          =dropup_create_new("Product", "new_flow_product_path")
+                          =dropup_create_new("Project", "new_flow_project_path")
+                          =dropup_create_new("Facility", "new_flow_facility_path")
+                          =dropup_create_new("Market", "new_flow_market_path")
+                          =dropup_create_new("Data Asset", "new_flow_data_asset_path")
+                %li.black-link
+                  %a{ 'href': "/help/{{ self.page_help()|trim }}", 'data-toggle': 'modal-ajax' }
+                    %i.grcicon-help
+                    %span
+                      Help
+                %li.user.dropdown.dropdown-black.black-link
+                  %a.dropdown-toggle{ 'href': "#", 'data-toggle': "dropdown", 'role': "button" }
+                    %i.grcicon-user
+                    %span
+                      -# FIXME: Use actual account information
+                      -#%strong=current_user.email
+                    %i.grcicon-carot-white
+                  %ul.dropdown-menu{'aria-labelledby': 'drop1', 'role': "menu"}
+                    -# FIXME: Restrict view to administrators
+                    -#if current_user.can_admin?
+                    -# FIXME: Fix link
+                    %li
+                      %a{'href': "admin_dash_path"}
+                        %i.grcicon-admin
+                        Admin Area
+                    %li
+                      %a.clear-display-settings{'href': "javascript://", 'tabindex': "-1"}
+                        %i.grcicon-desktop
+                        Reset Layout to Default
+                    %li
+                      %a.set-display-settings-default{'href': "javascript://", 'tabindex': "-1"}
+                        %i.grcicon-desktop
+                        Set Layout as Default
+                    %li
+                      -# FIXME: Fix link
+                      %a{'href': "logout_path", 'tabindex': "-1"}
+                        %i.grcicon-logout
+                        Logout
+                %li.screen.dropdown.dropdown-black.black-link
+                  %a{'href': "#", 'class': "dropdown-toggle screen-size", 'data-toggle': "dropdown", 'role': "button"}
+                    %i.grcicon-desktop
+                    %span
+                      100%
+                    %i.grcicon-carot-white
+                  %ul.dropdown-menu{ 'aria-labelledby': 'drop2', 'role': "menu" }
+                    %li.full-view
+                      %a{'href': '#', 'tabindex': "-1"}
+                        %i.grcicon-wide
+                        100%
+                    %li.wide-view
+                      %a{'href': '#', 'tabindex': "-1"}
+                        %i.grcicon-wide
+                        Wide
+                    %li.narrow-view
+                      %a{'href': '#', 'tabindex': "-1"}
+                        %i.grcicon-normal
+                        Narrow
+
+      .header-content{ 'data-spy': 'affix', 'data-offset-top': '25' }
+        .container-fluid
+          .row-fluid
+            .span5
+              -block header
+            .span7
+              -block subheader_extras
+
+    -block subheader_plus
+
+    %section.content{ 'data-spy': 'affix', 'data-offset-top': '25' }
+      .container-fluid
+        .flash
+          -#FIXME: Flash messages
+          -#flash.each do |type, value|
+            -value = [value] unless value.is_a?(Array)
+            -value = value.map(:presence).compact
+            -if value.size > 0
+              %div{ 'class': type }
+                %a.close{'href': "#{}", :'data-dismiss': "alert"}
+                  &times;
+
+                -value.each do |message|
+                  %p=message
+      -block main
+
+    %section.footer
+      .container-fluid
+        .row-fluid
+          .span12
+            %ul.bottom-nav.pull-left
+              -#FIXME: demo mode?
+              -#%li
+                -if controller_name == 'design'
+                  -path = programs_dash_path
+                -else
+                  -path = request.fullpath
+                -path = path.gsub(/BETA=[^&]*&?/, '').sub(/[?&]$/, '')
+                -path += path.include?('?') ? '&' : '?'
+                -if has_feature? 'BETA'
+                  %a.demo-hide{ 'href': "#{path}BETA=0" }
+                    Hide Demo
+                -else
+                  %a.demo-show{ 'href': "#{path}BETA=1" }
+                    Show Demo
+            %p
+              -#FIXME: Copyright footer
+              -#=CMS_CONFIG['COMPANY']
+              Confidential.
+              Copyright &copy;
+              -#=Time.now.year
+              -#=CMS_CONFIG['COMPANY']
