@@ -37,11 +37,12 @@ python_virtualenv "/vagrant-dev/opt/dev_virtualenv" do
   action :create
 end
 
-execute "Prepare initial dev virtualenv" do
+execute "Prepare dev virtualenv" do
   command "/bin/bash -c '"\
           "source /vagrant-dev/opt/dev_virtualenv/bin/activate;"\
           "pip install -U pip;"\
-          "pip install -r /vagrant/src/dev-requirements.txt'"
+          "pip install -r /vagrant/src/dev-requirements.txt;"\
+          "pip install --no-deps -r /vagrant/src/requirements.txt'"
   user "vagrant"
   group "vagrant"
   action :run
@@ -101,6 +102,9 @@ export DEV_PREFIX=/vagrant-dev
   cd /vagrant &&
   source /vagrant/bin/init_env
 END
+
+# Update development virtualenv with requirements and dev-requirements
+
 
 # Attempt to include custom local additions to the environment
 begin
