@@ -9,6 +9,10 @@ Werkzeug==0.8.3
 Flask==0.9
 webassets==0.8
 Flask-Assets==0.8
+# FIXME: Remove pygments, markdown
+# - they are not used, but are imported by HamlPy
+pygments==1.6
+markdown==2.3.1
 HamlPy==0.82.2
 jinja2_hamlpy
 iso8601
