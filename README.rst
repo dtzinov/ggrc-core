@@ -208,7 +208,7 @@ Since gGRC uses Sass for CSS templating, the templates need to be compiled.
 However, this has been automated via script command made available on the path
 in the virtual machine:
 
-.. sourccode:: bash
+.. sourcecode:: bash
 
   build_compass
 
