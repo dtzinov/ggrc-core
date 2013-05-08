@@ -66,8 +66,7 @@ launching the application in the Google App Engine SDK environment is simple:
 
 .. sourcecode:: bash
 
-   cd /vagrant
-   ./launch_gae_ggrc
+   launch_gae_ggrc
 
 Accessing the Application
 -------------------------
