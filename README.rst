@@ -309,7 +309,7 @@ solution is to update the submodules:
   git submodule update
 
 Given that Sass and Javascript related projects are included in the submodule
-requirments of gGRC, it may also be necessary to rebuild the Sass and other
+requirements of gGRC, it may also be necessary to rebuild the Sass and other
 web assets:
 
 .. sourcecode:: bash
