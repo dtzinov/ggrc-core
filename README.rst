@@ -90,8 +90,39 @@ Running Behave Integration Tests
 
    run_behave
 
-Details
-=======
+Quickstart Breakdown
+====================
+
+The quickstart above gives a glimpse into the gGRC development environment.
+It's worth noting where there is automation in gGRC, and where there isn't.
+Often the lack of automation support for a step is intentional. Let's explore
+each step in detail.
+
+Git Submodules in gGRC
+----------------------
+
+gGRC makes use of some external tools for Sass templates and Javascript form
+handling. In order to have the relevant repositories checked out as Git
+submodules the following command must be issued in the project directory:
+
+.. sourcecode:: bash
+
+  git submodule init
+
+The lack of automation for this step is intentional. First, it must be done in
+the host operating system, not the Vagrant virtual machine. Second, performing
+this step informs the new gGRC developer that there are Git submodules to be
+concerned about, leading to the second step:
+
+.. sourcecode:: bash
+
+  git submodule update
+
+As the dependencies change over time it will be necessary for developers to
+update to a new revision for one or more of the submodules. 
+
+Librian and Chef
+----------------
 
 gGRC-Core provides both a ``Vagrantfile`` and a ``Cheffile`` to make standing
 up a development environment simple and repeatable thanks to the magic of
@@ -101,6 +132,75 @@ allowing developers to use the source code editing environment of their choice.
 The librarian-chef gem provides management of the Chef cookbooks required to
 provision the development VM,  with required packages.
 
+Updating Cookbooks with ``librarian-chef``
+''''''''''''''''''''''''''''''''''''''''
+
+When changes are made to the Cheffile ``librarian-chef`` will need to be run to
+update the installed cookbooks.
+
+.. sourcecode:: bash
+
+  librarian-chef install
+
+Vagrant
+-------
+
+The application is run in a virtual machine environment that can be repeatably,
+consistently, and reliably constructed thanks to Vagrant. In order to use
+Vagrant to create and manage the development virtual machine environment it
+must first be created by issuing the following command from the project
+directory:
+
+.. sourcecode:: bash
+
+  vagrant up
+
+This results in the creation of the virtual machine and the provisioning of
+required software to support the development and execution of gGRC.
+
+Reprovisioning a Vagrant VM
+'''''''''''''''''''''''''''
+
+There are several ways to update the provisioning of a Vagrant vm when changes
+have been made to the cookbooks or other dependency management mechanisms in
+gGRC.
+
+Provision a running Vagrant VM
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+To run provisioning on a running Vagrant VM, simply run the following in the
+project directory:
+
+.. sourcecode:: bash
+
+  vagrant provision
+
+Provisioning a halted Vagrant VM
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+If you have halted your Vagrant VM via ``vagrant halt``, simply ``vagrant up``
+in the project directory to have provisioning run and update your development
+environment.
+
+Clean Slate Provisioning
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+To create a clean slate environment in your Vagrant VM you can either reload or
+recreate the environment. To reload the environment issue the following command
+in the project directory:
+
+.. sourcecode:: bash
+
+  vagrant reload
+
+To completely recreate the environment issue the following command in the
+project directory:
+
+.. sourcecode:: bash
+
+  vagrant destroy
+  vagrant up
+
 Gotchas
 =======
 
@@ -108,9 +208,10 @@ After sync'ing your local clone of gGRC-Core you may experience a failure when
 trying to run the application due to a change (usually an addition) to the
 prerequisites. 
 
-There are two broad classes of requirements for gGRC-Core: cookbooks and
-Python packages. Cookbooks are managed via specification in the ``Cheffile``
-while Python packages are managed via specification in pip requirements files.
+There are three primary classes of requirements for gGRC-Core: submodules,
+cookbooks and Python packages. Cookbooks are managed via specification in the
+``Cheffile`` while Python packages are managed via specification in pip
+requirements files.
 
 There are two pip requirements files: a runtime requirements file,
 ``src/requirements.txt``, for application package dependencies and a
@@ -135,11 +236,10 @@ operating system (what you're running the VM on):
    vagrant provision
 
 This will prompt vagrant to run the Chef provisioner. The result of this
-command *should* be an update to the ``/opt/packages.zip`` containing the
-Python packages required by the application as well as any updates to the
-system Python packages for any new development package requirements. However,
-this may not be the case and you may experience a provisioning failure due to
-a change to ``Cheffile``.
+command *should* be an update Python virtualenv containing the Python packages
+required by the application as well as any new development package
+requirements. However, this may not be the case and you may experience a
+provisioning failure due to a change to ``Cheffile``.
 
 Cheffile Changes
 ----------------
@@ -152,4 +252,25 @@ directory by issuing the following commands from within the project directory:
 
    librarian-chef install
    vagrant provision
+
+Changes to ``site-cookbooks``
+-----------------------------
+
+Changes to the recipes defined by gGRC itself can also lead to errors. The
+solution is to reprovision the Vagrant VM:
+
+.. sourcecode:: bash
+
+  vagrant provision
+
+Git Submodule Changes
+---------------------
+
+A change in the git submodules required by the project could also lead to
+errors, particularly in the front-end HTML portion of the application. The
+solution is to update the submodules:
+
+.. sourcecode:: bash
+
+  git submodule update
 
