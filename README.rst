@@ -35,24 +35,34 @@ have the prerequisite software installed. Here are the steps:
 
 .. sourcecode:: bash
 
+  git submodule init
+  git submodule update
   librarian-chef install
   vagrant up
   vagrant ssh
-  cd /vagrant
-  ls
+  # The following commands are executed in the vm via the ssh session!
+  pip install -r src/dev-requirements.txt
+  pip install --no-deps -r src/requirements.txt
+  build_compass
+  build_assets
 
 Now you're in the VM and ready to rock. Get to work!
 
 Launching gGRC as Stand-alone Flask
 -----------------------------------
 
+We strive to make getting up and running as simple as possible; to that end,
+launching the application is simple:
+
 .. sourcecode:: bash
 
-   cd /vagrant
-   ./launch_ggrc
+   launch_ggrc
 
 Launching gGRC in Google App Engine SDK
 ---------------------------------------
+
+We strive to make getting up and running as simple as possible; to that end,
+launching the application in the Google App Engine SDK environment is simple:
 
 .. sourcecode:: bash
 
@@ -72,8 +82,14 @@ Running Unit Tests
 
 .. sourcecode:: bash
 
-   cd /vagrant
-   ./unittests
+   run_unittests
+
+Running Behave Integration Tests
+--------------------------------
+
+.. sourcecode:: bash
+
+   run_behave
 
 Details
 =======
