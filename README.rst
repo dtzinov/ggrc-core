@@ -201,6 +201,40 @@ project directory:
   vagrant destroy
   vagrant up
 
+Compiling Sass Templates
+------------------------
+
+Since gGRC uses Sass for CSS templating, the templates need to be compiled.
+However, this has been automated via script command made available on the path
+in the virtual machine:
+
+.. sourccode:: bash
+
+  build_compass
+
+To have a process watch the Sass resources and compile them as they are changed
+you could use this command:
+
+.. sourcecode:: bash
+
+  watch_compass
+
+Compiling Assets
+----------------
+
+For other asset bundling required, there is the following command:
+
+.. sourcecode:: bash
+
+  build_assets
+
+As for compass, there is an asset builder that can watch for changes and update
+them as they change:
+
+.. sourcecode:: bash
+
+  watch_assets
+
 Gotchas
 =======
 
@@ -273,4 +307,13 @@ solution is to update the submodules:
 .. sourcecode:: bash
 
   git submodule update
+
+Given that Sass and Javascript related projects are included in the submodule
+requirments of gGRC, it may also be necessary to rebuild the Sass and other
+web assets:
+
+.. sourcecode:: bash
+
+  build_compass
+  build_assets
 
