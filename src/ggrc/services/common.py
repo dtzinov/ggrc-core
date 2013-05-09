@@ -137,7 +137,12 @@ class Resource(View):
     header_error = self.validate_headers_for_put_or_delete(obj)
     if header_error:
       return header_error
-    src = self.request.json[self.model_name]
+    src = UnicodeSafeJsonWrapper(self.request.json)
+    try:
+      src = src[self.model_name]
+    except KeyError, e:
+      return current_app.make_response((
+        'Required attribute "%s" not found' % self.model_name, 400, []))
     ggrc.builder.json.update(obj, src)
     #FIXME Fake the modified_by_id until we have that information in session.
     obj.modified_by_id = 1
@@ -181,7 +186,11 @@ class Resource(View):
         'Content-Type must be application/json', 415,[]))
     obj = self.model()
     src = UnicodeSafeJsonWrapper(self.request.json)
-    src = src[self.model_name]
+    try:
+      src = src[self.model_name]
+    except KeyError, e:
+      return current_app.make_response((
+        'Required attribute "%s" not found' % self.model_name, 400, []))
     ggrc.builder.json.create(obj, src)
     #FIXME Fake the modified_by_id until we have that information in session.
     obj.modified_by_id = 1
