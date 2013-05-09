@@ -3,6 +3,8 @@ from sqlalchemy.ext.declarative import declared_attr
 from .associationproxy import association_proxy
 from .mixins import BusinessObject, Timeboxed
 from .categorization import Categorizable
+from .object_document import Documentable
+from .object_person import Personable
 
 CATEGORY_SYSTEM_TYPE_ID = 101
 
@@ -12,7 +14,8 @@ class SystemCategorized(Categorizable):
     return cls._categorizations(
         'categorizations', 'categories', CATEGORY_SYSTEM_TYPE_ID)
 
-class System(Timeboxed, BusinessObject, SystemCategorized, db.Model):
+class System(
+    Documentable, Personable, Timeboxed, BusinessObject, SystemCategorized, db.Model):
   __tablename__ = 'systems'
 
   infrastructure = db.Column(db.Boolean)

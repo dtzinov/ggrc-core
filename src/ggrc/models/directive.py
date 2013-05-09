@@ -1,8 +1,10 @@
 from ggrc import db
 from .associationproxy import association_proxy
-from .mixins import Slugged, Hyperlinked, Timeboxed
+from .mixins import BusinessObject, Timeboxed
+from .object_document import Documentable
+from .object_person import Personable
 
-class Directive(Slugged, Hyperlinked, Timeboxed, db.Model):
+class Directive(Documentable, Personable, BusinessObject, Timeboxed, db.Model):
   __tablename__ = 'directives'
 
   company = db.Column(db.Boolean, default=False, nullable=False)

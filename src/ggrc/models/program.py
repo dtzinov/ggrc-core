@@ -1,8 +1,10 @@
 from ggrc import db
 from .associationproxy import association_proxy
 from .mixins import BusinessObject, Timeboxed
+from .object_document import Documentable
+from .object_person import Personable
 
-class Program(BusinessObject, Timeboxed, db.Model):
+class Program(Documentable, Personable, BusinessObject, Timeboxed, db.Model):
   __tablename__ = 'programs'
 
   KINDS = [

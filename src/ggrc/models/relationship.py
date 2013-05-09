@@ -16,7 +16,7 @@ class Relationship(Base, db.Model):
     if hasattr(self, attr):
       return getattr(self, attr)
     cls = getattr(ggrc.models, node_type)
-    value = db.session.query(cls).get(self.node_id)
+    value = db.session.query(cls).get(node_id)
     setattr(self, attr, value)
     return value
 
@@ -54,6 +54,7 @@ class Relationship(Base, db.Model):
 
 class RelationshipType(Base, Described, db.Model):
   __tablename__ = 'relationship_types'
+  relationship_type = db.Column(db.String)
   forward_phrase = db.Column(db.String)
   backward_phrase = db.Column(db.String)
   symmetric = db.Column(db.Boolean, nullable=False)

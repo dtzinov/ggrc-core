@@ -139,7 +139,10 @@ class Builder(AttributeInfo):
   dictionary recorded.
   '''
   def publish_link_collection(self, obj, json_obj, attr_name):
-    return [{'id': o.id, 'href': url_for(o)} for o in getattr(obj, attr_name)]
+    # FIXME: This should not require `if o is not None`
+    # - if `o is None`, it means a join pointed to a non-existent object
+    return [{'id': o.id, 'href': url_for(o)}
+        for o in getattr(obj, attr_name) if o is not None]
 
   def publish_link(self, obj, json_obj, attr_name):
     attr_value = getattr(obj, attr_name)
@@ -164,6 +167,8 @@ class Builder(AttributeInfo):
               obj, json_obj, attr_name)
         else:
           json_obj[attr_name] = self.publish_link(obj, json_obj, attr_name)
+      elif isinstance(class_attr, property):
+        json_obj[attr_name] = self.publish_link(obj, json_obj, attr_name)
       else:
         json_obj[attr_name] = getattr(obj, attr_name)
 

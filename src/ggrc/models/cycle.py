@@ -1,7 +1,9 @@
 from ggrc import db
 from .mixins import Base, Described
+from .object_document import Documentable
+from .object_person import Personable
 
-class Cycle(Base, Described, db.Model):
+class Cycle(Documentable, Personable, Base, Described, db.Model):
   __tablename__ = 'cycles'
 
   start_at = db.Column(db.Date)

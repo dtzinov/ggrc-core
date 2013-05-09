@@ -43,7 +43,8 @@ class ChangeTracked(object):
   '''A model with fields to tracked the last user to modify the model, the
   creation time of the model, and the last time the model was updated.
   '''
-  modified_by_id = db.Column(db.Integer, nullable=False)
+  # FIXME: change modified_by_id to nullable=False when there is an Account model
+  modified_by_id = db.Column(db.Integer)
   created_at = db.Column(
       db.DateTime,
       **created_at_args())
@@ -64,7 +65,7 @@ class ChangeTracked(object):
 
 class Described(object):
   description = db.Column(db.Text)
-  
+
   # REST properties
   _publish_attrs = ['description']
 
