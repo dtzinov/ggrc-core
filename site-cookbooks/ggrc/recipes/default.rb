@@ -6,7 +6,7 @@ src_dir = "#{base_dir}src/"
 
 include_recipe "apt"
 
-apt_packages = %w(unzip zip make python-virtualenv fabric python-mysqldb python-imaging git)
+apt_packages = %w(unzip zip make python-virtualenv fabric python-mysqldb python-imaging git sqlite3)
 
 apt_packages.each do |package_name|
   package package_name do

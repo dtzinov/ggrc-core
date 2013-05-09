@@ -3,4 +3,4 @@
 SCRIPTPATH=$( cd "$(dirname "$0")" ; pwd -P )
 
 cd "${SCRIPTPATH}/../src"
-python -m unittest discover
+GGRC_SETTINGS_MODULE=testing python -m unittest discover

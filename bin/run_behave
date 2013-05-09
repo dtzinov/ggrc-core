@@ -3,4 +3,4 @@
 SCRIPTPATH=$( cd "$(dirname "$0")" ; pwd -P )
 
 cd "${SCRIPTPATH}/../src"
-behave service_specs
+GGRC_SETTINGS_MODULE=testing behave service_specs
