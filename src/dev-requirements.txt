@@ -4,7 +4,3 @@ Flask-Testing
 mock
 requests
 PyYAML
-# HamlPy is required here to pull in "requirements" which aren't
-# actually required but will cause `import hamlpy` to fail
-# Requirements are: django, Jinja2, markdown, pygments
-HamlPy
