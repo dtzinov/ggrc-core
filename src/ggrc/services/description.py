@@ -3,10 +3,9 @@ from flask.views import MethodView
 
 class ServiceDescription(MethodView):
   def get(self):
-    from ggrc import collections
     from ggrc import services
     endpoints = {}
-    for context_path, service in collections:
+    for context_path, service in services.all_collections():
       service = getattr(services, service.__name__)
       endpoints[service.__name__] = {
           'href': service.url_for(),
