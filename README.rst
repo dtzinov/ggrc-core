@@ -45,6 +45,11 @@ have the prerequisite software installed. Here are the steps:
   pip install --no-deps -r src/requirements.txt
   build_compass
   build_assets
+  db_reset
+
+If you see download errors during the ``vagrant up`` stage, or if any subsequent
+step fails, try running ``vagrant provision`` (See `Provision a running Vagrant 
+VM`_ below for more).
 
 Now you're in the VM and ready to rock. Get to work!
 
