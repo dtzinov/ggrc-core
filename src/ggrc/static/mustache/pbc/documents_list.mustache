@@ -4,7 +4,7 @@
       <div class="span6">
         {{#pack document issystem=system_or_process}}
         {{#if link_url}}
-          <a class="inner-element" data-popover-trigger="sticky-hover" data-sticky-popover="true" data-content="{{render '/static/mustache/pbc/iframe_tooltip.mustache'}}" {{^issystem}}data-placement="right"{{/issystem}} href="{{link_url}}" target="_blank">
+          <a class="inner-element" data-popover-trigger="sticky-hover" data-sticky-popover="true" data-content="{{render '/assets/pbc/iframe_tooltip.mustache'}}" {{^issystem}}data-placement="right"{{/issystem}} href="{{link_url}}" target="_blank">
               {{{withattr "data-original-title" "<div class='row-fluid'><div class='span12'><h3><i class='grcicon-link'></i> Viewing {firstnonempty title link_url} </span> </h3></div></div>"}}}
             {{firstnonempty title link_url}}
           </a>
