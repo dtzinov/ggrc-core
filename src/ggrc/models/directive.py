@@ -3,6 +3,7 @@ from .associationproxy import association_proxy
 from .mixins import BusinessObject, Timeboxed
 from .object_document import Documentable
 from .object_person import Personable
+from .reflection import PublishOnly
 
 class Directive(Documentable, Personable, BusinessObject, Timeboxed, db.Model):
   __tablename__ = 'directives'
@@ -45,20 +46,9 @@ class Directive(Documentable, Personable, BusinessObject, Timeboxed, db.Model):
       'kind',
       'organization',
       'programs',
-      'program_directives',
+      PublishOnly('program_directives'),
       'scope',
       'sections',
       'version',
       ]
-  _update_attrs = [
-      'audit_start_date',
-      'company',
-      'organization',
-      'programs',
-      'scope',
-      'version',
-      #FIXME
-      #'audit_frequency',
-      #'audit_duration',
-      #etc..
-      ]
+

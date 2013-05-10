@@ -5,6 +5,7 @@ from .categorization import Categorizable
 from .mixins import Slugged, Described, Hierarchical, Hyperlinked, Timeboxed
 from .object_document import Documentable
 from .object_person import Personable
+from .reflection import PublishOnly
 
 CATEGORY_CONTROL_TYPE_ID = 100
 CATEGORY_ASSERTION_TYPE_ID = 102
@@ -58,25 +59,25 @@ class Control(
                   'Option.role == "verify_frequency")',
       uselist=False)
   system_controls = db.relationship('SystemControl', backref='control')
-  systems = association_proxy('system_controls', 'system', 'System')
+  systems = association_proxy('system_controls', 'system', 'SystemControl')
   control_sections = db.relationship('ControlSection', backref='control')
-  sections = association_proxy('control_sections', 'section', 'Section')
+  sections = association_proxy('control_sections', 'section', 'ControlSection')
   control_controls = db.relationship(
       'ControlControl',
       foreign_keys='ControlControl.control_id',
       backref='control',
       )
   implemented_controls = association_proxy(
-      'control_controls', 'implemented_control', 'Control')
+      'control_controls', 'implemented_control', 'ControlControl')
   implementing_control_controls = db.relationship(
       'ControlControl',
       foreign_keys='ControlControl.implemented_control_id',
       backref='implemented_control',
       )
   implementing_controls = association_proxy(
-      'implementing_control_controls', 'control', 'Control')
+      'implementing_control_controls', 'control', 'ControlControl')
   control_risks = db.relationship('ControlRisk', backref='control')
-  risks = association_proxy('control_risks', 'risk', 'Risk')
+  risks = association_proxy('control_risks', 'risk', 'ControlRisk')
   control_assessments = db.relationship('ControlAssessment', backref='control')
 
   # REST properties
@@ -92,16 +93,15 @@ class Control(
       'key_control',
       'active',
       'notes',
-      'system_controls',
+      PublishOnly('system_controls'),
       'systems',
-      'control_sections',
+      PublishOnly('control_sections'),
       'sections',
-      'control_controls',
+      PublishOnly('control_controls'),
       'implemented_controls',
-      'implementing_control_controls',
+      PublishOnly('implementing_control_controls'),
       'implementing_controls',
-      'control_risks',
+      PublishOnly('control_risks'),
       'risks',
       'control_assessments',
       ]
-

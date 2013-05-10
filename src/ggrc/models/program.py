@@ -19,7 +19,7 @@ class Program(Documentable, Personable, BusinessObject, Timeboxed, db.Model):
   kind = db.Column(db.String)
   program_directives = db.relationship('ProgramDirective', backref='program')
   directives = association_proxy(
-      'program_directives', 'directive', 'Directive')
+      'program_directives', 'directive', 'ProgramDirective')
   cycles = db.relationship('Cycle', backref='program')
 
   _publish_attrs = [

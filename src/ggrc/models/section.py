@@ -9,12 +9,18 @@ class Section(Hierarchical, BusinessObject, db.Model):
   na = db.Column(db.Boolean, default=False, nullable=False)
   notes = db.Column(db.Text)
   control_sections = db.relationship('ControlSection', backref='section')
-  controls = association_proxy('control_sections', 'control', 'Control')
+  controls = association_proxy('control_sections', 'control', 'ControlSection')
 
   _publish_attrs = [
       'directive',
       'na',
       'notes',
       'control_sections',
+      'controls',
+      ]
+  _update_attrs = [
+      'directive',
+      'na',
+      'notes',
       'controls',
       ]

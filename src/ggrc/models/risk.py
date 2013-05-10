@@ -4,6 +4,7 @@ from .control import ControlCategorized
 from .mixins import BusinessObject, Timeboxed
 from .object_document import Documentable
 from .object_person import Personable
+from .reflection import PublishOnly
 
 class Risk(
     Documentable, Personable, Timeboxed, BusinessObject, ControlCategorized , db.Model):
@@ -25,7 +26,7 @@ class Risk(
   residual_risk = db.Column(db.Text)
   impact = db.Column(db.Text)
   control_risks = db.relationship('ControlRisk', backref='risk')
-  controls = association_proxy('control_risks', 'control', 'Control')
+  controls = association_proxy('control_risks', 'control', 'ControlRisk')
   risk_risky_attributes = db.relationship(
       'RiskRiskyAttribute', backref='risk')
   risky_attributes = association_proxy(
@@ -44,8 +45,8 @@ class Risk(
       'inherent_risk',
       'residual_risk',
       'impact',
-      'control_risks',
+      PublishOnly('control_risks'),
       'controls',
-      'risk_risky_attributes',
+      PublishOnly('risk_risky_attributes'),
       'risky_attributes',
       ]

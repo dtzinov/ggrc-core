@@ -8,6 +8,7 @@ def resolve_class(model_class):
   return model_class
 
 def association_proxy(target_collection, attr, model_class):
+  #FIXME is model_class needed? can't that be determined off of reflection?!
   return orig_association_proxy(target_collection, attr, creator=\
       lambda arg: resolve_class(model_class)(**{
         attr: arg,
