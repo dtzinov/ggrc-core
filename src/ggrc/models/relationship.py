@@ -8,9 +8,11 @@ class Relationship(Base, db.Model):
   source_type = db.Column(db.String)
   destination_id = db.Column(db.Integer)
   destination_type = db.Column(db.String)
-  relationship_type_id = db.Column(
-      db.Integer, db.ForeignKey('relationship_types.id'))
-  relationship_type = db.relationship('RelationshipType', uselist=False)
+  relationship_type_id = db.Column(db.String)
+  # FIXME: Should this be a strict constraint?  If so, a migration is needed.
+  #relationship_type_id = db.Column(
+  #    db.Integer, db.ForeignKey('relationship_types.id'))
+  #relationship_type = db.relationship('RelationshipType', uselist=False)
 
   def get_relationship_node(self, attr, node_type, node_id):
     if hasattr(self, attr):
@@ -49,7 +51,7 @@ class Relationship(Base, db.Model):
   _publish_attrs = [
       'source',
       'destination',
-      'relationship_type',
+      'relationship_type_id',
       ]
 
 class RelationshipType(Base, Described, db.Model):
