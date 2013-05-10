@@ -8,14 +8,18 @@ from flask.views import View
 from ggrc import db
 from wsgiref.handlers import format_date_time
 
+"""gGRC Collection REST services implementation. Common to all gGRC collection
+resources.
+"""
+
 class DateTimeEncoder(json.JSONEncoder):
-  '''Custom JSON Encoder to handle datetime objects
+  """Custom JSON Encoder to handle datetime objects
 
   from:
      `http://stackoverflow.com/questions/12122007/python-json-encoder-to-support-datetime`_
   also consider:
      `http://hg.tryton.org/2.4/trytond/file/ade5432ac476/trytond/protocols/jsonrpc.py#l53`_
-  '''
+  """
   def default(self, obj):
     if isinstance(obj, datetime.datetime):
       return obj.isoformat()
@@ -27,9 +31,9 @@ class DateTimeEncoder(json.JSONEncoder):
       return super(DateTimeEncoder, self).default(obj)
     
 class UnicodeSafeJsonWrapper(dict):
-  '''JSON received via POST has keys as unicode. This makes get work with plain
+  """JSON received via POST has keys as unicode. This makes get work with plain
   `str` keys.
-  '''
+  """
   def __getitem__(self, key):
     ret = self.get(key)
     if ret is None:
@@ -43,7 +47,7 @@ class UnicodeSafeJsonWrapper(dict):
 #   - /resources (GET, POST)
 #   - /resources/<pk:pk_type> (GET, PUT, POST, DELETE)
 class Resource(View):
-  '''View base class for Views handling.  Will typically be registered with an
+  """View base class for Views handling.  Will typically be registered with an
   application following a collection style for routes. Collection `GET` and
   `POST` will have a route like `/resources` while collection member
   resource routes will have routes likej `/resources/<pk:pk_type>`.
@@ -55,7 +59,7 @@ class Resource(View):
      FooCollection.add_to(app, '/foos')
 
   By default will only support the `application/json` content-type.
-  '''
+  """
   #methods = ['GET', 'PUT', 'POST', 'DELETE']
   pk = 'id'
   pk_type = 'int'
@@ -317,7 +321,7 @@ class Resource(View):
     return current_app.make_response((self.not_found_message(), 404, []))
 
   def etag(self, last_modified):
-    '''Generate the etag given a datetime for the last time the resource was
+    """Generate the etag given a datetime for the last time the resource was
     modified. This isn't as good as an etag generated off of a hash of the
     representation, but, it doesn't require the representation in order to be
     calculated. An alternative would be to keep an etag on the stored
@@ -328,15 +332,15 @@ class Resource(View):
        Using the datetime implies the need for some care - the resolution of
        the time object needs to be sufficient such that you don't end up with
        the same etag due to two updates performed in rapid succession.
-    '''
+    """
     return '"{}"'.format(hashlib.sha1(str(last_modified)).hexdigest())
 
   def collection_last_modified(self):
-    '''Calculate the last time a member of the collection was modified. This
+    """Calculate the last time a member of the collection was modified. This
     method relies on the fact that the collection table has an `updated_at`
     column; services for models that don't have this field **MUST** override
     this method.
-    '''
+    """
     result = db.session.query(
         self.model.updated_at).order_by(self.model.updated_at.desc()).first()
     if result is not None:
