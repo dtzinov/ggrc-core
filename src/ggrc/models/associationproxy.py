@@ -1,3 +1,6 @@
+'''Wrapper for SQLAlchemy association proxies. Automatically add creator
+function for model classes for join table associations.
+'''
 from sqlalchemy.ext.associationproxy \
     import association_proxy as orig_association_proxy
 
@@ -8,6 +11,7 @@ def resolve_class(model_class):
   return model_class
 
 def association_proxy(target_collection, attr, model_class):
+  '''Return an association proxy with a creator function specified.'''
   #FIXME is model_class needed? can't that be determined off of reflection?!
   return orig_association_proxy(target_collection, attr, creator=\
       lambda arg: resolve_class(model_class)(**{

@@ -1,3 +1,4 @@
+'''All gGRC model objects and associated utilities.'''
 from .all_models import *
 
 def create_db():
