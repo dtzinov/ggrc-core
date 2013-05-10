@@ -1,8 +1,8 @@
-'''Utilties to deal with introspecting gGRC models for publishing, creation,
-and update from resource format representations, such as JSON.'''
+"""Utilties to deal with introspecting gGRC models for publishing, creation,
+and update from resource format representations, such as JSON."""
 
 class DontPropagate(object):
-  '''Attributes wrapped by ``DontPropagate`` instances should not be considered
+  """Attributes wrapped by ``DontPropagate`` instances should not be considered
   to be a part of an inherited list. For example, ``_update_attrs`` can be
   inherited from ``_publish_attrs`` if left unspecified. This class provides
   a mechanism to use that inheritance while excluding some elements from the
@@ -26,20 +26,20 @@ class DontPropagate(object):
     _update_attrs = [
     'inherited_attr',
     ]
-  '''
+  """
   def __init__(self, attr_name):
     self.attr_name = attr_name
 
 class PublishOnly(DontPropagate):
-  '''Alias of ``DontPropagate`` for use in a ``_publish_attrs`` specification.
-  '''
+  """Alias of ``DontPropagate`` for use in a ``_publish_attrs`` specification.
+  """
   pass
 
 class AttributeInfo(object):
-  '''Gather model CRUD information by reflecting on model classes. Builds and
+  """Gather model CRUD information by reflecting on model classes. Builds and
   caches a list of the publishing properties for a class by walking the
   class inheritance tree.
-  '''
+  """
   def __init__(self, tgt_class):
     self._publish_attrs = AttributeInfo.gather_publish_attrs(tgt_class)
     self._update_attrs = AttributeInfo.gather_update_attrs(tgt_class)
@@ -47,13 +47,13 @@ class AttributeInfo(object):
 
   @classmethod
   def gather_attrs(cls, tgt_class, src_attrs, accumulator=None):
-    '''Gathers the attrs to be included in a list for publishing, update, or
+    """Gathers the attrs to be included in a list for publishing, update, or
     some other purpose. Supports inheritance by iterating the list of
     ``src_attrs`` until a list is found.
 
     Inheritance of some attributes can be circumvented through use of the
     ``DontPropoagate`` decorator class.
-    '''
+    """
     src_attrs = src_attrs if type(src_attrs) is list else [src_attrs]
     accumulator = accumulator if accumulator is not None else set()
     ignore_dontpropagate = True

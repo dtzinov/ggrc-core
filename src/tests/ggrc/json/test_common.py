@@ -6,10 +6,10 @@ from mock import MagicMock
 from tests.ggrc import TestCase
 
 class TestBuilder(TestCase):
-  '''Note: Since we are using module member lookup to wire the builders up,
+  """Note: Since we are using module member lookup to wire the builders up,
   we have to clean up after every test. This is why we're using mock and
   removing the builders on tearDown.
-  '''
+  """
   def mock_service(self, name):
     svc = MagicMock(Resource)
     svc.url_for.return_value = '/some-url'

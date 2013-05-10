@@ -1,4 +1,4 @@
-'''Manage "static" assets
+"""Manage "static" assets
 
 The actual list of stylesheets and javascripts to compile is in 
 `assets/assets.yaml`.
@@ -16,7 +16,7 @@ monitor utility, which can be invoked thusly:
 ..
   cd src/ggrc
   compass watch -c assets/compass.config.rb
-'''
+"""
 
 from . import settings
 

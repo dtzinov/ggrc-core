@@ -76,7 +76,7 @@ class TestResource(TestCase):
     return format_date_time(time.mktime(timestamp.utctimetuple()))
 
   def get_location(self, response):
-    '''Ignore the `http://localhost` prefix of the Location'''
+    """Ignore the `http://localhost` prefix of the Location"""
     return response.headers['Location'][16:]
 
   def assertRequiredHeaders(

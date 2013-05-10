@@ -2,7 +2,7 @@ from ggrc import settings, db
 from sqlalchemy.ext.declarative import declared_attr
 from sqlalchemy.orm import relationship
 
-'''Mixins to add common attributes and relationships. Note, all model classes
+"""Mixins to add common attributes and relationships. Note, all model classes
 must also inherit from ``db.Model``. For example:
 
   ..
@@ -10,11 +10,10 @@ must also inherit from ``db.Model``. For example:
      class Market(BusinessObject, db.Model):
        __tablename__ = 'markets'
 
-'''
+"""
 
 class Identifiable(object):
-  '''A model with an ``id`` property that is the primary key.
-  '''
+  """A model with an ``id`` property that is the primary key."""
   id = db.Column(db.Integer, primary_key=True)
 
   # REST properties
@@ -22,13 +21,13 @@ class Identifiable(object):
   _update_attrs = []
 
 def created_at_args():
-  '''Sqlite doesn't have a server, per se, so the server_* args are useless.'''
+  """Sqlite doesn't have a server, per se, so the server_* args are useless."""
   if settings.SQLALCHEMY_DATABASE_URI.startswith('sqlite'):
     return {'default': db.text('current_timestamp'),}
   return {'server_default': db.text('current_timestamp'),}
 
 def updated_at_args():
-  '''Sqlite doesn't have a server, per se, so the server_* args are useless.'''
+  """Sqlite doesn't have a server, per se, so the server_* args are useless."""
   if settings.SQLALCHEMY_DATABASE_URI.startswith('sqlite'):
     return {
         'default': db.text('current_timestamp'),
@@ -40,9 +39,9 @@ def updated_at_args():
       }
 
 class ChangeTracked(object):
-  '''A model with fields to tracked the last user to modify the model, the
+  """A model with fields to tracked the last user to modify the model, the
   creation time of the model, and the last time the model was updated.
-  '''
+  """
   # FIXME: change modified_by_id to nullable=False when there is an Account model
   modified_by_id = db.Column(db.Integer)
   created_at = db.Column(
@@ -102,16 +101,16 @@ class Timeboxed(object):
   _publish_attrs = ['start_date', 'end_date']
 
 class Base(Identifiable, ChangeTracked):
-  '''Several of the models use the same mixins. This class covers that common
+  """Several of the models use the same mixins. This class covers that common
   case.
-  '''
+  """
   pass
 
 class Slugged(Base):
-  '''Several classes make use of the common mixins and additional are
+  """Several classes make use of the common mixins and additional are
   "slugged" and have additional fields related to their publishing in the
   system.
-  '''
+  """
   slug = db.Column(db.String, nullable=False)
   title = db.Column(db.String, nullable=False)
 

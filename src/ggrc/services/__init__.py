@@ -1,10 +1,11 @@
-'''All gGRC REST services.'''
 from .common import *
 
+"""All gGRC REST services."""
+
 def all_collections():
-  '''The list of all gGRC collection services as a list of
+  """The list of all gGRC collection services as a list of
   (url, ModelClass) tuples.
-  '''
+  """
   from ggrc.models import all_models as models
 
   return [
@@ -45,7 +46,7 @@ def all_collections():
     ]
 
 def init_all_services(app):
-  '''Register all gGRC REST services with the Flask application ``app``.'''
+  """Register all gGRC REST services with the Flask application ``app``."""
   from .common import Resource
 
   for k,v in all_collections():

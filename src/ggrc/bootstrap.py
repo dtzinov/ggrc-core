@@ -16,9 +16,9 @@ from flask.ext.sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
 
 class String(db.String):
-  '''Simple subclass of sqlalchemy.orm.String which provides a default
+  """Simple subclass of sqlalchemy.orm.String which provides a default
   length for `String` types to satisfy MySQL
-  '''
+  """
   def __init__(self, length=None, *args, **kwargs):
     # TODO: Check for MySQL and only apply when needed
     if length is None:

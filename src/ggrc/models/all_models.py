@@ -1,3 +1,4 @@
+"""All gGRC model classes grouped together for convenience."""
 
 # TODO: Implement with Authentication
 #from .account import Account

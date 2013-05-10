@@ -4,13 +4,13 @@ from behave import given, when, then
 from iso8601 import parse_date
 
 class DateTimeEncoder(json.JSONEncoder):
-  '''Custom JSON Encoder to handle datetime objects
+  """Custom JSON Encoder to handle datetime objects
 
   from:
      `http://stackoverflow.com/questions/12122007/python-json-encoder-to-support-datetime`_
   also consider:
      `http://hg.tryton.org/2.4/trytond/file/ade5432ac476/trytond/protocols/jsonrpc.py#l53`_
-  '''
+  """
   def default(self, obj):
     if isinstance(obj, datetime.datetime):
       return obj.isoformat('T')
@@ -51,7 +51,7 @@ def get_resource(context, url):
       )
 
 class Example(object):
-  '''An example resource for use in a behave scenario, by name.'''
+  """An example resource for use in a behave scenario, by name."""
   def __init__(self, resource_type, value):
     self.resource_type = resource_type
     self.value = value
@@ -80,19 +80,19 @@ def named_example_resource(context, resource_type, name):
   setattr(context, name, example)
 
 def get_service_endpoint_url(context, endpoint_name):
-  '''Return the URL for the `endpoint_name`. This assumes that there is a
+  """Return the URL for the `endpoint_name`. This assumes that there is a
   `service_description` in the `context` to ues to lookup the endpoint url.
-  '''
+  """
   return context.service_description.get(u'service_description')\
       .get(u'endpoints').get(unicode(endpoint_name)).get(u'href')
 
 @given('"{name}" is POSTed to its collection')
 def post_named_example_to_collection_endpoint(context, name):
-  '''Create a new resource for the given example. Expects that there is a
+  """Create a new resource for the given example. Expects that there is a
   `service_description` in `context` to use to lookup the endpoint url. The
   created resource is added to the context as the attribute name given by
   `name`.
-  '''
+  """
   example = getattr(context, name)
   url = get_service_endpoint_url(context, example.resource_type)
   post_named_example(context, name, url)

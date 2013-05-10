@@ -1,4 +1,4 @@
-'''Settings for Flask and Flask-SQLAlchemy
+"""Settings for Flask and Flask-SQLAlchemy
 
 Flask: http://flask.pocoo.org/docs/config/
 Flask-SQLAlchemy: https://github.com/mitsuhiko/flask-sqlalchemy/blob/master/docs/config.rst
@@ -6,7 +6,7 @@ Flask-SQLAlchemy: https://github.com/mitsuhiko/flask-sqlalchemy/blob/master/docs
 Default settings should go in `settings.default`.
 
 Environment/deployment-specific settings should go in `settings.<environment_name>`.
-'''
+"""
 
 import sys, os
 

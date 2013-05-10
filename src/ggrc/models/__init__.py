@@ -1,5 +1,6 @@
-'''All gGRC model objects and associated utilities.'''
 from .all_models import *
+
+"""All gGRC model objects and associated utilities."""
 
 def create_db():
   # FIXME: Should not have to import app

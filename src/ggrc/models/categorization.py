@@ -31,7 +31,7 @@ class Categorization(Base, db.Model):
   _update_attrs = []
 
 class Categorizable(object):
-  '''Subclasses **MUST** provide a declared_attr method that defines the
+  """Subclasses **MUST** provide a declared_attr method that defines the
   relationship and association_proxy. For example:
     
   ..
@@ -40,7 +40,7 @@ class Categorizable(object):
      def control_categorizations(cls):
        return cls.categorizations(
            'control_categorizations', 'control_categories', 100)
-  '''
+  """
   @classmethod
   def _categorizations(cls, rel_name, proxy_name, scope):
     setattr(cls, proxy_name, association_proxy(
