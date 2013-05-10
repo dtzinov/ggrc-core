@@ -58,6 +58,15 @@ can.Model("can.Model.Cacheable", {
       }
     });
   }
+  , models : function(params) {
+    if(params[this.root_collection + "_collection"]) {
+      params = params[this.root_collection + "_collection"]
+    }
+    if(params[this.root_collection]) {
+      params = params[this.root_collection];
+    }
+    return this._super(params);
+  }
   , model : function(params) {
     var m;
     var obj_name = this.root_object;

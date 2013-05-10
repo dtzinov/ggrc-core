@@ -4,7 +4,8 @@
 
 can.Model.Cacheable("CMS.Models.Section", {
   root_object : "section"
-  , findAll : "GET " + (/^\/[^\/]+\/[^\/]+/.exec(window.location.pathname) || [])[0] + "/sections.json"
+  , root_collection : "sections"
+  , findAll : "GET /api/sections?" + window.cms_singularize((/^\/([^\/]+)\//.exec(window.location.pathname) || ["",""])[1]) + "_id=" + (/^\/[^\/]+\/([^\/]+)/.exec(window.location.pathname) || ["",""])[1]
   , update : function(id, section) {
     var param = {};
     can.each(section, function(val, key) {
@@ -275,11 +276,11 @@ CMS.Models.Section("CMS.Models.SectionSlug", {
     return m;
   }
   , tree_view_options : {
-    list_view : "/assets/sections/tree.mustache"
+    list_view : "/static/mustache/sections/tree.mustache"
     , child_options : [{
       model : CMS.Models.Control
       , property : "linked_controls"
-      , list_view : "/assets/controls/tree.mustache"
+      , list_view : "/static/mustache/controls/tree.mustache"
     }, {
       model : CMS.Models.SectionSlug
       , property : "children"

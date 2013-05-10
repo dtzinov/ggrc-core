@@ -15,7 +15,7 @@ var widget_descriptors = {
     , object_category : "governance"
     , object_route : "programs"
     , object_display : "Programs"
-    , tooltip_view : "/assets/programs/object_tooltip.mustache"
+    , tooltip_view : "/static/mustache/programs/object_tooltip.mustache"
   }
   , "directive" : {
     model : CMS.Models.Directive
@@ -135,7 +135,7 @@ var widget_descriptors = {
     , object_category : "business"
     , object_route : "systems"
     , object_display : "Systems/Processes"
-    , widget_view : "/assets/systems/object_widget.mustache"
+    , widget_view : "/static/mustache/systems/object_widget.mustache"
   }
   , "sectionslug" : {
     model : CMS.Models.SectionSlug

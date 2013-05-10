@@ -29,7 +29,7 @@ can.Control("CMS.Controllers.Responses", {
         , person_model : namespace.CMS.Models.Person
         , object_document_model : namespace.CMS.Models.ObjectDocument
         , document_model : namespace.CMS.Models.Document
-        , list : "/assets/pbc/responses_list.mustache"
+        , list : "/static/mustache/pbc/responses_list.mustache"
         , id : null //The ID of the parent request
         , type_id : null // type_id from request
         , type_name : null // type_name from request

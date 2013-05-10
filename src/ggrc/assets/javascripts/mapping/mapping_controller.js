@@ -200,7 +200,7 @@ can.Control("CMS.Controllers.Mapping", {
 
     ev.preventDefault();
     // Not putting in the real model because live binding is having a problem with how we do things.
-    $dialog.html(can.view("/assets/sections/controls_mapping.mustache", el.closest("[data-model]").data("model").serialize()));
+    $dialog.html(can.view("/static/mustache/sections/controls_mapping.mustache", el.closest("[data-model]").data("model").serialize()));
     $dialog.modal_form({ backdrop: true }).modal_form('show');
   }
 
@@ -225,7 +225,7 @@ can.Control("CMS.Controllers.Mapping", {
         .then(function() {
           _section.update_linked_controls();
           var $dialog = $("#mapping_dialog");
-          $dialog.html(can.view("/assets/sections/controls_mapping.mustache", _section.serialize()));
+          $dialog.html(can.view("/static/mustache/sections/controls_mapping.mustache", _section.serialize()));
           that.options.section_list_controller.draw_list();
         }),
       el);
@@ -293,25 +293,25 @@ CMS.Controllers.Mapping("CMS.Controllers.ControlMappingPopup", {
       this.element.append($(new Spinner().spin().el).css({"position" : "relative", "left" : 50, "top" : 50, "height": 150, "width": 150}));
     this.options.observer = new can.Observe({
       section : this.options.section
-      , parent_type : this.options.parent_model.root_object
+      , parent_type : window.cms_singularize(this.options.parent_model.root_object)
       , parent_subtype : can.underscore(this.options.parent_model.shortName).replace("_", " ")
       , parent_id : this.options.parent_id
     });
 
-    can.view("/assets/sections/control_selector.mustache", that.options.observer, function(frag) {
+    can.view("/static/mustache/sections/control_selector.mustache", that.options.observer, function(frag) {
       that.options.company_list_controller = that.element
       .html(frag).trigger("shown")
       .find(".controls-list")
       .cms_controllers_controls({
-        list : "/assets/controls/list_selector.mustache"
-        , show : "/assets/controls/show_selector.mustache"
+        list : "/static/mustache/controls/list_selector.mustache"
+        , show : "/static/mustache/controls/show_selector.mustache"
         , arity : 2})
       .control();
 
       that.options.selected_control_controller = that.element
       .find(".selector-info.control")
       .append($(new Spinner().spin().el).css({"position" : "relative", "left" : 50, "top" : 50, "height": 150, "width": 150}))
-      .cms_controllers_controls({show : "/assets/controls/show_selected_sidebar.mustache", arity : 1})
+      .cms_controllers_controls({show : "/static/mustache/controls/show_selected_sidebar.mustache", arity : 1})
       .control();
 
       that.search_filter(that.options.company_list_controller.find_all_deferred).done(function(d) {
@@ -377,7 +377,7 @@ CMS.Controllers.Mapping("CMS.Controllers.ControlMappingPopup", {
   //   }
   //   $count.html(html);
   //   var data = obj.linked_controls.length ? obj.linked_controls.serialize() : {na : obj.na};
-  //   var render_str = can.view.render("/assets/controls/list_popover.mustache", data);
+  //   var render_str = can.view.render("/static/mustache/controls/list_popover.mustache", data);
   //   $count.attr("data-content", render_str).data("content", render_str)
   //   this.update();
   // }
@@ -398,7 +398,7 @@ CMS.Controllers.Mapping("CMS.Controllers.ControlMappingPopup", {
     var that = this;
     var check = { ids_only: true };
     if(this.element.find(".control-type-filter").prop("checked")) {
-      check[this.options.parent_model.root_object + "_id"] = this.options.parent_id;
+      check[window.cms_singularize(this.options.parent_model.root_object) + "_id"] = this.options.parent_id;
     }
     var search = this.element.find(".widgetsearch-tocontent").val();
     

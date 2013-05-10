@@ -4,13 +4,15 @@
 
 can.Model.Cacheable("CMS.Models.Program", {
   root_object : "program"
-  , findAll : "/programs.json?company_controls_first=true"
+  , root_collection : "programs"
+  , findAll : "/api/programs?company_controls_first=true"
 }, {});
 
 can.Model.Cacheable("CMS.Models.Directive", {
   root_object : "directive"
-  , findAll : "/directives.json"
-  , findOne : "/directives/{id}.json"
+  , root_collection : "directives"
+  , findAll : "/api/directives"
+  , findOne : "/api/directives/{id}"
 }, {
   init : function() {
     this._super && this._super.apply(this, arguments);
@@ -29,58 +31,66 @@ can.Model.Cacheable("CMS.Models.Directive", {
 });
 
 CMS.Models.Directive("CMS.Models.Regulation", {
-  findAll : "/directives.json?meta_kind=regulation"
+  findAll : "/api/directives?meta_kind=regulation"
 }, {});
 
 CMS.Models.Directive("CMS.Models.Policy", {
-  findAll : "/directives.json?meta_kind=policy"
+  findAll : "/api/directives?meta_kind=policy"
 }, {});
 
 CMS.Models.Directive("CMS.Models.Contract", {
-  findAll : "/directives.json?meta_kind=contract"
+  findAll : "/api/directives?meta_kind=contract"
 }, {});
 
 can.Model.Cacheable("CMS.Models.OrgGroup", {
   root_object : "org_group"
-  , findAll : "/org_groups.json"
+  , root_collection : "org_groups"
+  , findAll : "/api/org_groups"
 }, {});
 
 can.Model.Cacheable("CMS.Models.Project", {
   root_object : "project"
-  , findAll : "/projects.json"
+  , root_collection : "projects"
+  , findAll : "/api/projects"
 }, {});
 
 can.Model.Cacheable("CMS.Models.Facility", {
   root_object : "facility"
-  , findAll : "/facilities.json"
+  , root_collection : "facilities"
+  , findAll : "/api/facilities"
 }, {});
 
 can.Model.Cacheable("CMS.Models.Product", {
   root_object : "product"
-  , findAll : "/products.json"
+  , root_collection : "products"
+  , findAll : "/api/products"
 }, {});
 
 can.Model.Cacheable("CMS.Models.DataAsset", {
   root_object : "data_asset"
-  , findAll : "/data_assets.json"
+  , root_collection : "data_assets"
+  , findAll : "/api/data_assets"
 }, {});
 
 can.Model.Cacheable("CMS.Models.Market", {
   root_object : "market"
-  , findAll : "/markets.json"
+  , root_collection : "markets"
+  , findAll : "/api/markets"
 }, {});
 
 can.Model.Cacheable("CMS.Models.RiskyAttribute", {
   root_object : "risky_attribute"
-  , findAll : "/risky_attributes.json"
+  , root_collection : "risky_attributes"
+  , findAll : "/api/risky_attributes"
 }, {});
 
 can.Model.Cacheable("CMS.Models.Risk", {
   root_object : "risk"
+  , root_collection : "risks"
   , findAll : function(params) {
     var root_object =  this.root_object;
     return $.ajax({
-      url : "/risks.json"
+      url : "/api/risks"
       , type : "get"
       , data : params
       , dataType : "json" 

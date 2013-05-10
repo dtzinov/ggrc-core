@@ -4,11 +4,11 @@
 CMS.Controllers.Filterable("CMS.Controllers.DashboardWidgets", {
   defaults : {
     model : null
-    , list_view : "/assets/programs_dash/object_list.mustache"
-    , related_list_view : "/assets/programs_dash/related_list.mustache"
-    //, show_view : "/assets/controls/tree.mustache"
-    , tooltip_view : "/assets/programs_dash/object_tooltip.mustache"
-    , widget_view : "/assets/programs_dash/object_widget.mustache"
+    , list_view : "/static/mustache/programs_dash/object_list.mustache"
+    , related_list_view : "/static/mustache/programs_dash/related_list.mustache"
+    //, show_view : "/static/mustache/controls/tree.mustache"
+    , tooltip_view : "/static/mustache/programs_dash/object_tooltip.mustache"
+    , widget_view : "/static/mustache/programs_dash/object_widget.mustache"
     , object_type : null
     , object_category : null //e.g. "governance"
     , object_route : null //e.g. "systems"

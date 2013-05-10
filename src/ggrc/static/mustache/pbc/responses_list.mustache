@@ -57,7 +57,7 @@
               <div class="span12">
                 {{#if_equals type_name 'Documentation'}}
                   <ul class="items pbc-item-list">
-                    {{> /assets/pbc/documents_list.mustache}}
+                    {{> /static/mustache/pbc/documents_list.mustache}}
                     <li class="toggle-add-document add-new">
                       <span>
                         <a class="btn btn-mini btn-add" href="javascript://">
@@ -146,7 +146,7 @@
               {{#if_equals type_name 'Population Sample'}}
                 {{#population_sample}}
                 <div class="evidence">
-                  {{> /assets/pbc/population_sample.mustache}}
+                  {{> /static/mustache/pbc/population_sample.mustache}}
                 </div>
                 {{/population_sample}}
               {{/if_equals}}
@@ -155,7 +155,7 @@
         </div>
       </div>
       {{#if system}}
-        {{> /assets/pbc/system.mustache}}
+        {{> /static/mustache/pbc/system.mustache}}
       {{/if}}
       {{#if_null system}}
         <div class="span6">

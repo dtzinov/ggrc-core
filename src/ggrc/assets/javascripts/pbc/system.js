@@ -5,6 +5,7 @@
 
 can.Model.Cacheable("CMS.Models.System", {
     root_object : "system"
+    , root_collection : "systems"
     , xable_type : "System"
     , findAll : "GET /systems.json?responseid={id}" 
     , findOne : "GET /systems/{id}.json" 
@@ -80,14 +81,14 @@ can.Model.Cacheable("CMS.Models.System", {
         this.tree_view_options.child_options[1].model = CMS.Models.System;
     }
     , tree_view_options : {
-      list_view : "/assets/systems/tree.mustache"
+      list_view : "/static/mustache/systems/tree.mustache"
       , child_options : [{
         model : CMS.Models.Control
-        , list_view : "/assets/controls/tree.mustache"
+        , list_view : "/static/mustache/controls/tree.mustache"
         , parent_find_param : "system_id"
       },{
         model : null ///filled in after init.
-        , list_view : "/assets/systems/tree.mustache"
+        , list_view : "/static/mustache/systems/tree.mustache"
         , parent_find_param : "parent_id"
 				, link_buttons: true
       }]

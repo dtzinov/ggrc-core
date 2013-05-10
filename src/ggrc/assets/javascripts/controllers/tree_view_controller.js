@@ -4,8 +4,8 @@ can.Control("CMS.Controllers.TreeView", {
   //static properties
   defaults : {
     model : null
-    , list_view : "/assets/controls/tree.mustache"
-    , show_view : "/assets/controls/show.mustache"
+    , list_view : "/static/mustache/controls/tree.mustache"
+    , show_view : "/static/mustache/controls/show.mustache"
     , parent_id : null
     , list : null
     , single_object : false
@@ -42,7 +42,7 @@ can.Control("CMS.Controllers.TreeView", {
     //this.options.attr(this.options.model.tree_view_options).attr(opts instanceof can.Observe ? opts._data : opts);
     this.options.list ? this.draw_list() : this.fetch_list(this.options.parent_id);
     this.element.attr("data-object-type", can.underscore(this.options.model.shortName)).data("object-type", can.underscore(this.options.model.shortName));
-    this.element.attr("data-object-meta-type", can.underscore(this.options.model.root_object)).data("object-meta-type", can.underscore(this.options.model.root_object));
+    this.element.attr("data-object-meta-type", can.underscore(window.cms_singularize(this.options.model.root_object))).data("object-meta-type", can.underscore(window.cms_singularize(this.options.model.root_object)));
   }
   , fetch_list : function() {
     if(can.isEmptyObject(this.options.find_params.serialize())) {

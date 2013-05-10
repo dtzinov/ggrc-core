@@ -22,26 +22,6 @@
  *= require related_graph
  */
 
-  window.cms_singularize = function(type) {
-    type = type.trim();
-    var _type = type.toLowerCase();
-    switch(_type) {
-      case "facilities":
-      type = type[0] + "acility"; break;
-      case "people":
-      type = type[0] + "erson"; break;
-      case "processes":
-      type = type[0] + "rocess"; break;
-      case "systems_processes":
-      type = type[0] + "ystem_" + type[8] + "rocess";
-      break;
-      default:
-      type = type.replace(/s$/, "");
-    }
-
-    return type;
-  }
-
 // Initialize delegated event handlers
 jQuery(function($) {
 

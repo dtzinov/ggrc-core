@@ -63,7 +63,7 @@ $(function() {
     $sections_tree.cms_controllers_tree_view({
       model : CMS.Models.Directive
       , list : d
-      , list_view : "/assets/directives/tree.mustache"
+      , list_view : "/static/mustache/directives/tree.mustache"
       , child_options : [{
         model : CMS.Models.SectionSlug
         , property : "sections"

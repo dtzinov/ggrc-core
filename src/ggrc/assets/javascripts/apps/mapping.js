@@ -21,20 +21,20 @@
       	, {
       		RegControls : $("#rcontrol_list .content").cms_controllers_controls({
       			arity : 2
-      			, list: "/assets/controls/list_mapping.mustache"
+      			, list: "/static/mustache/controls/list_mapping.mustache"
       			, model : CMS.Models.RegControl
       			, id : directiveId }).control()
       		, CompanyControls : $("#ccontrol_list .content").cms_controllers_controls({
       			arity : 2
-      			, list: "/assets/controls/list_mapping.mustache"
+      			, list: "/static/mustache/controls/list_mapping.mustache"
       			, model : CMS.Models.CompanyControl }).control()
           , SelectedRegControl : $("#selected_rcontrol").cms_controllers_controls({
             arity : 1
-            , show: "/assets/controls/show_selected.mustache"
+            , show: "/static/mustache/controls/show_selected.mustache"
             , model : CMS.Models.RegControl }).control()
           , SelectedCompanyControl : $("#selected_ccontrol").cms_controllers_controls({
             arity : 1
-            , show: "/assets/controls/show_selected.mustache"
+            , show: "/static/mustache/controls/show_selected.mustache"
             , model : CMS.Models.CompanyControl }).control()
       	});
 
@@ -52,7 +52,7 @@
 				      }).control()
             , SelectedSection : $("#selected_sections").cms_controllers_sections({
               arity : 1
-              , show : "/assets/sections/show_selected.mustache"
+              , show : "/static/mustache/sections/show_selected.mustache"
               }).control()
           });
 

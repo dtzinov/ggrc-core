@@ -4,8 +4,9 @@
 (function(ns, can) {
 
 can.Model.Cacheable("CMS.Models.Person", {
-    root_object : "person"
-    , findAll : "GET /people.json"
+   root_object : "person"
+   , root_collection : "people"
+   , findAll : "GET /people.json"
     , create : function(params) {
         var _params = {
             person : {
@@ -59,6 +60,7 @@ can.Model.Cacheable("CMS.Models.Person", {
 
 can.Model.Cacheable("CMS.Models.ObjectPerson", {
     root_object : "object_person"
+    , root_collection : "object_people"
     , create : function(params) {
         var _params = {
             object_person : {

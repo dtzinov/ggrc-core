@@ -5,6 +5,7 @@
 
 can.Model.Cacheable("CMS.Models.Document", {
     root_object : "document"
+    , root_collection : "documents"
     , findAll : "GET /documents.json"
     , create : function(params) {
         var _params = {
@@ -64,6 +65,7 @@ can.Model.Cacheable("CMS.Models.Document", {
 
 can.Model.Cacheable("CMS.Models.ObjectDocument", {
     root_object : "object_document"
+    , root_collection : "object_documents"
     , create : function(params) {
         var _params = {
             object_document : {

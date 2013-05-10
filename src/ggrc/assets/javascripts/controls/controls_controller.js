@@ -8,8 +8,8 @@
     //Static
     defaults: {
       arity: 2
-      , list : "/assets/controls/list.mustache"
-      , show : "/assets/controls/show.mustache"
+      , list : "/static/mustache/controls/list.mustache"
+      , show : "/static/mustache/controls/show.mustache"
       , model : CMS.Models.Control
       , id : null
       , spinner_while_filtering : true

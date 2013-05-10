@@ -8,6 +8,7 @@
 CMS.Models.System("CMS.Models.Response", {
 
     root_object : "response"
+    , root_collection : "responses"
     , xable_type : "Response"
     , init : function() {
       this._super && this._super.apply(this, arguments);

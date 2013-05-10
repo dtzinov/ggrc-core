@@ -4,11 +4,12 @@
 can.Model.Cacheable("CMS.Models.Control", {
   // static properties
     root_object : "control"
-  , findAll : "GET /controls.json"
-  , findOne : "GET /controls/{id}.json"
+  , root_collection : "controls"
+  , findAll : "GET /api/controls"
+  , findOne : "GET /api/controls/{id}"
   , update : function(id, params) {
     return $.ajax({
-      url : "/controls/" + id + ".json"
+      url : "/api/controls/" + id
       , type : "put"
       , data : this.process_args(params, ["notes", "title", "description"])
     })
@@ -78,7 +79,7 @@ can.Model.Cacheable("CMS.Models.Control", {
 
 // This creates a subclass of the Control model
 CMS.Models.Control("CMS.Models.ImplementedControl", {
-	findAll : "GET /controls/{id}/implemented_controls.json"
+	findAll : "GET /api/controls/{id}/implemented_controls"
 }, {
 	init : function() {
 		if(this.control) {
@@ -102,13 +103,13 @@ CMS.Models.Control("CMS.Models.ImplementedControl", {
 	--BM 12/10/2012
 */
 CMS.Models.ImplementedControl("CMS.Models.ImplementingControl", {
-	findAll : "GET /controls/{id}/implementing_controls.json"
+	findAll : "GET /api/controls/{id}/implementing_controls"
 }, {});
 
 
 // This creates a subclass of the Control model
 CMS.Models.Control("CMS.Models.RegControl", {
-	findAll : "GET /programs/{id}/controls.json"
+	findAll : "GET /api/programs/{id}/controls"
 	, map_ccontrol : function(params, control) {
 		return can.ajax({
 			url : "/mapping/map_ccontrol"

@@ -89,7 +89,7 @@ $(function() {
       model : CMS.Models.SectionSlug
       , edit_sections : true
       , list : s
-      , list_view : "/assets/sections/tree.mustache"
+      , list_view : "/static/mustache/sections/tree.mustache"
     });
   });
 

@@ -2,8 +2,8 @@
 
 can.Control("CMS.Controllers.SectionNotes", {
   defaults : {
-    edit_view : "/assets/sections/edit_notes.mustache"
-    , show_view : "/assets/sections/show_notes.mustache"
+    edit_view : "/static/mustache/sections/edit_notes.mustache"
+    , show_view : "/static/mustache/sections/show_notes.mustache"
     , model_instance : null
     , model_class : CMS.Models.Section
     , section_id : null

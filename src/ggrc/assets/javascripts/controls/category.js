@@ -3,6 +3,7 @@
 
 can.Model.Cacheable("CMS.Models.Category", {
   root_object : "category"
+  , root_collection : "categories"
   ,  findAll : function(params) {
     var root_object = this.root_object;
 
@@ -25,7 +26,7 @@ can.Model.Cacheable("CMS.Models.Category", {
     }
 
     return can.ajax(
-      can.extend({ url : "/categories.json"}, params)
+      can.extend({ url : "/api/categories"}, params)
     ).then(
       function(list, xhr) {
         can.$(list).each(function(i, s) {
@@ -45,7 +46,7 @@ can.Model.Cacheable("CMS.Models.Category", {
     return m;
   }
   , tree_view_options : {
-    list_view : "/assets/controls/categories_tree.mustache"
+    list_view : "/static/mustache/controls/categories_tree.mustache"
     , start_expanded : false
     , child_options : [{
       model : null
@@ -53,7 +54,7 @@ can.Model.Cacheable("CMS.Models.Category", {
     }, {
       model : CMS.Models.Control
       , property : "linked_controls"
-      , list_view : "/assets/controls/tree_with_section_mappings.mustache"
+      , list_view : "/static/mustache/controls/tree_with_section_mappings.mustache"
     }]
 
   }

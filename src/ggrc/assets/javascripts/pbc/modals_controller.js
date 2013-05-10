@@ -89,7 +89,7 @@ can.Control("CMS.Controllers.PBCModals", {
               // case 2: control does not exist
               $requests.append(
                 can.view(
-                    "/assets/pbc/control_assessment.mustache"
+                    "/static/mustache/pbc/control_assessment.mustache"
                     , $.extend({}, control_data, { type_name : type_name, control_assessment_id : data.control_assessment_id })
                 ));
               $ca = $requests.find(".pbc-ca[data-control-id=" + control_data.id + "]");

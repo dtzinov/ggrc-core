@@ -3,7 +3,7 @@
 can.Control("CMS.Controllers.Related", {
 
   defaults : {
-    template : "/assets/related.mustache"
+    template : "/static/mustache/related.mustache"
   }
 }, {
   // Finds all of the tabs within the container and sets them up.
