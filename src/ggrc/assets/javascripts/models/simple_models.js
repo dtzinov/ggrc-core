@@ -88,17 +88,28 @@ can.Model.Cacheable("CMS.Models.Risk", {
   root_object : "risk"
   , root_collection : "risks"
   , findAll : function(params) {
-    var root_object =  this.root_object;
+    var root_object =  this.root_object
+    , root_collection = this.root_collection;
     return $.ajax({
       url : "/api/risks"
       , type : "get"
       , data : params
       , dataType : "json" 
     }).then(function(risks) {
+      if(risks[root_collection + "_collection"]) {
+        risks = risks[root_collection + "_collection"];
+      }
+      if(risks[root_collection]) {
+        risks = risks[root_collection];
+      }
+
       can.each(risks, function(r) {
-        if(r[root_object].hasOwnProperty("trigger")) {
-          r[root_object].risk_trigger = r[root_object].trigger;
-          delete r[root_object].trigger;
+        if(r[root_object]) {
+          r = r[root_object];
+        }
+        if(r.hasOwnProperty("trigger")) {
+          r.risk_trigger = r.trigger;
+          delete r.trigger;
         }
       });
       return risks;
