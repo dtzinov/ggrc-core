@@ -154,7 +154,7 @@ jQuery(function($) {
     var $tab = $(e.target)
       , loaded = $tab.data('tab-loaded')
       , pane = ($tab.data('tab-target') || $tab.attr('href'))
-      , template = "<div></div>";
+      , template = $tab.data("template") || "<div></div>";
 
     if (href)
       loaded = false;
@@ -176,12 +176,31 @@ jQuery(function($) {
         $(spinner.el).css({ width: '100px', height: '100px', left: '50px', top: '50px', zIndex : calculate_spinner_z_index });
       }
 
-      $(pane).load(href, function(data, status, xhr) {
-        $tab.data('tab-loaded', true);
-        var $data = $(data);
-        $(e.target).find(".item-count").html($data.find("li").length);
-        $(this).html($data).trigger("loaded", xhr, data);
+      $.ajax({url : href, dataType : "json"}).done(function(data, status, xhr) {
+        var collections_token;
+        for(var i in data) {
+          if(data.hasOwnProperty(i)) {
+            if(/_collection$/.test(i)) {
+              collections_token = /(.*)_collection$/.exec(i)[1];
+            }
+          }
+        }
+
+        data = data[collections_token + "_collection"][collections_token];
+
+        can.view(template, {list: data, tooltip_view : "/static/mustache/programs_dash/object_tooltip.mustache"}, function(frag) {
+          $tab.data('tab-loaded', true);
+          $(e.target).find(".item-count").html(data.length);
+          $(pane).html(frag).trigger("loaded", xhr, data);
+        });
       });
+
+      // $(pane).load(href, function(data, status, xhr) {
+      //   $tab.data('tab-loaded', true);
+      //   var $data = $(data);
+      //   $(e.target).find(".item-count").html($data.find("li").length);
+      //   $(this).html($data).trigger("loaded", xhr, data);
+      // });
     }
   });
 

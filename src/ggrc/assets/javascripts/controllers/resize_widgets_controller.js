@@ -121,7 +121,7 @@ can.Control("CMS.Controllers.ResizeWidgets", {
       $(child).addClass("span" + widths[i]);
 
       can.each(
-        $(child).find(that.options.resizable_selector)
+        $(child).find(that.options.resizable_selector).get()
         , that.proxy("check_horizontal_tab_sheet")
       );
     });

@@ -12,23 +12,23 @@
 
 .tabbable.tabs-left{ 'id': "{{ tabbable_id }}" }
   %ul.nav.nav-tabs
-    =_tab("Control", "Controls", "flow_controls_path(:quick => true, :qr => quick_result)", "active")
-    =_tab("Regulation", "Regulations", "flow_directives_path(:quick => true, :qr => quick_result, :meta_kind => :regulation)")
-    =_tab("Policy", "Policies", "flow_directives_path(:quick => true, :qr => quick_result, :meta_kind => :policy)")
-    =_tab("Contract", "Contracts", "flow_directives_path(:quick => true, :qr => quick_result, :meta_kind => :contract)")
+    =_tab("Control", "Controls", "/api/controls?quick=true&qr=#{quick_result}", "active")
+    =_tab("Regulation", "Regulations", "/api/directives?quick=true&qr=#{quick_result}&meta_kind=regulation")
+    =_tab("Policy", "Policies", "/api/directives?quick=true&qr=#{quick_result}&meta_kind=policy")
+    =_tab("Contract", "Contracts", "/api/directives?quick=true&qr=#{quick_result}&meta_kind=contract")
     -#FIXME: Restrict to risk managers
     -#if current_user.can_manage_risk?
-    =_tab("Risk", "Risks", "flow_risks_path(:quick => true, :qr => quick_result)")
-    =_tab("Attribute", "Attributes", "flow_risky_attributes_path(:quick => true, :qr => quick_result)")
-    =_tab("Process", "Processes", "flow_systems_path(:quick => true, :qr => quick_result, :is_biz_process => true)")
-    =_tab("System", "Systems", "flow_systems_path(:quick => true, :qr => quick_result, :is_biz_process => false)")
-    =_tab("Org Group", "Org Groups", "flow_org_groups_path(:quick => true, :qr => quick_result)")
-    =_tab("Project", "Projects", "flow_projects_path(:quick => true, :qr => quick_result)")
-    =_tab("Facility", "Facilities", "flow_facilities_path(:quick => true, :qr => quick_result)")
-    =_tab("Product", "Products", "flow_products_path(:quick => true, :qr => quick_result)")
-    =_tab("Data Asset", "Data Assets", "flow_data_assets_path(:quick => true, :qr => quick_result)")
-    =_tab("Market", "Markets", "flow_markets_path(:quick => true, :qr => quick_result)")
-    =_tab("Program", "Programs", "flow_programs_path(:quick => true, :qr => quick_result)")
+    =_tab("Risk", "Risks", "/api/risks?quick=true&qr=#{quick_result}")
+    =_tab("Attribute", "Attributes", "/api/risky_attributes?quick=true&qr=#{quick_result}")
+    =_tab("Process", "Processes", "/api/systems?quick=true&qr=#{quick_result}&is_biz_process=true")
+    =_tab("System", "Systems", "/api/systems?quick=true&qr=#{quick_result}&is_biz_process=false")
+    =_tab("Org Group", "Org Groups", "/api/org_groups?quick=true&qr=#{quick_result}")
+    =_tab("Project", "Projects", "/api/projects?quick=true&qr=#{quick_result}")
+    =_tab("Facility", "Facilities", "/api/facilities?quick=true&qr=#{quick_result}")
+    =_tab("Product", "Products", "/api/products?quick=true&qr=#{quick_result}")
+    =_tab("Data Asset", "Data Assets", "/api/data_assets?quick=true&qr=#{quick_result}")
+    =_tab("Market", "Markets", "/api/markets?quick=true&qr=#{quick_result}")
+    =_tab("Program", "Programs", "/api/programs?quick=true&qr=#{quick_result}")
 
   .tab-content
     .tab-pane.active{ 'id': "{{ prefix }}_controls" }

@@ -1,0 +1,44 @@
+-extends 'layouts/_widget_box.haml'
+
+-block widget_help
+  risk
+
+-block widget_id
+  risk_widget
+
+-block widget_class
+  risk
+
+-block widget_title
+  Risk
+
+-block widget_buttons
+  .filter
+    .row-fluid
+      .span8
+        %input.ui-corner-all.widgetsearch.clear-value{type :'text', placeholder :'Search'}
+      .span4
+        %a.btn.btn-add.pull-right{ href : "new_flow_risk_path", 'data-toggle' : 'modal-ajax-form', 'data-modal-reset' : 'reset', 'data-form-target' : 'refresh', 'data-modal-class' : 'modal-wide' } 
+          %i.grcicon-add
+          %span.object-type Risk
+
+-set quick_result_risk = quick_result_risk if quick_result_risk else None
+-set prefix = "qf" if quick_result_risk else "dash"
+
+-block main
+  .tabbable.tabs-left{ id : "={None if quick_result_risk is defined else \"quick_find_risk\"}" }
+    %ul.nav.nav-tabs
+      %li.active
+        %a{ href : "##{prefix}_risks", 'data-tab-href' : "/api/risks?quick=true&qr=#{quick_result_risk}", 'data-template' : "/static/mustache/programs_dash/object_list.mustache", 'data-toggle' : 'tab', 'data-new-href' : "new_flow_risk_path" }
+          %i.grcicon-risk-color
+          %span.text-risk Risks
+          %span.item-count
+      %li
+        %a{ href : "##{prefix}_risky_attributes", 'data-tab-href' : "/api/risky_attributes?quick=true&qr=#{quick_result_risk}", 'data-template' : "/static/mustache/programs_dash/object_list.mustache", 'data-toggle' : 'tab', 'data-new-href' : "new_flow_risk_path" }
+          %i.grcicon-risk-color
+          %span.text-risk Risky Attributes
+          %span.item-count
+
+    .tab-content
+      .tab-pane{ id : "#{prefix}_risks" }
+      .tab-pane{ id : "#{prefix}_risky_attributes" }

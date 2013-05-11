@@ -7,16 +7,13 @@
 
 // Required external stylesheets
 
-// FIXME: (?) This doesn't play nice with compass, so include it separately into assets.yaml
-//@import "jquery-ui.css";
+//@import "jquery-ui";
 
 @import "bootstrap";
 @import "bootstrap-responsive";
 
 @import "compass/css3";
-
-// FIXME: (?) This doesn't play nice with compass, so include it separately into assets.yaml
-//@import "bootstrap-wysihtml5-0.0.2.css";
+//@import "bootstrap-wysihtml5-0.0.2";
 
 @import "setup";
 @import "common";

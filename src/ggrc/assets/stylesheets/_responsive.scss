@@ -187,7 +187,8 @@
       }
     }
     .tree-structure {
-      &.pbc .item-content {
+      &.pbc
+      .item-content {
         .row-fluid {
           [class*="span"] {
             float: none;

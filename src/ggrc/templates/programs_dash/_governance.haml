@@ -32,28 +32,28 @@
     -# FIXME: Fix all `data-tab-href` and `data-new-href` attribute paths
     %ul.nav.nav-tabs
       %li
-        %a{ 'href': "##{ prefix }_regulations", 'data-tab-href': 'flow_directives_path(:quick => true, :qr => quick_result, :meta_kind => "regulation")', 'data-toggle': 'tab', 'data-new-href': 'new_flow_directive_path(:meta_kind => "regulation")' }
+        %a{ 'href': "##{ prefix }_regulations", 'data-tab-href': "/api/directives?quick=true&qr=#{quick_result}&meta_kind=regulation", 'data-template' : "/static/mustache/programs_dash/object_list.mustache", 'data-toggle': 'tab', 'data-new-href': 'new_flow_directive_path(:meta_kind => "regulation")' }
           %i.grcicon-regulation-color
           %span.text-governance Regulations
           %span.item-count
       %li
-        %a{ 'href': "##{ prefix }_policies", 'data-tab-href': 'flow_directives_path(:quick => true, :qr => quick_result, :meta_kind => "policy")', 'data-toggle': 'tab', 'data-new-href': 'new_flow_directive_path(:meta_kind => "policy")' }
+        %a{ 'href': "##{ prefix }_policies", 'data-tab-href': "/api/directives?quick=true&qr=#{quick_result}&meta_kind=policy", 'data-template' : "/static/mustache/programs_dash/object_list.mustache",'data-toggle': 'tab', 'data-new-href': 'new_flow_directive_path(:meta_kind => "policy")' }
           %i.grcicon-policy-color
           %span.text-governance Policies
           %span.item-count
       %li
-        %a{ 'href': "##{ prefix }_contracts", 'data-tab-href': 'flow_directives_path(:quick => true, :qr => quick_result, :meta_kind => "contract")', 'data-toggle': 'tab', 'data-new-href': 'new_flow_directive_path(:meta_kind => "contract")' }
+        %a{ 'href': "##{ prefix }_contracts", 'data-tab-href': "/api/directives?quick=true&qr=#{quick_result}&meta_kind=contract", 'data-template' : "/static/mustache/programs_dash/object_list.mustache", 'data-toggle': 'tab', 'data-new-href': 'new_flow_directive_path(:meta_kind => "contract")' }
           %i.grcicon-contract-color
           %span.text-governance Contracts
           %span.item-count
       %li
-        %a{ 'href': "##{ prefix }_controls", 'data-tab-href': 'FIXME:flow_controls_path(:quick => true, :qr => quick_result)', 'data-toggle': 'tab', 'data-new-href': 'FIXME:new_flow_control_path' }
+        %a{ 'href': "##{ prefix }_controls", 'data-tab-href': "/api/controls?quick=true&qr=#{quick_result}", 'data-template' : "/static/mustache/programs_dash/object_list.mustache", 'data-toggle': 'tab', 'data-new-href': 'FIXME:new_flow_control_path' }
           %i.grcicon-control-color
           %span.text-governance Controls
           %span.item-count
 
     .tab-content
-      .tab-pane{ :id => "#{prefix}_regulations" }
-      .tab-pane{ :id => "#{prefix}_policies" }
-      .tab-pane{ :id => "#{prefix}_contracts" }
-      .tab-pane{ :id => "#{prefix}_controls" }
+      .tab-pane{ id : "#{prefix}_regulations" }
+      .tab-pane{ id : "#{prefix}_policies" }
+      .tab-pane{ id : "#{prefix}_contracts" }
+      .tab-pane{ id : "#{prefix}_controls" }

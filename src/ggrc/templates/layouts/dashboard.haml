@@ -172,4 +172,6 @@
               Confidential.
               Copyright &copy;
               -#=Time.now.year
-              -#=CMS_CONFIG['COMPANY']
+              =config.get('COMPANY')
+              Version
+              =config.get('VERSION')
