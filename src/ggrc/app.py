@@ -22,8 +22,9 @@ app.jinja_env.add_extension('jinja2.ext.with_')
 app.jinja_env.add_extension('hamlpy.ext.HamlPyExtension')
 
 # Initialize services
-from .services import init_all_services
-init_all_services(app)
+import ggrc.services
+ggrc.services.init_all_services(app)
 
 # Initialize views
 import ggrc.views
+ggrc.views.init_all_object_views(app)

@@ -51,3 +51,37 @@ def styleguide():
   '''The style guide page
   '''
   return render_template("styleguide.haml")
+
+
+def all_object_views():
+  object_views = [
+    'programs',
+    'directives',
+    'cycles',
+    'controls',
+    'systems',
+    'products',
+    'org_groups',
+    'facilities',
+    'markets',
+    'projects',
+    'data_assets',
+    'risky_attributes',
+    'risks',
+    'people',
+    'pbc_lists',
+    ]
+
+  import ggrc.services
+  collections = dict(ggrc.services.all_collections())
+
+  def with_model(object_plural):
+    return (object_plural, collections.get(object_plural))
+
+  return map(with_model, object_views)
+
+def init_all_object_views(app):
+  from .common import BaseObjectView
+
+  for k,v in all_object_views():
+    BaseObjectView.add_to(app, '/{}'.format(k), v)

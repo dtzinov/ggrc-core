@@ -14,6 +14,10 @@ def url_for(obj):
   service = getattr(ggrc.services, obj.__class__.__name__, None)
   return service.url_for(obj) if service else None
 
+def view_url_for(obj):
+  view = getattr(ggrc.views, obj.__class__.__name__, None)
+  return view.url_for(obj) if view else None
+
 def get_json_builder(obj):
   """Instantiate or retrieve a JSON representation builder for the given
   object.
@@ -38,8 +42,13 @@ def publish(obj):
   publisher = get_json_builder(obj)
   if publisher and hasattr(publisher, '_publish_attrs') \
       and publisher._publish_attrs:
-    url = url_for(obj)
-    ret = {'selfLink': url_for(obj)} if url else {}
+    ret = {}
+    self_url = url_for(obj)
+    if self_url:
+      ret['selfLink'] = self_url
+    view_url = view_url_for(obj)
+    if view_url:
+      ret['viewLink'] = view_url
     ret.update(publisher.publish_contribution(obj))
     return ret
   # Otherwise, just return the value itself by default

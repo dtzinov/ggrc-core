@@ -29,7 +29,7 @@ class DateTimeEncoder(json.JSONEncoder):
       return (datetime.datetime.min + obj).time().isoformat()
     else:
       return super(DateTimeEncoder, self).default(obj)
-    
+
 class UnicodeSafeJsonWrapper(dict):
   """JSON received via POST has keys as unicode. This makes get work with plain
   `str` keys.
@@ -43,10 +43,96 @@ class UnicodeSafeJsonWrapper(dict):
   def get(self, key, default=None):
     return super(UnicodeSafeJsonWrapper, self).get(unicode(key), default)
 
+class ModelView(View):
+  pk = 'id'
+  pk_type = 'int'
+
+  _model = None
+  _model_name = 'object'
+  _model_plural = 'objects'
+
+  # Simple accessor properties
+  @property
+  def request(self):
+    return request
+
+  @property
+  def model(self):
+    return self._model
+
+  # Model/DB Inspection
+  # TODO: Fix -- this is cheating
+  @property
+  def model_name(self):
+    if self.model is None:
+      return self._model_name
+    else:
+      return self.model.__name__.lower()
+
+  @property
+  def model_plural(self):
+    if self.model is None:
+      return self._model_plural
+    else:
+      return self.model.__tablename__
+
+  # Default model/DB helpers
+  def get_collection(self):
+    return db.session.query(self.model).order_by(self.model.updated_at.desc())
+
+  def get_object(self, id):
+    # This could also use `self.pk`
+    return self.get_collection().filter(self.model.id == id).first()
+
+  def not_found_message(self):
+    return '%s not found.' % (self.model_name.title(),)
+
+  def not_found_response(self):
+    return current_app.make_response((self.not_found_message(), 404, []))
+
+  def etag(self, last_modified):
+    """Generate the etag given a datetime for the last time the resource was
+    modified. This isn't as good as an etag generated off of a hash of the
+    representation, but, it doesn't require the representation in order to be
+    calculated. An alternative would be to keep an etag on the stored
+    representation, but this will do for now.
+
+    .. note::
+
+       Using the datetime implies the need for some care - the resolution of
+       the time object needs to be sufficient such that you don't end up with
+       the same etag due to two updates performed in rapid succession.
+    """
+    return '"{}"'.format(hashlib.sha1(str(last_modified)).hexdigest())
+
+  def collection_last_modified(self):
+    """Calculate the last time a member of the collection was modified. This
+    method relies on the fact that the collection table has an `updated_at`
+    column; services for models that don't have this field **MUST** override
+    this method.
+    """
+    result = db.session.query(
+        self.model.updated_at).order_by(self.model.updated_at.desc()).first()
+    if result is not None:
+      return result.updated_at
+    return datetime.datetime.now()
+
+  # Routing helpers
+  @classmethod
+  def endpoint_name(cls):
+    return cls.__name__
+
+  @classmethod
+  def url_for(cls, *args, **kwargs):
+    if args and isinstance(args[0], db.Model):
+      return url_for(cls.endpoint_name(), *args[1:], id=args[0].id, **kwargs)
+    return url_for(cls.endpoint_name(), *args, **kwargs)
+
+
 # View base class for Views handling
 #   - /resources (GET, POST)
 #   - /resources/<pk:pk_type> (GET, PUT, POST, DELETE)
-class Resource(View):
+class Resource(ModelView):
   """View base class for Views handling.  Will typically be registered with an
   application following a collection style for routes. Collection `GET` and
   `POST` will have a route like `/resources` while collection member
@@ -55,18 +141,11 @@ class Resource(View):
   To register a Resource subclass FooCollection with a Flask application:
 
   ..
-     
+
      FooCollection.add_to(app, '/foos')
 
   By default will only support the `application/json` content-type.
   """
-  #methods = ['GET', 'PUT', 'POST', 'DELETE']
-  pk = 'id'
-  pk_type = 'int'
-
-  _model = None
-  _model_name = 'object'
-  _model_plural = 'objects'
 
   def dispatch_request(self, *args, **kwargs):
     method = request.method.lower()
@@ -81,7 +160,6 @@ class Resource(View):
         return self.post(*args, **kwargs)
       else:
         return self.collection_post()
-      #return self.post(*args, **kwargs)
     elif method == 'put':
       return self.put(*args, **kwargs)
     elif method == 'delete':
@@ -203,53 +281,6 @@ class Resource(View):
     return self.json_success_response(
       self.object_for_json(obj), obj.updated_at, id=obj.id, status=201)
 
-  # Simple accessor properties
-  @property
-  def request(self):
-    return request
-
-  @property
-  def model(self):
-    return self._model
-
-  # Model/DB Inspection
-  # TODO: Fix -- this is cheating
-  @property
-  def model_name(self):
-    if self.model is None:
-      return self._model_name
-    else:
-      return self.model.__name__.lower()
-
-  @property
-  def model_plural(self):
-    if self.model is None:
-      return self._model_plural
-    else:
-      return self.model.__tablename__
-
-  # Default model/DB helpers
-  def get_collection(self):
-    return db.session.query(self.model).order_by(self.model.updated_at.desc())
-
-  def get_object(self, id):
-    # This could also use `self.pk`
-    return self.get_collection().filter(self.model.id == id).first()
-
-  def update_object(self, obj, src):
-    return
-
-  # Routing helpers
-  @classmethod
-  def endpoint_name(cls):
-    return cls.__name__
-
-  @classmethod
-  def url_for(cls, *args, **kwargs):
-    if args and isinstance(args[0], db.Model):
-      return url_for(cls.endpoint_name(), *args[1:], id=args[0].id, **kwargs)
-    return url_for(cls.endpoint_name(), *args, **kwargs)
-
   @classmethod
   def add_to(cls, app, url, model_class=None):
     if model_class:
@@ -313,39 +344,6 @@ class Resource(View):
       headers.append(('Location', self.url_for(id=id)))
     return current_app.make_response(
       (self.as_json(response_object), status, headers))
-
-  def not_found_message(self):
-    return '%s not found.' % (self.model_name.title(),)
-
-  def not_found_response(self):
-    return current_app.make_response((self.not_found_message(), 404, []))
-
-  def etag(self, last_modified):
-    """Generate the etag given a datetime for the last time the resource was
-    modified. This isn't as good as an etag generated off of a hash of the
-    representation, but, it doesn't require the representation in order to be
-    calculated. An alternative would be to keep an etag on the stored
-    representation, but this will do for now.
-
-    .. note::
-      
-       Using the datetime implies the need for some care - the resolution of
-       the time object needs to be sufficient such that you don't end up with
-       the same etag due to two updates performed in rapid succession.
-    """
-    return '"{}"'.format(hashlib.sha1(str(last_modified)).hexdigest())
-
-  def collection_last_modified(self):
-    """Calculate the last time a member of the collection was modified. This
-    method relies on the fact that the collection table has an `updated_at`
-    column; services for models that don't have this field **MUST** override
-    this method.
-    """
-    result = db.session.query(
-        self.model.updated_at).order_by(self.model.updated_at.desc()).first()
-    if result is not None:
-      return result.updated_at 
-    return datetime.datetime.now()
 
   def getval(self, src, attr, *args):
     if args:
