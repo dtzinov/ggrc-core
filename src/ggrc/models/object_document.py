@@ -57,3 +57,10 @@ class Documentable(object):
       'documents',
       'object_documents',
       ]
+
+  @classmethod
+  def eager_query(cls):
+    from sqlalchemy import orm
+
+    query = super(Documentable, cls).eager_query()
+    return query.options(orm.subqueryload_all('object_documents.document'))

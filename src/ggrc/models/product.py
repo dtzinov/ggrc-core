@@ -19,3 +19,10 @@ class Product(Documentable, Personable, Timeboxed, BusinessObject, db.Model):
       'type',
       'version',
       ]
+
+  @classmethod
+  def eager_query(cls):
+    from sqlalchemy import orm
+
+    query = super(Product, cls).eager_query()
+    return query.options(orm.joinedload('type'))

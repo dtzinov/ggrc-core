@@ -93,6 +93,15 @@ class Hierarchical(object):
       'parent',
       ]
 
+  @classmethod
+  def eager_query(cls):
+    from sqlalchemy import orm
+
+    query = super(Hierarchical, cls).eager_query()
+    return query.options(
+        orm.joinedload('parent'),
+        orm.joinedload('children'))
+
 class Timeboxed(object):
   start_date = db.Column(db.DateTime)
   end_date = db.Column(db.DateTime)
@@ -104,7 +113,10 @@ class Base(Identifiable, ChangeTracked):
   """Several of the models use the same mixins. This class covers that common
   case.
   """
-  pass
+
+  @classmethod
+  def eager_query(cls):
+    return db.session.query(cls)
 
 class Slugged(Base):
   """Several classes make use of the common mixins and additional are

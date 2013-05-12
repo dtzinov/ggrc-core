@@ -78,7 +78,11 @@ class ModelView(View):
 
   # Default model/DB helpers
   def get_collection(self):
-    return db.session.query(self.model).order_by(self.model.updated_at.desc())
+    if hasattr(self.model, 'eager_query'):
+      query = self.model.eager_query()
+    else:
+      query = db.session.query(self.model)
+    return query.order_by(self.model.updated_at.desc())
 
   def get_object(self, id):
     # This could also use `self.pk`

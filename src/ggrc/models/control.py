@@ -105,3 +105,21 @@ class Control(
       'risks',
       'control_assessments',
       ]
+
+  @classmethod
+  def eager_query(cls):
+    from sqlalchemy import orm
+
+    query = super(Control, cls).eager_query()
+    return query.options(
+        orm.joinedload('directive'),
+        orm.joinedload('type'),
+        orm.joinedload('kind'),
+        orm.joinedload('means'),
+        orm.joinedload('verify_frequency'),
+        orm.subqueryload_all('system_controls.system'),
+        orm.subqueryload_all('control_sections.section'),
+        orm.subqueryload_all('control_controls.implemented_control'),
+        orm.subqueryload_all('implementing_control_controls.control'),
+        orm.subqueryload_all('control_risks.risk'),
+        orm.subqueryload_all('control_assessments'))

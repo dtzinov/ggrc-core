@@ -57,3 +57,10 @@ class Personable(object):
       'people',
       'object_people',
       ]
+
+  @classmethod
+  def eager_query(cls):
+    from sqlalchemy import orm
+
+    query = super(Personable, cls).eager_query()
+    return query.options(orm.subqueryload_all('object_people.person'))
