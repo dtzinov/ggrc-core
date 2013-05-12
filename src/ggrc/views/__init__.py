@@ -40,11 +40,11 @@ def login():
   """
   return render_template("user_sessions/login.html")
 
-@app.route("/programs_dash")
-def programs_dash():
+@app.route("/dashboard")
+def dashboard():
   """The dashboard page
   """
-  return render_template("programs_dash/index.haml")
+  return render_template("dashboard/index.haml")
 
 @app.route("/design")
 def styleguide():

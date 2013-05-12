@@ -731,7 +731,7 @@ jQuery(function($) {
       $.when.apply($, destroys).done(function() {
         $('body').trigger(
           'ajax:flash', 
-          { "success" : "Saved page layout as default for " + (page_token === "programs_dash" ? "dahsboard" : page_token) }
+          { "success" : "Saved page layout as default for " + (page_token === "dashboard" ? "dahsboard" : page_token) }
         );
       });
     });

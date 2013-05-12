@@ -37,7 +37,7 @@
                     %p.title
                       Search Results
                       -with quick_result = True
-                        -include 'programs_dash/_quick_find.haml'
+                        -include 'shared/_quick_find.haml'
 
                     .quick-find-add
                       Didn't find it in results?
@@ -155,7 +155,7 @@
               -#FIXME: demo mode?
               -#%li
                 -if controller_name == 'design'
-                  -path = programs_dash_path
+                  -path = dashboard_path
                 -else
                   -path = request.fullpath
                 -path = path.gsub(/BETA=[^&]*&?/, '').sub(/[?&]$/, '')

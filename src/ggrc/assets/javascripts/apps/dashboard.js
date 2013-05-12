@@ -145,7 +145,7 @@ var widget_descriptors = {
   }
 };
 
-var programs_dash_menu = {categories : [
+var dashboard_menu = {categories : [
   {
     title : "Governance / Compliance"
     , objects: [
@@ -184,7 +184,7 @@ $(function() {
          $(this)
           .cms_controllers_resize_widgets({
             model : data[0]
-            , minimum_widget_height : (/programs_dash/.test(window.location) ? 97 : 167)
+            , minimum_widget_height : (/dashboard/.test(window.location) ? 97 : 167)
           }).control(CMS.Controllers.ResizeWidgets);
 
     }
@@ -195,7 +195,7 @@ $(function() {
 
     $(".widget-add-placeholder").cms_controllers_add_widget({
       widget_descriptors : widget_descriptors
-      , menu_tree : (/programs_dash/.test(window.location) ? programs_dash_menu : null)
+      , menu_tree : (/dashboard/.test(window.location) ? dashboard_menu : null)
       , minimum_widget_height : 100
     });
     
