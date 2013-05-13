@@ -188,7 +188,7 @@ jQuery(function($) {
 
         data = data[collections_token + "_collection"][collections_token];
 
-        can.view(template, {list: data, tooltip_view : "/static/mustache/programs_dash/object_tooltip.mustache"}, function(frag) {
+        can.view(template, {list: data, tooltip_view : "/static/mustache/dashboard/object_tooltip.mustache"}, function(frag) {
           $tab.data('tab-loaded', true);
           $(e.target).find(".item-count").html(data.length);
           $(pane).html(frag).trigger("loaded", xhr, data);

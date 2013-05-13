@@ -30,42 +30,42 @@
   .tabbable.tabs-left{ 'id' : "#{tabbable_id}" }
     %ul.nav.nav-tabs
       %li.active
-        %a{ 'href' : "##{prefix}_processes", 'data-tab-href' : "/api/systems?quick=true&qr=#{quick_result_business_objects}&is_biz_process=1", 'data-template' : "/static/mustache/programs_dash/object_list.mustache", "data-toggle" : 'tab', 'data-new-href' : "new_flow_system_path( system : { :is_biz_process : 1 } )" }
+        %a{ 'href' : "##{prefix}_processes", 'data-tab-href' : "/api/systems?quick=true&qr=#{quick_result_business_objects}&is_biz_process=1", 'data-template' : "/static/mustache/dashboard/object_list.mustache", "data-toggle" : 'tab', 'data-new-href' : "new_flow_system_path( system : { :is_biz_process : 1 } )" }
           %i.grcicon-process-color
           %span.text-business Processes
           %span.item-count
       %li
-        %a{ 'href' : "##{prefix}_systems", 'data-tab-href' : "/api/systems?quick=true&qr=#{quick_result_business_objects}&is_biz_process=0", 'data-template' : "/static/mustache/programs_dash/object_list.mustache", "data-toggle" : 'tab', 'data-new-href' : "new_flow_system_path( system : { :is_biz_process : 0 } )" }
+        %a{ 'href' : "##{prefix}_systems", 'data-tab-href' : "/api/systems?quick=true&qr=#{quick_result_business_objects}&is_biz_process=0", 'data-template' : "/static/mustache/dashboard/object_list.mustache", "data-toggle" : 'tab', 'data-new-href' : "new_flow_system_path( system : { :is_biz_process : 0 } )" }
           %i.grcicon-system-color
           %span.text-business Systems
           %span.item-count
       %li
-        %a{ 'href' : "##{prefix}_org_groups", 'data-tab-href' : "/api/org_groups?quick=true&qr=#{quick_result_business_objects}", 'data-template' : "/static/mustache/programs_dash/object_list.mustache", "data-toggle" : 'tab', 'data-new-href' : "new_flow_system_path( system : { :is_biz_process : 0 } )" }
+        %a{ 'href' : "##{prefix}_org_groups", 'data-tab-href' : "/api/org_groups?quick=true&qr=#{quick_result_business_objects}", 'data-template' : "/static/mustache/dashboard/object_list.mustache", "data-toggle" : 'tab', 'data-new-href' : "new_flow_system_path( system : { :is_biz_process : 0 } )" }
           %i.grcicon-orggroup-color
           %span.text-business Org Groups
           %span.item-count
       %li
-        %a{ 'href' : "##{prefix}_projects", 'data-tab-href' : "/api/projects?quick=true&qr=#{quick_result_business_objects}", 'data-template' : "/static/mustache/programs_dash/object_list.mustache", "data-toggle" : 'tab', 'data-new-href' : "new_flow_system_path( system : { :is_biz_process : 0 } )" }
+        %a{ 'href' : "##{prefix}_projects", 'data-tab-href' : "/api/projects?quick=true&qr=#{quick_result_business_objects}", 'data-template' : "/static/mustache/dashboard/object_list.mustache", "data-toggle" : 'tab', 'data-new-href' : "new_flow_system_path( system : { :is_biz_process : 0 } )" }
           %i.grcicon-project-color
           %span.text-business Projects
           %span.item-count
       %li
-        %a{ 'href' : "##{prefix}_facilities", 'data-tab-href' : "/api/facilities?quick=true&qr=#{quick_result_business_objects}", 'data-template' : "/static/mustache/programs_dash/object_list.mustache", "data-toggle" : 'tab', 'data-new-href' : "new_flow_system_path( system : { :is_biz_process : 0 } )" }
+        %a{ 'href' : "##{prefix}_facilities", 'data-tab-href' : "/api/facilities?quick=true&qr=#{quick_result_business_objects}", 'data-template' : "/static/mustache/dashboard/object_list.mustache", "data-toggle" : 'tab', 'data-new-href' : "new_flow_system_path( system : { :is_biz_process : 0 } )" }
           %i.grcicon-facility-color
           %span.text-business Facilities
           %span.item-count
       %li
-        %a{ 'href' : "##{prefix}_products", 'data-tab-href' : "/api/products?quick=true&qr=#{quick_result_business_objects}", 'data-template' : "/static/mustache/programs_dash/object_list.mustache", "data-toggle" : 'tab', 'data-new-href' : "new_flow_system_path( system : { :is_biz_process : 0 } )" }
+        %a{ 'href' : "##{prefix}_products", 'data-tab-href' : "/api/products?quick=true&qr=#{quick_result_business_objects}", 'data-template' : "/static/mustache/dashboard/object_list.mustache", "data-toggle" : 'tab', 'data-new-href' : "new_flow_system_path( system : { :is_biz_process : 0 } )" }
           %i.grcicon-product-color
           %span.text-business Products
           %span.item-count
       %li
-        %a{ 'href' : "##{prefix}_data_assets", 'data-tab-href' : "/api/data_assets?quick=true&qr=#{quick_result_business_objects}", 'data-template' : "/static/mustache/programs_dash/object_list.mustache", "data-toggle" : 'tab', 'data-new-href' : "new_flow_system_path( system : { :is_biz_process : 0 } )" }
+        %a{ 'href' : "##{prefix}_data_assets", 'data-tab-href' : "/api/data_assets?quick=true&qr=#{quick_result_business_objects}", 'data-template' : "/static/mustache/dashboard/object_list.mustache", "data-toggle" : 'tab', 'data-new-href' : "new_flow_system_path( system : { :is_biz_process : 0 } )" }
           %i.grcicon-dataasset-color
           %span.text-business Data Assets
           %span.item-count
       %li
-        %a{ 'href' : "##{prefix}_markets", 'data-tab-href' : "/api/markets?quick=true&qr=#{quick_result_business_objects}", 'data-template' : "/static/mustache/programs_dash/object_list.mustache", "data-toggle" : 'tab', 'data-new-href' : "new_flow_system_path( system : { :is_biz_process : 0 } )" }
+        %a{ 'href' : "##{prefix}_markets", 'data-tab-href' : "/api/markets?quick=true&qr=#{quick_result_business_objects}", 'data-template' : "/static/mustache/dashboard/object_list.mustache", "data-toggle" : 'tab', 'data-new-href' : "new_flow_system_path( system : { :is_biz_process : 0 } )" }
           %i.grcicon-market-color
           %span.text-business Markets
           %span.item-count

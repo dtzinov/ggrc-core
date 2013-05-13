@@ -19,13 +19,13 @@
     #columns.row-fluid{ 'data-resize': "true" }
       #left_column.span6.widget-area
         -with widget_class = 'widget-tabs'
-          -include 'programs_dash/_governance.haml'
-          -include 'programs_dash/_business_objects.haml'
+          -include 'dashboard/_governance.haml'
+          -include 'dashboard/_business_objects.haml'
         -include 'shared/_add_widget_section.haml'
 
       #right_column.span6.widget-area
         -with widget_class = 'widget-tabs'
-          -include 'programs_dash/_programs.haml'
+          -include 'dashboard/_programs.haml'
           -#if g.user.can_manage_risk()
-          -include 'programs_dash/_risk.haml'
+          -include 'dashboard/_risk.haml'
         -include 'shared/_add_widget_section.haml'
