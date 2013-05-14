@@ -18,9 +18,10 @@ $(function() {
     CMS.Models.Category.findAll()
     , CMS.Models.Control.findAll({ program_id : program_id })
   ).done(function(cats, ctls) {
-    var uncategorized = cats[cats.length - 1];
-    can.each(ctls, function(c) {
-      if(c.category_ids.length < 1) {
+    var uncategorized = cats[cats.length - 1]
+    , cat_ctls = [];
+    can.each(cats, function(c) {
+      if(!c.category_ids || c.category_ids.length < 1) {
         uncategorized.linked_controls.push(c);
       }
       can.each(c.category_ids, function(id) {
@@ -41,7 +42,7 @@ $(function() {
   }
 
   can.each(directives_by_type, function(v, k) {
-    can.ajax({url : "/program_directives.json", data : { directive_meta_kind : k , program_id : program_id }})
+    can.ajax({url : "/api/directives", dataType : "json", data : { directive_meta_kind : k , program_id : program_id }})
     .done(function(d) {
       directives_by_type[k] = d;
     });
@@ -57,7 +58,7 @@ $(function() {
       dir.attr("sections", new can.Observe.List());
     })
     s.each(function(sec) {
-      CMS.Models.Directive.findInCacheById(sec.directive_id).sections.push(sec);
+      sec.directive_id && CMS.Models.Directive.findInCacheById(sec.directive_id).sections.push(sec);
     });
 
     $sections_tree.cms_controllers_tree_view({

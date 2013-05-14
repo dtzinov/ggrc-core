@@ -5,7 +5,8 @@ can.Model.Cacheable("CMS.Models.Category", {
   root_object : "category"
   , root_collection : "categories"
   ,  findAll : function(params) {
-    var root_object = this.root_object;
+    var root_object = this.root_object
+    , root_collection = this.root_collection;
 
     function filter_out(original, predicate) {
       var target = [];
@@ -26,9 +27,13 @@ can.Model.Cacheable("CMS.Models.Category", {
     }
 
     return can.ajax(
-      can.extend({ url : "/api/categories"}, params)
+      can.extend({ url : "/api/categories", dataType : "json"}, params)
     ).then(
       function(list, xhr) {
+        list = list[root_collection + "_collection"] 
+        ? list[root_collection + "_collection"][root_collection] 
+        : list;
+        
         can.$(list).each(function(i, s) {
           can.extend(s, s[root_object]);
           delete s[root_object];
