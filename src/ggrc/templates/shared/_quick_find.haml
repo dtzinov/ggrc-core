@@ -1,7 +1,7 @@
 
 -macro _tab(type, type_plural, path, li_class='')
   %li{ 'class': '{{ li_class }}' }
-    %a{ 'href': '##{ prefix }_{{ type_plural|underscore }}', 'data-tab-href': '{{ path }}', 'data-toggle': 'tab' }
+    %a{ 'href': '##{ prefix }_{{ type_plural|underscore }}', 'data-tab-href': '{{ path }}', 'data-toggle': 'tab', 'data-template' : '/static/mustache/dashboard/object_list.mustache' }
       %i{ 'class': 'grcicon-{{ type|lower|nospace }}-color' }
       {{ type_plural|title }}
 -endmacro
