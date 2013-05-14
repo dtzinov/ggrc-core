@@ -7,6 +7,7 @@ src/requirements.txt.md5
 src/packages.zip
 *.pyc
 src/instance
+.DS_Store
 
 # Non-shared default recipe extension
 site-cookbooks/ggrc/recipes/local.rb
@@ -17,3 +18,4 @@ src/ggrc/static/assets.manifest
 src/ggrc/static/dashboard-*
 src/ggrc/assets/stylesheets/dashboard.css
 src/ggrc/.sass-cache
+
