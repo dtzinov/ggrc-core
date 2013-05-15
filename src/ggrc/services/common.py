@@ -313,7 +313,8 @@ class Resource(ModelView):
 
   def object_for_json(self, obj, model_name=None):
     model_name = model_name or self.model_name
-    return { model_name: ggrc.builder.json.publish(obj) }
+    json_obj = ggrc.builder.json.publish(obj)
+    return { model_name: json_obj }
 
   def collection_for_json(
       self, objects, model_plural=None, collection_name=None):

@@ -7,7 +7,8 @@ from .object_person import Personable
 from .reflection import PublishOnly
 
 class Risk(
-    Documentable, Personable, Timeboxed, BusinessObject, ControlCategorized , db.Model):
+    Documentable, Personable, Timeboxed, BusinessObject, ControlCategorized,
+    db.Model):
   __tablename__ = 'risks'
 
   kind = db.Column(db.String)
@@ -33,20 +34,21 @@ class Risk(
       'risk_risky_attributes', 'risky_attribute', 'RiskRiskyAttribute')
 
   _publish_attrs = [
+      'categories',
+      'controls',
+      'financial_impact_rating',
+      'inherent_risk',
+      'impact',
       'kind',
       'likelihood',
+      'likelihood_rating',
+      'operational_impact_rating',
+      'preconditions',
+      'reputational_impact_rating',
+      'residual_risk',
+      'risky_attributes',
       'threat_vector',
       'trigger',
-      'preconditions',
-      'likelihood_rating',
-      'financial_impact_rating',
-      'reputational_impact_rating',
-      'operational_impact_rating',
-      'inherent_risk',
-      'residual_risk',
-      'impact',
       PublishOnly('control_risks'),
-      'controls',
       PublishOnly('risk_risky_attributes'),
-      'risky_attributes',
       ]

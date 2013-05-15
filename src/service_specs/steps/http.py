@@ -74,9 +74,9 @@ def example_resource(context, resource_type):
   context.example_resource = resource_factory()
 
 @given('a new "{resource_type}" named "{name}"')
-def named_example_resource(context, resource_type, name):
+def named_example_resource(context, resource_type, name, **kwargs):
   resource_factory = factory_for(resource_type)
-  example = Example(resource_type, resource_factory())
+  example = Example(resource_type, resource_factory(**kwargs))
   setattr(context, name, example)
 
 def get_service_endpoint_url(context, endpoint_name):

@@ -27,6 +27,7 @@ class Categorization(Base, db.Model):
 
   _publish_attrs = [
       'categorizable',
+      'category',
       ]
   _update_attrs = []
 

@@ -33,8 +33,6 @@ Feature: Many resources type pairs reference each other M x N relations. This
       | type_a    | link_property_a      | type_b   | link_property_b       |
      #| Control   | documents            | Document | FIXME no property??   |
      #| Control   | people               | Person   | ??                    |
-     #| Control   | categories           | Category | controls              |
-     #| Control   | assertions           | Category | ??                    |
       | Control   | systems              | System   | controls              |
       | Control   | sections             | Section  | controls              |
       | Control   | implemented_controls | Control  | implementing_controls |
