@@ -134,7 +134,7 @@
               <span class="label label-info">Note!</span>
               Do not put class on last %li element. It is solved from CSS.
 
-        %section#modals.widget
+        -#%section#modals.widget
           %section.header
             %h2
               Modals
@@ -1514,7 +1514,7 @@
                                               
                   %section.content
                     .filter
-                      %input.ui-corner-all.widgetsearch.clear-value(type='text' placeholder='Search')
+                      %input.ui-corner-all.widgetsearch.clear-value{type : 'text', placeholder : 'Search'}
                     
                     -set quick_result = quick_result if quick_result is defined else None
                     -set prefix = "qf" if quick_result else "dash"
@@ -1523,7 +1523,8 @@
                       %ul.nav.nav-tabs
                         %li.active
                           %a{ 'href' : "##{prefix}_programs", 'data-tab-href' : "/programs?quick=true&qr=={quick_result}", 'data-toggle' : 'tab' }
-                            %i.grcicon-program-black Programs
+                            %i.grcicon-program-black 
+                            Programs
 
                       .tab-content
                         .tab-pane{ 'id' : "#{prefix}_programs" }
@@ -1543,7 +1544,7 @@
                                               
                   %section.content
                     .filter
-                      %input.ui-corner-all.widgetsearch.clear-value(type='text' placeholder='Search')
+                      %input.ui-corner-all.widgetsearch.clear-value{type : 'text', placeholder : 'Search'}
                     
                     -set quick_result = quick_result if quick_result is defined else None
                     -set prefix = "qf" if quick_result else "dash"
@@ -1552,13 +1553,16 @@
                       %ul.nav.nav-tabs
                         %li
                           %a{'href' : "##{prefix}_controls", 'data-tab-href' : "/controls?quick=true&qr=#{quick_result}", 'data-toggle' : 'tab' }
-                            %i.grcicon-control-black Controls
+                            %i.grcicon-control-black 
+                            Controls
                         %li
                           %a{ 'href' : "##{prefix}_processes", 'data-tab-href' : "/systems?quick=true&qr=={quick_result}&is_biz_process=true", 'data-toggle' : 'tab' }
-                            %i.grcicon-process-black Processes
+                            %i.grcicon-process-black 
+                            Processes
                         %li.active
                           %a{ 'href' : "##{prefix}_systems", 'data-tab-href' : "/systems?quick=true&qr=#{quick_result}&is_biz_process=false", 'data-toggle' : 'tab' }
-                            %i.grcicon-system-black Systems
+                            %i.grcicon-system-black 
+                            Systems
                       .tab-content
                         .tab-pane{ 'id' : "#{prefix}_controls" }
                         .tab-pane{ 'id' : "#{prefix}_processes" }
@@ -1581,7 +1585,7 @@
                       
                   %section.content
                     .filter
-                      %input.ui-corner-all.widgetsearch.clear-value(type='text' placeholder='Search')
+                      %input.ui-corner-all.widgetsearch.clear-value{ type : 'text', placeholder : 'Search'}
                     
                     -set quick_result = quick_result if quick_result is defined else None
                     -set prefix = "qf" if quick_result else "dash"
@@ -1590,10 +1594,12 @@
                       %ul.nav.nav-tabs
                         %li.active
                           %a{ 'href' : "##{prefix}_risks", 'data-tab-href' : "/risks?quick=true&qr=={quick_result}", 'data-toggle' : 'tab' }
-                            %i.grcicon-risk-black Risks
+                            %i.grcicon-risk-black 
+                            Risks
                         %li
                           %a{ 'href' : "##{prefix}_risky_attributes", 'data-tab-href' : "/risky_attributes?quick=true&qr=={quick_result}", 'data-toggle' : 'tab' }
-                            %i.grcicon-attribute-black Attributes
+                            %i.grcicon-attribute-black 
+                            Attributes
 
                       .tab-content
                         .tab-pane{ 'id' : "#{prefix}_risks" }
@@ -1614,7 +1620,7 @@
                                               
                   %section.content
                     .filter
-                      %input.ui-corner-all.widgetsearch.clear-value(type='text' placeholder='Search')
+                      %input.ui-corner-all.widgetsearch.clear-value{type : 'text', placeholder : 'Search'}
                     
                     -set quick_result = quick_result if quick_result is defined else None
                     -set prefix = "qf" if quick_result else "dash"
@@ -1623,22 +1629,28 @@
                       %ul.nav.nav-tabs
                         %li
                           %a{ 'href' : "##{prefix}_products", 'data-tab-href' : "/products?quick=true&qr=={quick_result}", 'data-toggle' : 'tab' }
-                            %i.grcicon-product-black Products
+                            %i.grcicon-product-black 
+                            Products
                         %li.active
                           %a{'href' : "##{prefix}_org_groups", 'data-tab-href' : "/org_groups_path?quick=true&qr=={quick_result}", 'data-toggle' : 'tab' }
-                            %i.grcicon-orggroup-black Org Groups
+                            %i.grcicon-orggroup-black 
+                            Org Groups
                         %li
                           %a{ 'href' : "##{prefix}_facilities", 'data-tab-href' : "/facilities?quick=true&qr=={quick_result}", 'data-toggle' : 'tab' }
-                            %i.grcicon-facility-black Facilities
+                            %i.grcicon-facility-black 
+                            Facilities
                         %li
                           %a{ 'href' : "##{prefix}_markets", 'data-tab-href' : "/markets?quick=true&qr=={quick_result}", 'data-toggle' : 'tab' }
-                            %i.grcicon-market-black Markets
+                            %i.grcicon-market-black 
+                            Markets
                         %li
                           %a{'href' : "##{prefix}_data_assets", 'data-tab-href' : "/data_assets?quick=true&qr=={quick_result}", 'data-toggle' : 'tab' }
-                            %i.grcicon-dataasset-black Data Assets
+                            %i.grcicon-dataasset-black 
+                            Data Assets
                         %li
                           %a{ "href" : "##{prefix}_projects", 'data-tab-href' : "/projects?quick=true&qr=={quick_result}", 'data-toggle' : 'tab' }
-                            %i.grcicon-project-black Projects
+                            %i.grcicon-project-black 
+                            Projects
                     
                       .tab-content
                         .tab-pane{ 'id' : "#{prefix}_products" }
