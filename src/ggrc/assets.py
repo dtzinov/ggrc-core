@@ -47,6 +47,7 @@ environment.load_path = [
   'assets/vendor/remoteipart/vendor/assets/javascripts',
   'assets/stylesheets',
   'assets/vendor/stylesheets',
+  'assets/js_specs',
   ]
 
 environment.register("dashboard-js", webassets.Bundle(
@@ -57,3 +58,8 @@ environment.register("dashboard-js", webassets.Bundle(
 environment.register("dashboard-css", webassets.Bundle(
   *asset_paths['dashboard-css-files'],
   output='dashboard-%(version)s.css'))
+
+environment.register("dashboard-js-specs", webassets.Bundle(
+  *asset_paths['dashboard-js-spec-files'],
+  #filters='jsmin',
+  output='dashboard-%(version)s-specs.js'))

@@ -82,3 +82,8 @@ dashboard-css-files:
   - bootstrap-wysihtml5-0.0.2.css
   - jquery-ui.css
 
+dashboard-js-spec-files:
+  - controllers/resize_widgets_spec.js
+  - models/local_storage_spec.js
+  - models/display_prefs_spec.js
+  

@@ -28,3 +28,15 @@ ggrc.services.init_all_services(app)
 # Initialize views
 import ggrc.views
 ggrc.views.init_all_object_views(app)
+
+# Configure Flask-Jasmine, for dev mode unit testing
+from flask.ext.jasmine import Jasmine, Asset
+jasmine = Jasmine(app)
+
+jasmine.sources(
+    Asset("dashboard-js")
+)
+
+jasmine.specs(
+    Asset("dashboard-js-specs")
+)

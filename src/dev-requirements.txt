@@ -4,3 +4,5 @@ Flask-Testing
 mock
 requests
 PyYAML
+Flask-Jasmine
+
