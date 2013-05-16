@@ -52,7 +52,7 @@ def init_all_services(app):
   from .common import Resource
 
   for k,v in all_collections():
-    Resource.add_to(app, '/api/{}'.format(k), v)
+    Resource.add_to(app, '/api/{0}'.format(k), v)
 
   from .description import ServiceDescription
 

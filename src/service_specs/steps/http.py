@@ -103,7 +103,7 @@ def post_named_example(context, name, url):
   response = post_example(
       context, example.resource_type, example.value, url)
   assert response.status_code == 201, \
-      'Expected status code 201, received {}'.format(response.status_code)
+      'Expected status code 201, received {0}'.format(response.status_code)
   example = Example(example.resource_type, response.json())
   setattr(context, name, example)
 
@@ -135,13 +135,13 @@ def get_example_resource(context, name):
 @then('a "{status_code}" status code is received')
 def validate_status_code(context, status_code):
   assert context.response.status_code == int(status_code), \
-      'Expecxted status code {}, received {}'.format(
+      'Expecxted status code {0}, received {1}'.format(
           status_code, context.response.status_code)
 
 @then('a 201 status code is received')
 def validate_status_201(context):
   assert context.response.status_code == 201, \
-      'Expected status code 201, received {}'.format(
+      'Expected status code 201, received {0}'.format(
           context.response.status_code)
 
 @then('the response has a Location header')
@@ -170,11 +170,11 @@ def check_resource_equality_for_response(context, resource_type):
     if isinstance(original, datetime.datetime):
       response = parse_date(response)
       assert dates_within_tolerance(original, response), \
-          'for {}: expected {}, received {}'.format(
+          'for {0}: expected {1}, received {2}'.format(
               k, original, response)
       return
     elif isinstance(original, datetime.date):
       response = datetime.datetime.strptime(response, '%Y-%m-%d').date()
-    assert original == response, 'for {}: expected {}, received {}'.format(
+    assert original == response, 'for {0}: expected {1}, received {2}'.format(
         k, original, response)
 

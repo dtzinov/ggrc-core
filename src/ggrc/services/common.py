@@ -107,7 +107,7 @@ class ModelView(View):
        the time object needs to be sufficient such that you don't end up with
        the same etag due to two updates performed in rapid succession.
     """
-    return '"{}"'.format(hashlib.sha1(str(last_modified)).hexdigest())
+    return '"{0}"'.format(hashlib.sha1(str(last_modified)).hexdigest())
 
   def collection_last_modified(self):
     """Calculate the last time a member of the collection was modified. This

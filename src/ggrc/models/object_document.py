@@ -17,7 +17,7 @@ class ObjectDocument(Base, Timeboxed, db.Model):
 
   @property
   def documentable_attr(self):
-    return '{}_documentable'.format(self.documentable_type)
+    return '{0}_documentable'.format(self.documentable_type)
 
   @property
   def documentable(self):
@@ -51,7 +51,7 @@ class Documentable(object):
     return db.relationship(
         'ObjectDocument',
         primaryjoin=joinstr,
-        backref='{}_documentable'.format(cls.__name__),
+        backref='{0}_documentable'.format(cls.__name__),
         )
 
   _publish_attrs = [

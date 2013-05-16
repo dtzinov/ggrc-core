@@ -17,7 +17,7 @@ class ObjectPerson(Base, Timeboxed, db.Model):
 
   @property
   def personable_attr(self):
-    return '{}_personable'.format(self.personable_type)
+    return '{0}_personable'.format(self.personable_type)
 
   @property
   def personable(self):
@@ -51,7 +51,7 @@ class Personable(object):
     return db.relationship(
         'ObjectPerson',
         primaryjoin=joinstr,
-        backref='{}_personable'.format(cls.__name__),
+        backref='{0}_personable'.format(cls.__name__),
         )
 
   _publish_attrs = [

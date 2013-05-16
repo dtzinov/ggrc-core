@@ -84,4 +84,4 @@ def init_all_object_views(app):
   from .common import BaseObjectView
 
   for k,v in all_object_views():
-    BaseObjectView.add_to(app, '/{}'.format(k), v)
+    BaseObjectView.add_to(app, '/{0}'.format(k), v)

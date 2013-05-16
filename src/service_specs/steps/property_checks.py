@@ -30,14 +30,14 @@ def add_link_to_list(context, target_resource, property_name, source_resource):
 def get_property_from(context, property_path, resource):
   obj = getattr(context, resource)
   assert obj is not None, \
-      'Expected to find a resource named {} in the context!'.format(resource)
+      'Expected to find a resource named {0} in the context!'.format(resource)
   property_path = property_path.split('.')
   traversed = []
   for p in property_path:
     traversed.append(p)
     obj = obj.get(unicode(p))
     assert obj is not None, \
-        'Could not traverse entire property path, stopped at {}.'.format(
+        'Could not traverse entire property path, stopped at {0}.'.format(
             traversed)
   return obj
 
@@ -60,7 +60,7 @@ def check_link_present_in_list(
   links = source.get(unicode(property_name))
   rel_ids = set([o[u'id'] for o in links])
   assert target.get(u'id') in rel_ids, \
-      'Expected to find {} in links: {}'.format(
+      'Expected to find {0} in links: {1}'.format(
           target.get(u'id'),
           rel_ids)
 
@@ -71,7 +71,7 @@ def check_link_to_parent(
   parent = getattr(context, parent_resource)
   link = child.get(unicode(parent_property))
   assert link is not None, \
-      'no {} property was found in {}'.format(parent_property, child_resource)
+      'no {0} property was found in {1}'.format(parent_property, child_resource)
   assert parent.get(u'id') == link.get(u'id'), \
-      'Expected to find link to parent, id={}, instead found {}'.format(
+      'Expected to find link to parent, id={0}, instead found {1}'.format(
           parent.get(u'id'), link)

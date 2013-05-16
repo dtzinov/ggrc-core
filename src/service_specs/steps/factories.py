@@ -130,7 +130,7 @@ def factory_for(model_class):
     model_class = getattr(ggrc.models, model_class)
   else:
     factory_name = model_class.__name__
-  factory_name = '{}Factory'.format(factory_name)
+  factory_name = '{0}Factory'.format(factory_name)
   factory = globals().get(factory_name, None)
   if not factory:
     class model_factory(ModelFactory):

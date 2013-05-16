@@ -71,13 +71,13 @@ class Hierarchical(object):
   @declared_attr
   def parent_id(cls):
     return db.Column(
-        db.Integer, db.ForeignKey('{}.id'.format(cls.__tablename__)))
+        db.Integer, db.ForeignKey('{0}.id'.format(cls.__tablename__)))
 
   @declared_attr
   def children(cls):
     return db.relationship(
         cls.__name__,
-        backref=db.backref('parent', remote_side='{}.id'.format(cls.__name__)),
+        backref=db.backref('parent', remote_side='{0}.id'.format(cls.__name__)),
         )
 
   # REST properties
