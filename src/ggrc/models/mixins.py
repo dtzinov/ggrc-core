@@ -22,21 +22,14 @@ class Identifiable(object):
 
 def created_at_args():
   """Sqlite doesn't have a server, per se, so the server_* args are useless."""
-  if settings.SQLALCHEMY_DATABASE_URI.startswith('sqlite'):
-    return {'default': db.text('current_timestamp'),}
-  return {'server_default': db.text('current_timestamp'),}
+  return {'default': db.text('current_timestamp'),}
 
 def updated_at_args():
   """Sqlite doesn't have a server, per se, so the server_* args are useless."""
-  if settings.SQLALCHEMY_DATABASE_URI.startswith('sqlite'):
-    return {
-        'default': db.text('current_timestamp'),
-        'onupdate': db.text('current_timestamp'),
-        }
   return {
-      'server_default': db.text('current_timestamp'),
-      'server_onupdate': db.text('current_timestamp'),
-      }
+    'default': db.text('current_timestamp'),
+    'onupdate': db.text('current_timestamp'),
+    }
 
 class ChangeTracked(object):
   """A model with fields to tracked the last user to modify the model, the
