@@ -40,9 +40,6 @@ have the prerequisite software installed. Here are the steps:
   librarian-chef install
   vagrant up
   vagrant ssh
-  # The following commands are executed in the vm via the ssh session!
-  pip install -r src/dev-requirements.txt
-  pip install --no-deps -r src/requirements.txt
   build_compass
   build_assets
   db_reset
@@ -279,6 +276,20 @@ command *should* be an update Python virtualenv containing the Python packages
 required by the application as well as any new development package
 requirements. However, this may not be the case and you may experience a
 provisioning failure due to a change to ``Cheffile``.
+
+Running ``vagrant provision`` will run the following in the VM to update the
+development environment.
+
+.. sourcecode:: bash
+
+   make
+   pip install -r src/dev-requirements.txt
+   pip install --no-deps -r src/requirements.txt
+
+Note that if you're using ``launch_gae_ggrc``, then changes to
+``src/requirements.txt`` will require rebuilding the ``src/packages.zip`` via
+``make appengine_packages_zip``.  (This is also handled by the ``make`` step
+run via ``vagrant provision``.
 
 Cheffile Changes
 ----------------
