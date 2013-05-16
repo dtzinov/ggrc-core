@@ -11,7 +11,8 @@ APPENGINE_ZIP_NAME=google_appengine_$(APPENGINE_SDK_VERSION).zip
 APPENGINE_ZIP_HREF=http://googleappengine.googlecode.com/files/$(APPENGINE_ZIP_NAME)
 APPENGINE_ZIP_PATH=$(DEV_PREFIX)/opt/$(APPENGINE_ZIP_NAME)
 APPENGINE_SDK_PATH=$(DEV_PREFIX)/opt/google_appengine
-APPENGINE_PATCH_PATH=$(PREFIX)/extras/google_appengine__enable_sqlite3.diff
+APPENGINE_SQLITE_PATCH_PATH=$(PREFIX)/extras/google_appengine__enable_sqlite3.diff
+APPENGINE_NOAUTH_PATCH_PATH=$(PREFIX)/extras/google_appengine__force_noauth_local_webserver.diff
 
 APPENGINE_PACKAGES_ZIP=$(PREFIX)/src/packages.zip
 APPENGINE_PACKAGES_DIR=$(DEV_PREFIX)/opt/gae_packages
@@ -25,7 +26,8 @@ $(APPENGINE_SDK_PATH) : $(APPENGINE_ZIP_PATH)
 		unzip $(APPENGINE_ZIP_PATH)
 	touch $(APPENGINE_SDK_PATH)
 	cd $(APPENGINE_SDK_PATH); \
-		patch -p1 < $(APPENGINE_PATCH_PATH)
+		patch -p1 < $(APPENGINE_SQLITE_PATCH_PATH); \
+		patch -p1 < $(APPENGINE_NOAUTH_PATCH_PATH)
 
 appengine_sdk : $(APPENGINE_SDK_PATH)
 
