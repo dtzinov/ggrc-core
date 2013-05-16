@@ -260,6 +260,33 @@ Most requirements changes should be in either ``src/requirements.txt`` or
 ``src/dev-requirements.txt`` and would exhibit themselves as module import
 failures.
 
+Runtime Environment Variables
+-----------------------------
+
+:GGRC_SETTINGS_MODULE:
+  GGRC uses this environment variable to define which module(s) within
+  ``ggrc.settings`` to use during the bootstrap phase.  The value can be one
+  or more space-separated module names, which will be applied in the same
+  order they are specified.  ``source bin/init_env`` will set this value to
+  ``development``.
+
+Details About VM File Structure
+-------------------------------
+
+``vagrant provision`` installs several Debian packages globally within the
+VM.  All other project data is contained within two directories, specified by
+environment variables (and defined in ``/home/vagrant/.bashrc``).
+
+:PREFIX:
+  Points at root directory of the Git repository, and is automatically
+  detected if not present.
+
+:DEV_PREFIX:
+  Points at a directory containing ``tmp`` and ``opt`` directories.  If not
+  defined, ``DEV_PREFIX`` defaults to the value of ``PREFIX``.  (In the VM,
+  it is defined to ``/vagrant-dev`` to avoid slowdown caused by the shared
+  filesystem at ``/vagrant``.)
+
 Changes to Requirements Files
 -----------------------------
 
