@@ -1,5 +1,6 @@
 from ggrc import db
 from .mixins import Base
+from .reflection import PublishOnly
 
 class Person(Base, db.Model):
   __tablename__ = 'people'
@@ -17,9 +18,9 @@ class Person(Base, db.Model):
       )
 
   _publish_attrs = [
-      'email',
-      'name',
-      'language',
       'company',
-      'object_people',
+      'email',
+      'language',
+      'name',
+      PublishOnly('object_people'),
       ]

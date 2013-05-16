@@ -2,6 +2,7 @@ from ggrc import db
 from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.ext.declarative import declared_attr
 from .mixins import Base, Timeboxed
+from .reflection import PublishOnly
 
 class ObjectDocument(Base, Timeboxed, db.Model):
   __tablename__ = 'object_documents'
@@ -41,7 +42,7 @@ class Documentable(object):
         creator=lambda document: ObjectDocument(
             document=document,
             modified_by_id=1,
-            personable_type=cls.__name__,
+            documentable_type=cls.__name__,
             )
         )
     joinstr = 'and_(foreign(ObjectDocument.documentable_id) == {type}.id, '\
@@ -55,7 +56,7 @@ class Documentable(object):
 
   _publish_attrs = [
       'documents',
-      'object_documents',
+      PublishOnly('object_documents'),
       ]
 
   @classmethod

@@ -2,6 +2,7 @@ from ggrc import db
 from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.ext.declarative import declared_attr
 from .mixins import Base, Timeboxed
+from .reflection import PublishOnly
 
 class ObjectPerson(Base, Timeboxed, db.Model):
   __tablename__ = 'object_people'
@@ -55,7 +56,7 @@ class Personable(object):
 
   _publish_attrs = [
       'people',
-      'object_people',
+      PublishOnly('object_people'),
       ]
 
   @classmethod
