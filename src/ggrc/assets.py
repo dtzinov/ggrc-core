@@ -63,3 +63,8 @@ environment.register("dashboard-js-specs", webassets.Bundle(
   *asset_paths['dashboard-js-spec-files'],
   #filters='jsmin',
   output='dashboard-%(version)s-specs.js'))
+
+environment.register("dashboard-js-spec-helpers", webassets.Bundle(
+  *asset_paths['dashboard-js-spec-helpers'],
+  #filters='jsmin',
+  output='dashboard-%(version)s-spec-helpers.js'))

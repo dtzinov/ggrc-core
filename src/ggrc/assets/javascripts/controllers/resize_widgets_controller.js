@@ -4,19 +4,31 @@
 
 (function(can, $){
 
+/**
+  resize_widgets_controller.js
+  This controller covers the ability to resize columns (expected to the immediate children of the root element of the controller) 
+  and widgets within columns (children of the column having tag name 'section' and an id attribute).  Features covered in this 
+  controller are the ability to resize the columns, collapse widgets (showing only the title bar), pull widgets from the bottom
+  to resize their heights with an enforced minimum, and rearrange widgets within the columns ("sorting").
+
+*/
 can.Control("CMS.Controllers.ResizeWidgets", {
   defaults : {
     columns_token : "columns"
     , heights_token : "heights"
-    , total_columns : 12
+    , total_columns : 12  //Based on bootstrap fluid rows having span1 through span12 widths
     , default_layout : null
-    , page_token : null
-    , minimum_widget_height : 100
-    , resizable_selector : "section[id]"
-    , magic_content_height_offset : 17 //10px padding of the list inside the section + 7px height of resize handle
+    , page_token : null  // used for the display prefs model to determine what the defaults should be, if no record for this page exists
+    , minimum_widget_height : 100 // minimum size of the *content*, or the *tab content*, of the widget
+    , resizable_selector : "section[id]"  // how to determine what on the page count as widgets
+    , magic_content_height_offset : 17 //10px padding of the list inside the section + 7px height of resize handle -- probably shouldn't change this
   }
 }, {
 
+  /**
+    setup is a controller function that fires before the options or the events are set up.  The rationale for
+    setting this.options.model in setup may not be necessary anymore but it is preserved here for legacy.
+  */
   setup : function(el, opts) {
     this._super && this._super.apply(this, arguments)
     var that = this;
@@ -39,16 +51,24 @@ can.Control("CMS.Controllers.ResizeWidgets", {
     $(this.element)
     .find(this.options.resizable_selector)
     .filter(function() {
+      //don't set up resizable on collapsed widgets.  There are routines later in this file which add/remove
+      // resizable functionality when the collapse state is toggled.  Also, the DashboardWidgets controller
+      // handles it when new client-rendered widgets are created.  If you need to fix something about this
+      // code, check those other locations as well.
       var cs = that.options.model.getCollapsed(that.options.page_token, $(this).attr("id"));
       return cs == null ? true : !cs;
     })
     .each(function() {
+      //We set up minimum size based on the content or tab content height, but the resizable handle has to be
+      // set on the outside widget.  So first we calculate the extra height on top of the minimum that will be,
+      // meaning the height of the title bar, the height of any tabs and toolbars, and the resizer itself.
       var extra_ht = 0;
       function add_height(index, el) {
         extra_ht += $(el).height();        
       }
 
       $(this).children().not(".content").each(add_height);
+      // look for tabs if the tabs are atop the tab content (not if they're to the left)
       if($(".content .tab-content", this).not(".tabs-left .tab-content").length) {
         $(".content .tab-content", this).siblings().each(add_height);
       }

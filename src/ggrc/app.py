@@ -34,7 +34,8 @@ from flask.ext.jasmine import Jasmine, Asset
 jasmine = Jasmine(app)
 
 jasmine.sources(
-    Asset("dashboard-js")
+    Asset("dashboard-js"),
+    Asset("dashboard-js-spec-helpers")
 )
 
 jasmine.specs(
