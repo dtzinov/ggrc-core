@@ -41,7 +41,7 @@ if not settings.AUTOBUILD_ASSETS:
   environment.auto_build = False
 
 environment.url = '/static'
-environment.directory = 'static'
+environment.directory = os.path.join(settings.MODULE_DIR, 'static')
 
 environment.load_path = [
   'assets/javascripts',

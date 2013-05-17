@@ -1,10 +1,12 @@
 # Load initial project settings
-from ggrc import settings
+import settings
 
 # FIXME: This should probably be done in `settings/app_engine.py`
 if getattr(settings, 'APP_ENGINE', False):
   import sys
-  sys.path.insert(0, '/vagrant/src/packages.zip')
+  import os
+  sys.path.insert(0, os.path.join(settings.BASE_DIR, 'packages.zip'))
+  del os
   del sys
 
 # FIXME: This should be more complete

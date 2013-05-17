@@ -1,3 +1,5 @@
+# See https://developers.google.com/appengine/docs/python/config/appconfig
+
 application: ggrc-core
 version: 1
 runtime: python27
@@ -6,4 +8,34 @@ threadsafe: true
 
 handlers:
   - url: /.*
-    script: ggrc.app.wsgi_app
+    script: ggrc.app.app.wsgi_app
+
+libraries:
+  - name: jinja2
+    version: "2.6"
+
+# Don't upload some files
+#  - note the first 9 items are defaults, see:
+#    https://developers.google.com/appengine/docs/python/config/appconfig#Skipping_Files
+skip_files:
+- ^(.*/)?app\.yaml
+- ^(.*/)?app\.yml
+- ^(.*/)?index\.yaml
+- ^(.*/)?index\.yml
+- ^(.*/)?#.*#
+- ^(.*/)?.*~
+- ^(.*/)?.*\.py[co]
+- ^(.*/)?.*/RCS/.*
+- ^(.*/)?\..*
+# Custom GGRC excludes here
+- requirements\.txt
+- requirements\.txt\.md5
+- dev-requirements\.txt
+- migrations/.*
+- tests/.*
+- service_specs/.*
+- assets/.*
+
+# Define certain environment variables
+env_variables:
+  GGRC_SETTINGS_MODULE: app_engine_ggrc_core
