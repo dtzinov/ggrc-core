@@ -1,0 +1,37 @@
+diff --git a/src/webassets/filter/__init__.py b/src/webassets/filter/__init__.py
+index 84ea87b..f724ee3 100644
+--- a/src/webassets/filter/__init__.py
++++ b/src/webassets/filter/__init__.py
+@@ -528,6 +528,7 @@ class JavaTool(ExternalTool):
+ 
+ 
+ _FILTERS = {}
++_builtin_filters_loaded = False
+ 
+ def register_filter(f):
+     """Add the given filter to the list of know filters.
+@@ -553,9 +554,15 @@ def get_filter(f, *args, **kwargs):
+         assert not args and not kwargs
+         return f
+     elif isinstance(f, basestring):
++        klass = None
+         if f in _FILTERS:
+             klass = _FILTERS[f]
+         else:
++            if not _builtin_filters_loaded:
++                load_builtin_filters()
++                if f in _FILTERS:
++                    klass = _FILTERS[f]
++        if klass is None:
+             raise ValueError('No filter \'%s\'' % f)
+     elif inspect.isclass(f) and issubclass(f, Filter):
+         klass = f
+@@ -596,5 +603,7 @@ def load_builtin_filters():
+                         # considered abstract base classes.
+                         continue
+                     register_filter(attr)
+-load_builtin_filters()
+ 
++    # Mark builtin filters as loaded
++    global _builtin_filters_loaded
++    _builtin_filters_loaded = True

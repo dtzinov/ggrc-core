@@ -58,11 +58,10 @@ $(APPENGINE_PACKAGES_DIR) : $(APPENGINE_ENV_DIR)
 	mkdir -p $(APPENGINE_PACKAGES_DIR)
 	source "$(APPENGINE_ENV_DIR)/bin/activate"; \
 		pip install --no-deps -r "$(APPENGINE_REQUIREMENTS_TXT)" --target "$(APPENGINE_PACKAGES_DIR)"
+	cd "$(APPENGINE_PACKAGES_DIR)/webassets"; \
+		patch -p3 < "${PREFIX}/extras/webassets__fix_builtin_filter_loading.diff"
 	cd "$(APPENGINE_PACKAGES_DIR)/sqlalchemy"; \
 		patch -p3 < "${PREFIX}/extras/sqlalchemy__fix_gaerdbms_exceptions.diff"
-	@echo Remove packages included in App Engine environment
-	cd "$(APPENGINE_PACKAGES_DIR)"; \
-		rm -rf django setuptools jinja2
 
 appengine_packages : $(APPENGINE_PACKAGES_DIR)
 
