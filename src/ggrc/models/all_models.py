@@ -28,7 +28,7 @@ from .product import Product
 from .program import Program
 from .program_directive import ProgramDirective
 from .project import Project
-from .relationship import Relationship
+from .relationship import Relationship, RelationshipType
 
 #TODO: This isn't currently used
 #from .relationship_type import RelationshipType

@@ -12,11 +12,16 @@ class Relationship(Base, db.Model):
   # FIXME: Should this be a strict constraint?  If so, a migration is needed.
   #relationship_type_id = db.Column(
   #    db.Integer, db.ForeignKey('relationship_types.id'))
-  #relationship_type = db.relationship('RelationshipType', uselist=False)
+  relationship_type = db.relationship(
+      'RelationshipType',
+      primaryjoin='foreign(RelationshipType.relationship_type) == Relationship.relationship_type_id',
+      uselist=False)
 
   def get_relationship_node(self, attr, node_type, node_id):
     if hasattr(self, attr):
       return getattr(self, attr)
+    if node_type is None:
+      return None
     cls = getattr(ggrc.models, node_type)
     value = db.session.query(cls).get(node_id)
     setattr(self, attr, value)
@@ -34,8 +39,8 @@ class Relationship(Base, db.Model):
   @source.setter
   def source(self, value):
     setattr(self, '_source', value)
-    self.source_id = value.id
-    self.source_type = value.__class__.name
+    self.source_id = value.id if value is not None else None
+    self.source_type = value.__class__.__name__ if value is not None else None
 
   @property
   def destination(self):
@@ -45,8 +50,9 @@ class Relationship(Base, db.Model):
   @destination.setter
   def destination(self, value):
     setattr(self, '_destination', value)
-    self.destination_id = value.id
-    self.destination_type = value.__class__.name
+    self.destination_id = value.id if value is not None else None
+    self.destination_type = value.__class__.__name__ if value is not None \
+        else None
 
   _publish_attrs = [
       'source',

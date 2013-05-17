@@ -1,6 +1,7 @@
 import ggrc.builder
 import ggrc.services
 from datetime import datetime
+from flask import _request_ctx_stack, request
 from ggrc import db
 from ggrc.models.reflection import AttributeInfo
 from iso8601 import parse_date
@@ -173,8 +174,13 @@ class UpdateAttrHandler(object):
     #  properties
     # rel_class = None
     # return cls.query_for(rel_class, json_obj, attr_name, True)
+    if attr_name in json_obj:
+      url = json_obj[attr_name]['href']
+      rel_class_name = _request_ctx_stack.top.url_adapter.match(url, 'GET')[0]
+      from ggrc import models
+      rel_class = getattr(models, rel_class_name)
+      return cls.query_for(rel_class, json_obj, attr_name, False)
     return None
-
 
 class Builder(AttributeInfo):
   """JSON Dictionary builder for ggrc.models.* objects and their mixins."""

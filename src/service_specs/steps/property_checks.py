@@ -10,7 +10,11 @@ def set_link_property(
     context, source_resource, property_name, target_resource):
   source = getattr(context, source_resource)
   target = getattr(context, target_resource)
-  set_property(source, property_name, {'id': target.get(u'id')})
+  set_property(
+      source,
+      property_name,
+      {'id': target.get(u'id'), 'href': target.get(u'selfLink')},
+      )
 
 @given(\
     '"{target_resource}" is added to links property "{property_name}" of '\
@@ -75,3 +79,14 @@ def check_link_to_parent(
   assert parent.get(u'id') == link.get(u'id'), \
       'Expected to find link to parent, id={0}, instead found {1}'.format(
           parent.get(u'id'), link)
+
+@given('"{resource_name}" property "{property_name}" is "{value}"')
+def set_property_value_by_name(context, resource_name, property_name, value):
+  resource = getattr(context, resource_name)
+  resource.set(property_name, value)
+
+@then('the "{property_name}" property of "{resource_name}" is "{expected}"')
+def check_property_value(context, property_name, resource_name, expected):
+  resource = getattr(context, resource_name)
+  actual = resource.get(property_name)
+  assert expected == actual, 'Expected {}, found {}'.format(expected, actual)
