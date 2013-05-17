@@ -83,8 +83,9 @@ class Control(
   # REST properties
   _publish_attrs = [
       'active',
-      'categories',
-      'assertions',
+      # FIXME: add these in once eager-loading works correctly
+      #'categories',
+      #'assertions',
       'control_assessments',
       'directive',
       'documentation_description',

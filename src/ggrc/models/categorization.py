@@ -64,3 +64,12 @@ class Categorizable(object):
         backref=BACKREF_NAME_FORMAT.format(type=cls.__name__, scope=scope),
         )
 
+  # FIXME: make eager-loading work for categorizations/assertations
+  #@classmethod
+  #def eager_query(cls):
+  #  from sqlalchemy import orm
+
+  #  query = super(Categorizable, cls).eager_query()
+  #  return query.options(
+  #      orm.subqueryload_all('categorizations.category'),
+  #      orm.subqueryload_all('assertations.category'))
