@@ -15,7 +15,8 @@ class SystemCategorized(Categorizable):
         'categorizations', 'categories', CATEGORY_SYSTEM_TYPE_ID)
 
 class System(
-    Documentable, Personable, Timeboxed, BusinessObject, SystemCategorized, db.Model):
+    Documentable, Personable, Timeboxed, SystemCategorized,
+    BusinessObject, db.Model):
   __tablename__ = 'systems'
 
   infrastructure = db.Column(db.Boolean)
@@ -87,3 +88,17 @@ class System(
       'super_systems',
       'transactions',
       ]
+
+  @classmethod
+  def eager_query(cls):
+    from sqlalchemy import orm
+
+    query = super(System, cls).eager_query()
+    return query.options(
+        orm.joinedload('type'),
+        orm.joinedload('network_zone'),
+        orm.subqueryload('responses'),
+        orm.subqueryload_all('system_controls.control'),
+        orm.subqueryload_all('sub_system_systems.child'),
+        orm.subqueryload_all('super_system_systems.parent'),
+        orm.subqueryload('transactions'))

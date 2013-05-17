@@ -17,3 +17,11 @@ class RiskyAttribute(Documentable, Personable, Timeboxed, BusinessObject, db.Mod
       'risk_risky_attributes',
       'risks',
       ]
+
+  @classmethod
+  def eager_query(cls):
+    from sqlalchemy import orm
+
+    query = super(RiskyAttribute, cls).eager_query()
+    return query.options(
+        orm.subqueryload_all('risk_risky_attributes.risk'))

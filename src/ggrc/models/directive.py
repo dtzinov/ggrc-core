@@ -5,7 +5,7 @@ from .object_document import Documentable
 from .object_person import Personable
 from .reflection import PublishOnly
 
-class Directive(Documentable, Personable, BusinessObject, Timeboxed, db.Model):
+class Directive(Documentable, Personable, Timeboxed, BusinessObject, db.Model):
   __tablename__ = 'directives'
 
   company = db.Column(db.Boolean, default=False, nullable=False)
@@ -52,3 +52,14 @@ class Directive(Documentable, Personable, BusinessObject, Timeboxed, db.Model):
       'version',
       ]
 
+  @classmethod
+  def eager_query(cls):
+    from sqlalchemy import orm
+
+    query = super(Directive, cls).eager_query()
+    return query.options(
+        orm.joinedload('audit_frequency'),
+        orm.joinedload('audit_duration'),
+        orm.subqueryload('controls'),
+        orm.subqueryload_all('program_directives.program'),
+        orm.subqueryload('sections'))

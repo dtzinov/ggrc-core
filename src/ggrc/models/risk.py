@@ -7,7 +7,7 @@ from .object_person import Personable
 from .reflection import PublishOnly
 
 class Risk(
-    Documentable, Personable, Timeboxed, BusinessObject, ControlCategorized,
+    Documentable, Personable, Timeboxed, ControlCategorized, BusinessObject,
     db.Model):
   __tablename__ = 'risks'
 
@@ -52,3 +52,12 @@ class Risk(
       PublishOnly('control_risks'),
       PublishOnly('risk_risky_attributes'),
       ]
+
+  @classmethod
+  def eager_query(cls):
+    from sqlalchemy import orm
+
+    query = super(Risk, cls).eager_query()
+    return query.options(
+        orm.subqueryload_all('control_risks.control'),
+        orm.subqueryload_all('risk_risky_attributes.risky_attribute'))

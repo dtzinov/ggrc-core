@@ -28,3 +28,12 @@ class Program(Documentable, Personable, BusinessObject, Timeboxed, db.Model):
       'directives',
       'cycles',
       ]
+
+  @classmethod
+  def eager_query(cls):
+    from sqlalchemy import orm
+
+    query = super(Program, cls).eager_query()
+    return query.options(
+        orm.subqueryload_all('program_directives.directive'),
+        orm.subqueryload('cycles'))

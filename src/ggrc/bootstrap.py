@@ -11,7 +11,6 @@ if getattr(settings, 'APP_ENGINE', False):
 
 # FIXME: This should be more complete
 import logging
-logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 from flask.ext.sqlalchemy import SQLAlchemy

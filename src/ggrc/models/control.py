@@ -24,7 +24,7 @@ class AssertionCategorized(Categorizable):
 
 class Control(
     Documentable, Personable, ControlCategorized, AssertionCategorized,
-    Slugged, Described, Hierarchical, Hyperlinked, Timeboxed, db.Model):
+    Described, Hierarchical, Hyperlinked, Timeboxed, Slugged, db.Model):
   __tablename__ = 'controls'
 
   directive_id = db.Column(db.Integer, db.ForeignKey('directives.id'))

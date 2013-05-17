@@ -92,8 +92,9 @@ class Hierarchical(object):
 
     query = super(Hierarchical, cls).eager_query()
     return query.options(
-        orm.joinedload('parent'),
-        orm.joinedload('children'))
+        orm.subqueryload('children'),
+        orm.joinedload('parent'))
+
 
 class Timeboxed(object):
   start_date = db.Column(db.DateTime)
