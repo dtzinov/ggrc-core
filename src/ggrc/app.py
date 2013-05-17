@@ -13,7 +13,7 @@ db.init_app(app)
 
 # Configure webassets for app
 from . import assets
-app.jinja_env.add_extension('webassets.ext.jinja2.AssetsExtension')
+app.jinja_env.add_extension('webassets.ext.jinja2.assets')
 app.jinja_env.assets_environment = assets.environment
 
 # Configure Jinja2 extensions for app
@@ -29,15 +29,14 @@ ggrc.services.init_all_services(app)
 import ggrc.views
 ggrc.views.init_all_object_views(app)
 
-# Configure Flask-Jasmine, for dev mode unit testing
-from flask.ext.jasmine import Jasmine, Asset
-jasmine = Jasmine(app)
+if settings.ENABLE_JASMINE:
+  # Configure Flask-Jasmine, for dev mode unit testing
+  from flask.ext.jasmine import Jasmine, Asset
+  jasmine = Jasmine(app)
 
-jasmine.sources(
-    Asset("dashboard-js"),
-    Asset("dashboard-js-spec-helpers")
-)
+  jasmine.sources(
+      Asset("dashboard-js"),
+      Asset("dashboard-js-spec-helpers"))
 
-jasmine.specs(
-    Asset("dashboard-js-specs")
-)
+  jasmine.specs(
+      Asset("dashboard-js-specs"))

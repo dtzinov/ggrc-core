@@ -37,6 +37,9 @@ assets_yaml_path = os.path.join(settings.MODULE_DIR, 'assets', 'assets.yaml')
 with open(assets_yaml_path) as f:
   asset_paths = yaml.load(f.read())
 
+if not settings.AUTOBUILD_ASSETS:
+  environment.auto_build = False
+
 environment.url = '/static'
 environment.directory = 'static'
 
@@ -59,12 +62,11 @@ environment.register("dashboard-css", webassets.Bundle(
   *asset_paths['dashboard-css-files'],
   output='dashboard-%(version)s.css'))
 
-environment.register("dashboard-js-specs", webassets.Bundle(
-  *asset_paths['dashboard-js-spec-files'],
-  #filters='jsmin',
-  output='dashboard-%(version)s-specs.js'))
+if settings.ENABLE_JASMINE:
+  environment.register("dashboard-js-specs", webassets.Bundle(
+    *asset_paths['dashboard-js-spec-files'],
+    output='dashboard-%(version)s-specs.js'))
 
-environment.register("dashboard-js-spec-helpers", webassets.Bundle(
-  *asset_paths['dashboard-js-spec-helpers'],
-  #filters='jsmin',
-  output='dashboard-%(version)s-spec-helpers.js'))
+  environment.register("dashboard-js-spec-helpers", webassets.Bundle(
+    *asset_paths['dashboard-js-spec-helpers'],
+    output='dashboard-%(version)s-spec-helpers.js'))
