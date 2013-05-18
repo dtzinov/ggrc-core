@@ -34,7 +34,8 @@ class Risk(
       'risk_risky_attributes', 'risky_attribute', 'RiskRiskyAttribute')
 
   _publish_attrs = [
-      'categories',
+      # FIXME: add this in once eager-loading works correctly
+      #'categories',
       'controls',
       'financial_impact_rating',
       'inherent_risk',
@@ -60,4 +61,6 @@ class Risk(
     query = super(Risk, cls).eager_query()
     return query.options(
         orm.subqueryload_all('control_risks.control'),
+        # FIXME: make eager-loading work for categorizations
+        #orm.subqueryload_all('categorizations.categories'),
         orm.subqueryload_all('risk_risky_attributes.risky_attribute'))
