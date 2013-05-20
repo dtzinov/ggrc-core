@@ -4,7 +4,10 @@ SCRIPTPATH="$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )"
 
 PREFIX=$( cd "${SCRIPTPATH}/.." ; pwd -P )
 
-export DEV_PREFIX="${DEV_PREFIX}" || "${PREFIX}"
+if [[ -z $DEV_PREFIX ]];
+then
+  export DEV_PREFIX=${PREFIX}
+fi
 
 export GGRC_SETTINGS_MODULE="development"
 
