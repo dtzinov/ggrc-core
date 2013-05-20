@@ -85,6 +85,9 @@ can.Control("CMS.Controllers.ResizeWidgets", {
     this.update(newopts);
   }
 
+  /**
+    if any options change, rebind event listeners and make sure the columns and heights are correct.
+  */
   , update : function(newopts) {
     var that = this
     , opts = this.options;
@@ -94,6 +97,9 @@ can.Control("CMS.Controllers.ResizeWidgets", {
     this.on();
   }
 
+  /**
+    Set up the column widths for the values stored in the display prefs.
+  */
   , update_columns : function() {    
     var $c = $(this.element)
     , $children = $c.children().not(".width-selector-bar, .width-selector-drag")
@@ -108,6 +114,8 @@ can.Control("CMS.Controllers.ResizeWidgets", {
     for(var i = 0; i < widths.length; i++) {
       total_width += widths[i];
     }
+    // Always make up the total column width with the available columns.
+    //  If there is a discrepancy, try to figure out what the columns are already set to
     if(total_width != this.options.total_columns) {
       var scraped_cols = [];
       var scraped_col_total = 0;
@@ -124,22 +132,28 @@ can.Control("CMS.Controllers.ResizeWidgets", {
     }
 
     if(!widths || $children.length != widths.length) {
+      // In this case, widths are not set at all in the selector or the number
+      //  of columns isn't what was expected from the widths collection.
       if(scraped_col_total === this.options.total_columns) {
         widths = scraped_cols;
       } else {
+        // Widths are not properly set in the model AND the scraped set does not add up to the
+        //  intended total, so reset to the "sensible default"
         widths = this.sensible_default($children.length);
       }
       this.options.model.setColumnWidths(this.options.page_token, $c.attr("id"), widths);
     }  
 
-
+    // Get rid of previous Boostrap grid spans.
     for(i = 1; i <= this.options.total_columns; i++) {
       $children.removeClass("span" + i);
     }
 
+    // To each child add the appropriate "span#" class for the intended width
     $children.each(function(i, child) {
       $(child).addClass("span" + widths[i]);
 
+      // Then check whether we need to reformat the tab sheet, for any widget in the columns that has one
       can.each(
         $(child).find(that.options.resizable_selector).get()
         , that.proxy("check_horizontal_tab_sheet")
@@ -149,6 +163,15 @@ can.Control("CMS.Controllers.ResizeWidgets", {
 
   , " section_created" : "update_heights"
 
+  /**
+    Set the height of each visible, non-collapsed widget.  Get the heights from the display prefs
+    model.  If they exist, use them; if some widgets do not have registered height, try to distribute the
+    heights evenly within the viewport of the browser.
+
+    Note that the actual heights aren't directly set on the widgets in the case that some of them aren't 
+    stored in the model.  This is because saving them on the model will kick off the setting of the height
+    anyway.  Doing it once at the end (the if(dirty) case) prevents infinite recursion.
+  */
   , update_heights : function() {
     var model = this.options.model
     , page_heights = model.getWidgetHeights(this.options.page_token)
@@ -164,25 +187,29 @@ can.Control("CMS.Controllers.ResizeWidgets", {
       return ch;
     };
 
-    if(!$c.length) {
+    if(!$c.length) {  //get whatever children the current thing has if there aren't widget area children
       $c = $(this.element).children();
     }
 
     $c.each(function(i, child) {
-      var $gcs = $(child).find("section[id]");
+      // the grandchildren (widget descendants of the widget area) are what we'll be actually resizing
+      var $gcs = $(child).find(that.options.resizable_selector);
       $gcs.each(function(j, grandchild) {
+        // for a truthy value of this element's collapsed state stored in the DisplayPrefs, just collapse.
+        //  Do not attempt to set size.
         if(that.options.model.getCollapsed(that.options.page_token, $(grandchild).attr("id"))) {
           $(grandchild).css("height", "").find(".widget-showhide > a").showhide("hide")
         } else {
           if(page_heights.attr($(grandchild).attr("id")) != null) {
+            // case where the height for this widget is stored in the display prefs.
             var sh = page_heights.attr($(grandchild).attr("id"));
             that.set_widget_height(grandchild, sh);
           } else {
             // missing a height.  redistribute evenly but don't increase the size of anythng.
             var visible_ht = Math.floor($(window).height() - $(child).offset().top) - 10
-            , split_ht = visible_ht / $gcs.length
+            , split_ht = visible_ht / $gcs.length  // If you divided the visible height evenly, this is what each would get
             , col_ht = $(child).height();
-            $shrink_these = $gcs.filter(function() { return $(this).height() > split_ht });
+            $shrink_these = $gcs.filter(function() { return $(this).height() > split_ht });  //these ones are too big
             $shrink_these.each(function(i, grandchild) {
               var $gc = $(grandchild);
               var this_split_ht = split_ht - parseInt($gc.css("margin-top")) - (parseInt($gc.prev($gcs).css("margin-bottom")) || 0);
@@ -190,12 +217,13 @@ can.Control("CMS.Controllers.ResizeWidgets", {
               model.setWidgetHeight(that.options.page_token, $gc.attr("id"), this_split_ht);
               col_ht = $(child).height() + $(child).offset().top;
             });
-            $gcs.not($shrink_these).each(function(i, grandchild) {
+            $gcs.not($shrink_these).each(function(i, grandchild) {  //these ones are smaller than the even split
               var $gc = $(grandchild);
               if(!page_heights.attr($gc.attr("id"))) {
-                model.setWidgetHeight(that.options.page_token, $gc.attr("id"), $gc.height());
+                model.setWidgetHeight(that.options.page_token, $gc.attr("id"), $gc.height()); //just set these to their current
               }
             });
+            //Since we've had to readjust some heights, size each widget to the new height and save to the model
             dirty = true;
             return false;
           }
@@ -208,6 +236,11 @@ can.Control("CMS.Controllers.ResizeWidgets", {
     }
   }
 
+  /**
+    for any number of columns in the layout, return a set of column widths
+    such that the innermost column (or innermost two columns for even numbers of columns) 
+    gets any excess after even division.
+  */
   , divide_evenly : function(n) {
     var tc = this.options.total_columns;
     var ret = [];
@@ -226,18 +259,36 @@ can.Control("CMS.Controllers.ResizeWidgets", {
     return ret;
   }
 
+  /**
+    Preferred, "aesthetically pleasing" default column widths defined here, for times when
+    a default is needed.
+  */
   , sensible_default : function(n) {
+    var refcol;
     switch(n) {
       case 2:
-      return [5, 7];
+      refcol = Math.floor(this.options.total_columns * 5 / 12);
+      return [refcol, this.options.total_columns - refcol]; //[5,7] for default 12
       case 3:
-      return [3, 6, 3];
+      refcol = Math.floor(this.options.total_columns / 4); //[3,6,3] for default 12
+      return [refcol, this.options.total_columns - (refcol * 2), refcol];
       default:
       return this.divide_evenly(n);
     }
 
   }
 
+  /**
+    Listen to changes in the DisplayPrefs model.  Using the API for DisplayPrefs, the "columns"
+    are set with the id of this controller's attached element -- in all cases the parent of display
+    columns. Other modifications are setting properties keyed on descendant elements' ids, not that of
+    this element (explaining the first predicate below).  In short, make sure the column set is displaying
+    what the model says it should be.  Same any time a height has been set -- ensure that the widget height
+    matches the set height.
+
+    We could extend this to do the same for collapse and sorts, if necessary.  Just watch out for infinite
+    recursion where, e.g., setting collapse sets the model which sets the collapse.
+  */
   , "{model} change" : function(el, ev, attr, how, newVal, oldVal) {
     var parts = attr.split(".");
     if(parts.length > 1 && parts[0] === window.location.pathname && parts[2] === $(this.element).attr("id")) {
@@ -253,6 +304,13 @@ can.Control("CMS.Controllers.ResizeWidgets", {
     }
   }
 
+  /**
+    Set the width of a column and its left sibling a fixed adjustment (an integer value such as 5 or -1).
+    This first runs the adjustment through the normalizer to ensure that no column is crunched smaller than
+    a width of 2 units.
+    A negative adjustment value is the same as moving a dividing line to the left (the right column widens
+    and the left column narrows) -- similarly, positive values move the gutter to the right.
+  */
   , adjust_column : function(container, border_idx, adjustment) {
     var col = this.getWidthsForSelector(container);
     var adjustment = this.normalizeAdjustment(col, border_idx, adjustment);
@@ -265,14 +323,18 @@ can.Control("CMS.Controllers.ResizeWidgets", {
     this.options.model.save();
   }
 
+  /**
+    Given an adjustment to make between two columns in a column layout, return the closest adjustment that
+    ensures that no column is reduced to a width smaller than 2 units.
+  */
   , normalizeAdjustment : function(col, border_idx, initial_adjustment) {
     var adjustment = initial_adjustment;
 
     if(border_idx < 1 || border_idx >= col.length) 
       return 0;
 
-    //adjustment is +1, border_idx reduced by 1, adjustment should never be a higher number than border_idx width minus 1
-    //adjustment is -1, border_idx-1 reduced by 1, adjustment should never be lower than negative( border_idx-1 width minus 1)
+    //adjustment is +1, border_idx reduced by 1, adjustment should never be a higher number than border_idx width minus 2
+    //adjustment is -1, border_idx-1 reduced by 1, adjustment should never be lower than negative( border_idx-1 width minus 2)
 
     adjustment = Math.min(adjustment, col[border_idx] - 2);
     adjustment = Math.max(adjustment, -col[border_idx - 1] + 2);
@@ -280,10 +342,20 @@ can.Control("CMS.Controllers.ResizeWidgets", {
     return adjustment;
   }
 
+  /**
+    wrapper for DisplayPrefs column width accessor.
+  */
   , getWidthsForSelector : function(sel) {
     return this.options.model.getColumnWidths(this.options.page_token, $(sel).attr("id")) || [];
   }
 
+  /**
+    given an X-offset for the whole page, return the closest column boundary (a number from 0 to options.total_columns)
+    This is important when dragging around the resizer bar, because we need to know where to snap the ghost resizer to.
+
+    This makes use of certain Bootstrap CSS magic (grid layout is done in terms of 102.5641% of the layout width), which
+    explains the magic number pct_offset
+  */
   , getLeftOffset : function(pageX) {
     var pct_offset = -.025641;
     var $t = $(this.element)
@@ -291,6 +363,10 @@ can.Control("CMS.Controllers.ResizeWidgets", {
     return Math.round((pageX + 3 + margin / 2 - $t.offset().left) * this.options.total_columns / (1 - pct_offset) / $t.width());
   }
 
+  /**
+    Given a column boundary from 0 to options.total_columns, return the pixel offset from the left margin of the page of the
+    center of the boundary (This takes into account the size of the gap between columns).
+  */
   , getLeftOffsetAsPixels : function(offset) {
     var pct_offset = -.025641;
     var $t = $(this.element)
@@ -300,10 +376,17 @@ can.Control("CMS.Controllers.ResizeWidgets", {
 
   , " mousedown" : "startResize"
 
+  /**
+    Pack up the resizer bar with the data about where it started, and enable the drag mode, with the
+    full opacity resizer bar and the invisible drag target that sits under the mouse pointer.
+
+  */
   , startResize : function(el, ev) {
     var that = this;
     var origTarget = ev.originalEvent ? ev.originalEvent.target : ev.target;
     var $t = $(this.element);
+    //Don't start drag if you're not over a gutter (not clicking directly on the parent of the columns
+    // or the resizer bar, not currently showing the bar)
     if (($t.is(origTarget) || $(origTarget).is(".width-selector-bar, .width-selector-drag"))
         && $(".width-selector-bar", $t).length) {
       var offset = this.getLeftOffset(ev.pageX);
@@ -312,7 +395,8 @@ can.Control("CMS.Controllers.ResizeWidgets", {
       while(c_width > offset) { //should be >=?
         c_width -= widths.pop();
       }
-      //create the bar that shows where the new split will be
+      //create the bar that shows where the new split will be, if it doesn't exist
+      //  (really it should have been created already for the ghost bar)
       var $bar = $(".width-selector-bar", $t);
       if(!$bar.length) {
         $bar = $("<div>&nbsp;</div>")
@@ -345,7 +429,9 @@ can.Control("CMS.Controllers.ResizeWidgets", {
     }
   }
 
-
+  /**
+    on these events, check whether we should show the resize bar in the gutter between two columns
+  */
   , " mouseover" : "showGhostResizer"
   , " mousemove" : "showGhostResizer"
   , "{window} resize" : function(el, ev) {
@@ -357,10 +443,16 @@ can.Control("CMS.Controllers.ResizeWidgets", {
     });
   }
 
+
+  /**
+    When moused over the gutter between two widgets, show a half-opacity resizer bar.
+  */
   , showGhostResizer : function(el, ev) {
     var that = this;
-    var origTarget = ev.originalEvent ? ev.originalEvent.target : ev.target;
+    var origTarget = ev.originalEvent ? ev.originalEvent.target : ev.target;  //what did we actually mouse over?
     var $t = $(this.element);
+    // First test -- don't show resizer if we are not directly over the content box (outside any column), and not over the 
+    //  resizer bar, and the drag box doesn't exist (because we're not dragging).
     if(!$t.is(origTarget) && !$(origTarget).is(".width-selector-bar") && !$(".width-selector-drag", $t).length ) {
       this.removeResizer();
       return;
@@ -368,6 +460,7 @@ can.Control("CMS.Controllers.ResizeWidgets", {
     var offset = this.getLeftOffset(ev.pageX);
     var widths = this.getWidthsForSelector($t).slice(0);
     var acc = 0;
+    //Second test:  don't show resizer if we are outside of the gutters between colunns (probably below the content of a column)
     for(var i = 0; i < widths.length && acc !== offset; i++) {
       acc += widths[i];
       if(acc > offset) { //counted past our current offset. we're not near a gutter.
@@ -379,13 +472,14 @@ can.Control("CMS.Controllers.ResizeWidgets", {
     var gutterX = this.getLeftOffsetAsPixels(offset);
     var gutterWidth = Math.max.apply(Math, $t.children().map(function() { return parseInt($(this).css("margin-left")); }).get());
 
+    // If a resizer bar doesn't exist and we're in a gutter...
     if (!$(".width-selector-bar, .width-selector-drag").length
       && Math.abs(ev.pageX - gutterX) < gutterWidth / 2) {
       var c_width = that.options.total_columns;
       while(c_width > offset) { //should be >=?
         c_width -= widths.pop();
       }
-      //create the bar that shows where the new split will be
+      //...create the bar that shows where the new split will be
       $("<div>&nbsp;</div>")
       .addClass("width-selector-bar")
       .data("offset", offset)
@@ -402,20 +496,27 @@ can.Control("CMS.Controllers.ResizeWidgets", {
     }
   }
 
+  /**
+    After dragging the resizer drag element around (not the resizer bar but the little draggable box
+     we put under the pointer), find out where we dropped it and adjust the relevant columns as necessary
+  */
   , completeResize : function(el, ev) {
     var $drag = $(".width-selector-drag");
-    if($drag.length) {
+    if($drag.length) { // only do this if we have been dragging around the drag selector.  Note that this
+                       // has to change if browser compatibility makes us draw the drag box before dragging.
+                       // (a possibility since the code we have right now doesn't work in Firefox)
       var that = this
       , t = this.element
       , $bar = $(".width-selector-bar")
       , offset = $bar.data("offset")
-      , start_offset = $bar.data("start_offset")
+      , start_offset = $bar.data("start_offset") // this was set up when we started dragging
       , index = $bar.data("index");
 
       this.adjust_column(t, index, offset - start_offset);
       $(".width-selector-drag", t).remove();
-      $(".width-selector-bar", t).css("opacity", "0.5")
+      $(".width-selector-bar", t).css("opacity", "0.5") //"Ghost" the resizer bar
       if(!$(document.elementFromPoint(ev.pageX, ev.pageY)).is($(t).add(".width-selector-bar"))) {
+        //currently outside the gutter after dropping.  remove the ghost resizer.
         this.removeResizer();
       }
       t.find(this.options.resizable_selector).each(function(i, section) {
@@ -426,10 +527,16 @@ can.Control("CMS.Controllers.ResizeWidgets", {
 
   }
 
+  /**
+    Remove the resizer bar.  This happens mostly when the pointer leaves the gutter between widgets.
+  */
   , removeResizer : function(el, ev) {    
     $(".width-selector-bar", this.element).remove();
   }
 
+  /**
+    Whichever of mouseup or dragend happens, call the completeResize function.
+  */
   , " mouseup" : "completeResize"
   , " dragend" : "completeResize"
 
@@ -451,15 +558,28 @@ can.Control("CMS.Controllers.ResizeWidgets", {
     }
   }
 
+  /**
+    jQUI event, when the user stops dragging the resize handle in a widget.
+  */
   , " resizestop" : function(el, ev, ui) {
     var ht = $(ui.element).height();
     this.ensure_minimum($(ui.element).closest(this.options.resizable_selector), ht);
   }
 
+  /**
+    Synthetic event that allows other controllers, like DashboardWidgets, to indicate to this controller that it
+    should set minimum height, e.g. for a widget that was just created.
+  */
   , "{resizable_selector} min_size" : function(el, ev) {
     this.ensure_minimum(el);
   }
 
+  /**
+    set the height of a widget to the supplied height, or to the minimum height established in
+    the controller instance options, whichever is greater.  The height minimum is calculated against the 
+    "content" section, but the resizing is applied to the widget section. This function calculates the
+    difference between the two and acts accordingly
+  */
   , ensure_minimum : function(el, ht) {
     var $el = $(el);
     $el.css("width", "").find(".content").css("width", ""); //bizarre jQUI behavior fix
@@ -468,7 +588,7 @@ can.Control("CMS.Controllers.ResizeWidgets", {
     }
 
     if(!ht) {
-      ht = $el.height();
+      ht = $el.height();  //height not supplied just means to check the widget's current height against the minimum
     }
 
     var min_ht = this.options.minimum_widget_height;
@@ -476,11 +596,15 @@ can.Control("CMS.Controllers.ResizeWidgets", {
       min_ht += $(elt).height();
     }
 
+    // To calculate the delta between the intended content height and the intended widget height, add all of the
+    //  heights of the content's siblings. 
     $el.children().not(".content, .ui-resizable-handle").each(add_height);
+    // If the content is a tab sheet, also add the height of the tabs and any button barse.
     if($(".content .tab-content", el).not(".tabs-left .tab-content").length) {
       $(".content .tab-content", el).siblings().each(add_height);
     }
 
+    //Enable/re-enable resizable if it's not currently set up.
     if($el.is(":not(.ui-resizable)") || $el.resizable("option").minHeight !== min_ht) {
       if($el.is(".ui-resizable")) {
         $el.resizable("destroy");
@@ -499,12 +623,15 @@ can.Control("CMS.Controllers.ResizeWidgets", {
     this.options.model.setWidgetHeight(this.options.page_token, $el.attr("id"), ht);
   }
 
-  // lower-level function than ensure_minimum
-  // sets the height of the widget and its associated content pane
+  /**
+    lower-level function than ensure_minimum
+    sets the height of the widget and its associated content pane
+  */
   , set_widget_height : function(el, ht) {
     var $el = $(el);
     $el.css("height", ht);
 
+    // The remainder of this method determines what the height of the content should be set to.
     var content_ht = ht;
     var min_content_ht = this.options.minimum_widget_height;
     function add_height_outside(index, elt) {
@@ -514,7 +641,11 @@ can.Control("CMS.Controllers.ResizeWidgets", {
       min_content_ht += $(elt).height();
     }
 
+    // "outside" height is for the siblings of the content section, and gets subtracted
+    //  from the content section height.
     $el.children().not(".content, .ui-resizable-handle").each(add_height_outside);
+    // "inside" height is for the siblings of the tab pane, if there is a top-arranged tab sheet,
+    //  and gets added to the content *minimum* height
     if($(".content .tab-content", el).not(".tabs-left .tab-content").length) {
       $(".content .tab-content", el).siblings().each(add_height_inside);
     }
@@ -522,6 +653,11 @@ can.Control("CMS.Controllers.ResizeWidgets", {
     $el.find(".content:first").css("height", Math.max(min_content_ht, content_ht) - this.options.magic_content_height_offset);
   }
 
+  /**
+    Where we have horizontal tab sheets in the resizable columns, it's a bit more aesthetic to not stack them
+    into multiple rows when possible.  If we can avoid this by removing the text from the tabs and making the 
+    a
+  */
   , check_horizontal_tab_sheet : function(el) {
     var $el = $(el);
     $el = $el.is(".nav-tabs:not(.tabs-left > *)") ? $el.first() : $el.find(".nav-tabs:not(.tabs-left > *):first");
@@ -555,28 +691,35 @@ can.Control("CMS.Controllers.ResizeWidgets", {
     }
   }
 
-
+  /**
+    Classic Mac-style windowshading.  Double-click on title bar collapses the widget
+  */
   , "section[id] > header dblclick" : function(el, ev) {
     if(!$(ev.target).closest(".widget-showhide").length) {
       $(el).find(".widget-showhide a").click();
     }
   }
 
+  /**
+    Widget collapse handler.  This turns off the resizing when in the collapsed state,
+    and sets the state on the DisplayPrefs.  when the widget is uncollapsed, the last known
+    height of the widget or the minimum widget height is restored, whichever is larger, and
+    reinitializes resizable.
+  */
   , ".widget-showhide click" : function(el, ev) {
     var that = this;
     //animation hasn't completed yet, so collapse state is inverse of whether it's actually collapsed right now.
     var $section = el.closest(this.options.resizable_selector);
     var collapse = $section.find(".content").is(":visible");
-    console.log("collapse is ", collapse)
-      collapse && $section.css("height", "").find(".content").css("height", "");
-      if(collapse && $section.is(".ui-resizable")) {
-        $section.resizable("destroy");
-      } else if(!collapse) {
-        setTimeout(function() { 
-          that.ensure_minimum($section, that.options.model.getWidgetHeight(that.options.page_token, $section.attr("id")));
-        }, 1);
-      }
-      that.options.model.setCollapsed(that.options.page_token, $section.attr("id"), collapse);
+    collapse && $section.css("height", "").find(".content").css("height", "");
+    if(collapse && $section.is(".ui-resizable")) {
+      $section.resizable("destroy");
+    } else if(!collapse) {
+      setTimeout(function() { 
+        that.ensure_minimum($section, that.options.model.getWidgetHeight(that.options.page_token, $section.attr("id")));
+      }, 1);
+    }
+    that.options.model.setCollapsed(that.options.page_token, $section.attr("id"), collapse);
   }
 
 });
