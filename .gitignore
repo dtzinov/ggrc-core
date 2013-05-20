@@ -17,5 +17,6 @@ src/ggrc/static/.webassets-cache
 src/ggrc/static/assets.manifest
 src/ggrc/static/dashboard-*
 src/ggrc/assets/stylesheets/dashboard.css
+src/ggrc/assets/stylesheets/design.css
 src/ggrc/.sass-cache
 
