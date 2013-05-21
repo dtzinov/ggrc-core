@@ -1,6 +1,6 @@
 # See https://developers.google.com/appengine/docs/python/config/appconfig
 
-application: ggrc-core
+application: {APPENGINE_INSTANCE}
 version: 1
 runtime: python27
 api_version: 1
@@ -38,4 +38,5 @@ skip_files:
 
 # Define certain environment variables
 env_variables:
-  GGRC_SETTINGS_MODULE: app_engine_ggrc_core
+  GGRC_SETTINGS_MODULE: {SETTINGS_MODULE}
+  GGRC_DATABASE_URI: {DATABASE_URI}

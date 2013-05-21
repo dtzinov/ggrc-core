@@ -58,7 +58,7 @@ end
 
 execute "Run Makefile for first time" do
   command "/bin/bash -c '"\
-          "cd /vagrant; make DEV_PREFIX=/vagrant-dev'"
+          "cd /vagrant; make appengine DEV_PREFIX=/vagrant-dev'"
   user "vagrant"
   group "vagrant"
   action :run

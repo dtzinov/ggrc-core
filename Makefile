@@ -4,8 +4,6 @@ PREFIX := $(shell pwd)
 
 DEV_PREFIX ?= $(PREFIX)
 
-all : $(DEV_PREFIX)/opt appengine
-
 APPENGINE_SDK_VERSION=1.7.6
 APPENGINE_ZIP_NAME=google_appengine_$(APPENGINE_SDK_VERSION).zip
 APPENGINE_ZIP_HREF=http://googleappengine.googlecode.com/files/$(APPENGINE_ZIP_NAME)
@@ -35,10 +33,8 @@ clean_appengine_sdk :
 	rm -rf -- "$(APPENGINE_SDK_PATH)"
 	rm -f "$(APPENGINE_ZIP_PATH)"
 
-$(DEV_PREFIX)/opt :
-	mkdir $(DEV_PREFIX)/opt
-
 $(APPENGINE_ZIP_PATH) :
+	mkdir -p `dirname $(APPENGINE_ZIP_PATH)`
 	wget "$(APPENGINE_ZIP_HREF)" -O "$(APPENGINE_ZIP_PATH).tmp"
 	mv "$(APPENGINE_ZIP_PATH).tmp" "$(APPENGINE_ZIP_PATH)"
 
@@ -48,6 +44,7 @@ clean_appengine_packages :
 	rm -rf -- "$(APPENGINE_ENV_DIR)"
 
 $(APPENGINE_ENV_DIR) :
+	mkdir -p `dirname $(APPENGINE_ENV_DIR)`
 	virtualenv "$(APPENGINE_ENV_DIR)"
 	source "$(APPENGINE_ENV_DIR)/bin/activate"; \
 		pip install -U pip
@@ -79,4 +76,25 @@ appengine : appengine_sdk appengine_packages appengine_packages_zip
 
 clean_appengine : clean_appengine_sdk clean_appengine_packages
 
-clean : clean_appengine
+
+src/ggrc/assets/stylesheets/dashboard.css : src/ggrc/assets/stylesheets/*.scss
+	bin/build_compass
+
+src/ggrc/static/assets.manifest : src/ggrc/assets/stylesheets/dashboard.css src/ggrc/assets
+	source "bin/init_env"; \
+		bin/build_assets
+
+src/app.yaml : src/app.yaml.dist
+	bin/build_app_yaml src/app.yaml.dist src/app.yaml \
+		APPENGINE_INSTANCE=$(APPENGINE_INSTANCE) \
+		SETTINGS_MODULE=$(SETTINGS_MODULE) \
+		DATABASE_URI=$(DATABASE_URI)
+
+deploy : src/ggrc/static/assets.manifest src/app.yaml
+
+clean_deploy :
+	rm -f src/ggrc/assets/stylesheets/dashboard.css
+	rm -f src/ggrc/static/dashboard-*.* src/ggrc/static/assets.manifest
+	rm -f src/app.yaml
+
+clean : clean_deploy

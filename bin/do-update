@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+SCRIPTPATH=$( cd "$(dirname "$0")" ; pwd -P )
+
+if [[ -z "$1" ]]
+then
+  echo "Usage: `basename ${0}` <deployment_settings_file>"
+  exit
+fi
+
+cd "${SCRIPTPATH}/.."
+
+git show --oneline | head -1 > tmp/last_commit
+git pull -q
+git show --oneline | head -1 > tmp/next_commit
+
+mkdir -p tmp
+if diff tmp/last_commit tmp/next_commit; then
+  true
+else
+  date
+  bin/deploy_appengine "$1"
+fi
