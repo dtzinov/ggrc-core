@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+SCRIPTPATH=$( cd "$(dirname "$0")" ; pwd -P )
+
+if [[ -z "$1" ]]
+then
+  echo "Usage: `basename ${0}` <deployment_settings_file>"
+  exit
+fi
+
+SETTINGS_FILE=$1
+
+cd "${SCRIPTPATH}/.."
+source "bin/init_env"
+source "${SETTINGS_FILE}"
+
+make clean_deploy
+make deploy \
+	APPENGINE_INSTANCE="${APPENGINE_INSTANCE}" \
+	SETTINGS_MODULE="${SETTINGS_MODULE}" \
+	DATABASE_URI="${DATABASE_URI}"
+
+appcfg.py --oauth2 update src/

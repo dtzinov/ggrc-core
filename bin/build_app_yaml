@@ -1,0 +1,17 @@
+#!/usr/bin/env python
+
+def main(infile, outfile, **options):
+  f = open(infile)
+  s = f.read()
+  f.close()
+
+  f = open(outfile, 'w')
+  f.write(s.format(**options))
+  f.close()
+
+if __name__ == '__main__':
+  import sys
+  infile, outfile = sys.argv[1], sys.argv[2]
+  options = sys.argv[3:]
+  options = dict(map(lambda o: tuple(o.split('=', 1)), options))
+  main(infile, outfile, **options)
