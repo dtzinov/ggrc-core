@@ -4,6 +4,11 @@
 # Created By:
 # Maintained By:
 
+from .utils import \
+    handle_named_example_resource, get_service_endpoint_url, \
+    handle_get_resource_and_name_it, handle_get_example_resource, \
+    handle_post_named_example_to_collection_endpoint
+
 @given('the following resources are POSTed')
 def post_collection_of_resources(context):
   """Iterate over a table where the first two columns are `type` and `name`.
@@ -14,19 +19,20 @@ def post_collection_of_resources(context):
     resource_type = row[0]
     name = row[1]
     properties = dict([(heading, row[heading]) for heading in row.headings[2:]])
-    named_example_resource(context, resource_type, name, **properties)
-    post_named_example_to_collection_endpoint(context, name)
-    get_example_resource(context, name)
+    handle_named_example_resource(context, resource_type, name, **properties)
+    handle_post_named_example_to_collection_endpoint(context, name)
+    handle_get_example_resource(context, name)
 
 @when('fulltext search for "{terms}" as "{result_name}"')
 def perform_search(context, terms, result_name):
   url = get_service_endpoint_url(context, 'search')
-  get_resource_and_name_it(context, url+'?q={0}'.format(terms), result_name)
+  handle_get_resource_and_name_it(
+      context, url+'?q={0}'.format(terms), result_name)
 
 @when('fulltext search grouped by type for "{terms}" as "{result_name}"')
 def perform_grouped_search(context, terms, result_name):
   url = get_service_endpoint_url(context, 'search')
-  get_resource_and_name_it(
+  handle_get_resource_and_name_it(
       context, url+'?q={0}&group_by_type=true'.format(terms), result_name)
 
 def do_check_resource_is_in_result(

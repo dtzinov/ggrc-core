@@ -1,5 +1,8 @@
-behave
 Jinja2==2.6
+# Use `behave` library from github for --junit support of ScenarioOutline
+# This will be unnecessary when behave==1.2.2.16 is released to PyPI
+# see: https://github.com/behave/behave/issues/69
+git+https://github.com/behave/behave.git#egg=behave
 Flask-Testing
 git+https://github.com/rbarrois/factory_boy.git#egg=factory-boy
 mock

@@ -3,12 +3,15 @@
 # Created By: david@reciprocitylabs.com
 # Maintained By: david@reciprocitylabs.com
 
+from .utils import \
+    get_resource, get_service_endpoint_url, handle_get_resource_and_name_it
+
 @when('Querying "{resource_type}" with "{querystring}"')
 def query_resource_collection(context, resource_type, querystring):
   url = '{0}?{1}'.format(
       get_service_endpoint_url(context, resource_type),
       querystring)
-  get_resource_and_name_it(context, url, 'queryresultcollection')
+  handle_get_resource_and_name_it(context, url, 'queryresultcollection')
 
 @when('Querying "{resource_type}" with bad argument "{querystring}"')
 def query_with_bad_argument(context, resource_type, querystring):
