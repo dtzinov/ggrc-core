@@ -1454,50 +1454,40 @@
                           %a.active{ 'href': '#', 'rel': 'tooltip', 'title': 'Contract widget', 'data-placement': 'top' }
                   %section.content
                     .filter
-                      %input.ui-corner-all.widgetsearch.clear-value{ 'type': 'text', 'placeholder': 'Search' }
+                      .row-fluid
+                        .span8
+                          %input.ui-corner-all.widgetsearch.clear-value{ 'type': 'text', 'placeholder': 'Search' }
+                        .span4
+                          %a{ 'href': '#', 'class': 'btn btn-add pull-right' }
+                            %i.grcicon-add
+                            Regulation
                     -set quick_result = quick_result if quick_result is defined else None
                     -set prefix = 'qf' if quick_result else 'dash'
                     .tabbable.tabs-left{ 'id': '{{ nil if quick_result else \'quick_find\' }}' }
                       %ul.nav.nav-tabs
                         %li.active
-                          %a{ 'href': '#{prefix}_programs', 'data-tab-href': '/programs?quick=true&qr=={quick_result}', 'data-toggle': 'tab' }
-                            %i.grcicon-program-black 
-                            Programs
+                          %a{ 'href': '#', 'data-toggle': 'tab' }
+                            %i.grcicon-regulation-color
+                            %span.text-governance
+                              Regulations
+                        %li
+                          %a{ 'href': '#', 'data-toggle': 'tab' }
+                            %i.grcicon-policy-color
+                            %span.text-governance
+                              Policies
+                        %li
+                          %a{ 'href': '#', 'data-toggle': 'tab' }
+                            %i.grcicon-contract-color
+                            %span.text-governance
+                              Contracts
+                        %li
+                          %a{ 'href': '#', 'data-toggle': 'tab' }
+                            %i.grcicon-control-color
+                            %span.text-governance
+                              Controls
+
                       .tab-content
                         .tab-pane{ 'id': '#{prefix}_programs' }
-                %section{ 'class': 'widget widget-tabs compliance' }
-                  %header.header
-                    .row-fluid
-                      .span8
-                        %h2
-                          %i.grcicon-system
-                          Compliance
-                      .span4
-                        .widget-action.pull-right.widget-showhide
-                          %a.active{ 'href': '#', 'rel': 'tooltip', 'title': 'Contract widget', 'data-placement': 'top' }
-                  %section.content
-                    .filter
-                      %input.ui-corner-all.widgetsearch.clear-value{ 'type': 'text', 'placeholder': 'Search' }
-                    -set quick_result = quick_result if quick_result is defined else None
-                    -set prefix = 'qf' if quick_result else 'dash'
-                    .tabbable.tabs-left{ 'id': '{{ nil if quick_result else \'quick_find\' }}' }
-                      %ul.nav.nav-tabs
-                        %li
-                          %a{ 'href': '##{prefix}_controls', 'data-tab-href': '/controls?quick=true&qr=#{quick_result}', 'data-toggle': 'tab' }
-                            %i.grcicon-control-black
-                            Controls
-                        %li
-                          %a{ 'href': '##{prefix}_processes', 'data-tab-href': '/systems?quick=true&qr=={quick_result}&is_biz_process=true', 'data-toggle': 'tab' }
-                            %i.grcicon-process-black
-                            Processes
-                        %li.active
-                          %a{ 'href': '##{prefix}_systems', 'data-tab-href': '/systems?quick=true&qr=#{quick_result}&is_biz_process=false', 'data-toggle': 'tab' }
-                            %i.grcicon-system-black
-                            Systems
-                      .tab-content
-                        .tab-pane{ 'id': '#{prefix}_controls' }
-                        .tab-pane{ 'id': '#{prefix}_processes' }
-                        .tab-pane{ 'id': '#{prefix}_systems' }
               .span6
                 %section{ 'class': 'widget widget-tabs risk' }
                   %header.header
@@ -1511,19 +1501,27 @@
                           %a.active{ 'href': '#', 'rel': 'tooltip', 'title': 'Contract widget', 'data-placement': 'top' }
                   %section.content
                     .filter
-                      %input.ui-corner-all.widgetsearch.clear-value{ 'type': 'text', 'placeholder': 'Search' }
+                      .row-fluid
+                        .span8
+                          %input.ui-corner-all.widgetsearch.clear-value{ 'type': 'text', 'placeholder': 'Search' }
+                        .span4
+                          %a{ 'href': '#', 'class': 'btn btn-add pull-right' }
+                            %i.grcicon-add
+                            Risk
                     -set quick_result = quick_result if quick_result is defined else None
                     -set prefix = 'qf' if quick_result else 'dash'
                     .tabbable.tabs-left{ 'id': '{{ nil if quick_result else \'quick_find\' }}' }
                       %ul.nav.nav-tabs
                         %li.active
                           %a{ 'href': '#{prefix}_risks', 'data-tab-href': '/risks?quick=true&qr=={quick_result}', 'data-toggle': 'tab' }
-                            %i.grcicon-risk-black 
-                            Risks
+                            %i.grcicon-risk-color
+                            %span.text-risk
+                              Risks
                         %li
                           %a{ 'href': '#{prefix}_risky_attributes', 'data-tab-href': '/risky_attributes?quick=true&qr=={quick_result}', 'data-toggle': 'tab' }
-                            %i.grcicon-attribute-black 
-                            Attributes
+                            %i.grcicon-attribute-color
+                            %span.text-risk
+                              Attributes
                       .tab-content
                         .tab-pane{ 'id': '#{prefix}_risks' }
                         .tab-pane{ 'id': '#{prefix}_risky_attributes' }
@@ -1546,29 +1544,47 @@
                       %ul.nav.nav-tabs
                         %li
                           %a{ 'href': '#{prefix}_products', 'data-tab-href': '/products?quick=true&qr=={quick_result}', 'data-toggle': 'tab' }
-                            %i.grcicon-product-black 
-                            Products
+                            %i.grcicon-system-color
+                            %span.text-business
+                              Systems
+                        %li
+                          %a{ 'href': '#{prefix}_products', 'data-tab-href': '/products?quick=true&qr=={quick_result}', 'data-toggle': 'tab' }
+                            %i.grcicon-process-color
+                            %span.text-business
+                              Processes
+                        %li
+                          %a{ 'href': '#{prefix}_products', 'data-tab-href': '/products?quick=true&qr=={quick_result}', 'data-toggle': 'tab' }
+                            %i.grcicon-product-color
+                            %span.text-business
+                              Products
                         %li.active
                           %a{ 'href': '#{prefix}_org_groups', 'data-tab-href': '/org_groups_path?quick=true&qr=={quick_result}', 'data-toggle': 'tab' }
-                            %i.grcicon-orggroup-black 
-                            Org Groups
+                            %i.grcicon-orggroup-color
+                            %span.text-business
+                              Org Groups
                         %li
                           %a{ 'href': '#{prefix}_facilities', 'data-tab-href': '/facilities?quick=true&qr=={quick_result}', 'data-toggle': 'tab' }
-                            %i.grcicon-facility-black 
-                            Facilities
+                            %i.grcicon-facility-color
+                            %span.text-business
+                              Facilities
                         %li
                           %a{ 'href': '#{prefix}_markets', 'data-tab-href': '/markets?quick=true&qr=={quick_result}', 'data-toggle': 'tab' }
-                            %i.grcicon-market-black 
-                            Markets
+                            %i.grcicon-market-color
+                            %span.text-business
+                              Markets
                         %li
                           %a{ 'href': '#{prefix}_data_assets', 'data-tab-href': '/data_assets?quick=true&qr=={quick_result}', 'data-toggle': 'tab' }
-                            %i.grcicon-dataasset-black 
-                            Data Assets
+                            %i.grcicon-dataasset-color
+                            %span.text-business
+                              Data Assets
                         %li
                           %a{ 'href': '#{prefix}_projects', 'data-tab-href': '/projects?quick=true&qr=={quick_result}', 'data-toggle': 'tab' }
-                            %i.grcicon-project-black 
-                            Projects
+                            %i.grcicon-project-color
+                            %span.text-business
+                              Projects
                       .tab-content
+                        .tab-pane{ 'id': '#{prefix}_systems' }
+                        .tab-pane{ 'id': '#{prefix}_processes' }
                         .tab-pane{ 'id': '#{prefix}_products' }
                         .tab-pane{ 'id': '#{prefix}_org_groups' }
                         .tab-pane{ 'id': '#{prefix}_facilities' }
