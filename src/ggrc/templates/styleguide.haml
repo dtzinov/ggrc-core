@@ -1,4 +1,4 @@
--extends 'layouts/base.haml'
+-extends 'layouts/dashboard.haml'
 -set title = 'GRC: Style Guide'
 
 //%link(rel='stylesheet' type='text/css' href='styleguide.css')
@@ -17,7 +17,7 @@
 -block subheader_plus
   %a.navbarplus.pull-right{ 'href': '#comingsoonModal', 'data-toggle': 'modal' }
 
--block body
+-block main
   .container-fluid
     .row-fluid
       .span3.bs-docs-sidebar
