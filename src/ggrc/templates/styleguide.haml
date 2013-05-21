@@ -1,90 +1,84 @@
 -extends 'layouts/base.haml'
--set title = "GRC: Style Guide"
- 
-//%link(rel="stylesheet" type="text/css" href="styleguide.css")
+-set title = 'GRC: Style Guide'
+
+//%link(rel='stylesheet' type='text/css' href='styleguide.css')
 
 -block header
   %ul.breadcrumbs
     %li
-      %a{'href' : "/design/styleguide"}
+      %a{ 'href': '/design/styleguide' }
         Style Guide
   %h1
-    Visual & Syntax Style Guide
+    Visual &amp; Syntax Style Guide
 
 -block page_help
  Nope.
 
 -block subheader_plus
-  %a.navbarplus.fltrt{ 'href' : "#comingsoonModal", "data-toggle" => "modal" }
-
+  %a.navbarplus.pull-right{ 'href': '#comingsoonModal', 'data-toggle': 'modal' }
 
 -block body
   .container-fluid
     .row-fluid
       .span3.bs-docs-sidebar
-        %ul.nav.nav-list.bs-docs-sidenav{'data-spy' : 'affix', 'data-offset-top' : '25'}
+
+        %ul.nav.nav-list.bs-docs-sidenav{ 'data-spy': 'affix', 'data-offset-top': '25' }
           %li
-            %a{'href' : "#headers"}
+            %a{ 'href': '#headers' }
               %i.icon-chevron-right
               Headers
           %li
-            %a{'href' : "#breadcrumb"}
+            %a{ 'href': '#breadcrumb' }
               %i.icon-chevron-right
               Breadcrumbs
           %li
-            %a{'href' : "#modals"}
+            %a{ 'href': '#modals' }
               %i.icon-chevron-right
               Modals
-
           %li
-            %a{'href' : "#objects"}
+            %a{ 'href': '#objects' }
               %i.icon-chevron-right
               Objects
           %li
-            %a{'href' : "#icons"}
+            %a{ 'href': '#icons' }
               %i.icon-chevron-right
               Icons
           %li
-            %a{'href' : "#list"}
+            %a{ 'href': '#list' }
               %i.icon-chevron-right
               Tree List
           %li
-            %a{'href' : "#nesting"}
+            %a{ 'href': '#nesting' }
               %i.icon-chevron-right
               Nesting
           %li
-            %a{'href' : "#buttons"}
+            %a{ 'href': '#buttons' }
               %i.icon-chevron-right
               Buttons
           %li
-            %a{'href' : "#progress"}
+            %a{ 'href': '#progress' }
               %i.icon-chevron-right
               Progress Bar
           %li
-            %a{'href' : "#actions"}
+            %a{ 'href': '#actions' }
               %i.icon-chevron-right
               Actions List
           %li
-            %a{'href' : "#widgets"}
+            %a{ 'href': '#widgets' }
               %i.icon-chevron-right
               Widgets
           %li
-            %a{'href' : "#flash-notice"}
+            %a{ 'href': '#flash-notice' }
               %i.icon-chevron-right
               Flash Notices
-
           %li
-            %a{'href' : "#popover"}
+            %a{ 'href': '#popover' }
               %i.icon-chevron-right
               Popover
-
           %li
-            %a{'href' : "#helper"}
+            %a{ 'href': '#helper' }
               %i.icon-chevron-right
               Helper classes
-
-
-
 
       .span9.styleguide-content
 
@@ -100,9 +94,9 @@
                 h2. Subtitle - Lorem ipsum dolor sit amet
             %p
               style for h1 is: Bold, 24px, #444
-              %br/
+              %br
               style for h2 is: Bold, 20px, #111
-              
+
         %section#breadcrumb.widget
           %section.header
             %h2
@@ -112,39 +106,38 @@
               %ul.breadcrumbs
                 %li
                   %a
+                    Root link
+                %li
+                  %a
+                    Second link
+                %li
+                  %a
+                    Third link
+            %p
+              %strong
+                Example:
+            %textarea
+              %ul.breadcrumbs
+                %li
+                  %a
                     Breadcrumb
                 %li
                   %a
                     Breadcrumb inner
-
             %p
-              %strong Example:
-
-            %textarea
-              :escaped
-                %ul.breadcrumbs
-                  %li
-                    %a
-                      Breadcrumb
-                  %li
-                    %a
-                      Breadcrumb inner
-                  
-            %p
-              <span class="label label-info">Note!</span>
-              Do not put class on last %li element. It is solved from CSS.
+              %span.label.label-info
+                Note!
+              &nbsp; Do not put class on last %li element. It is solved from CSS.
 
         -#%section#modals.widget
           %section.header
             %h2
               Modals
           %section.content
-            %a.btn{"data-toggle" => "modal", 'href' : "#selectorSectionToControl"}
+            %a.btn{ 'data-toggle': 'modal', 'href': '#selectorSectionToControl' }
               Section to Control Mapper
-            %a.btn{"data-toggle" => "modal", 'href' : "#selectorSectionToControlNA"}
+            %a.btn{ 'data-toggle': 'modal', 'href': '#selectorSectionToControlNA' }
               Section to Control Mapper N/A
-
-
 
         %section#objects.widget
           %section.header
@@ -229,73 +222,55 @@
                     .grcobject.risk
                       %i.grcicon-attribute
                     Attribute
-                  
             %p
               %strong
                 Example:
-            
             %textarea
-              :escaped
                 .grcobject.governance
                   %i.grcicon-program
                 Program
-
                 .grcobject.governance
                   %i.grcicon-contract
                 Contract
-
                 .grcobject.governance
                   %i.grcicon-policy
                 Policy
-
                 .grcobject.governance
                   %i.grcicon-regulation
                 Regulation
-
                 .grcobject.governance
                   %i.grcicon-section
                 Section/Clause
-
                 .grcobject.business
                   %i.grcicon-market
                 Market
-
                 .grcobject.business
                   %i.grcicon-facility
                 Facility
-
                 .grcobject.business
                   %i.grcicon-project
                 Project
-                
                 .grcobject.business
                   %i.grcicon-product
                 Product
-
                 .grcobject.business
                   %i.grcicon-orggroup
                 Org Group
-
                 .grcobject.business
                   %i.grcicon-dataasset
                 Data Asset
-
                 .grcobject.compliance
                   %i.grcicon-businessprocess
                 Process
-
                 .grcobject.compliance
                   %i.grcicon-system
                 System
-
                 .grcobject.compliance
                   %i.grcicon-control
                 Control
-
                 .grcobject.risk
                   %i.grcicon-risk
-                Risk
-                
+                Risk              
                 .grcobject.risk
                   %i.grcicon-attribute
                 Attribute
@@ -356,8 +331,7 @@
                 %i.grcicon-check-white
               .btn.btn-add
                 %i.grcicon-comment-white
-              %br/
-              %br/
+            .real-example
               .btn.btn-add
                 %i.grcicon-add-black
               .btn.btn-add
@@ -408,7 +382,6 @@
                 %i.grcicon-check-green
               .btn.btn-add
                 %i.grcicon-comment
-            
             .real-example
               .btn
                 %i.grcicon-ok
@@ -436,7 +409,6 @@
                 %i.grcicon-eye-completed
               .btn
                 %i.grcicon-eye-danger
-                
             .real-example
               %p
                 %strong
@@ -475,8 +447,7 @@
                 %i.grcicon-attribute
               .btn.btn-add
                 %i.grcicon-clause
-              %br/
-              %br/
+            .real-example
               .btn.btn-add
                 %i.grcicon-program-black
               .btn.btn-add
@@ -511,7 +482,6 @@
                 %i.grcicon-attribute-black
               .btn.btn-add
                 %i.grcicon-clause-black
-                
             .real-example
               %p
                 %strong
@@ -560,137 +530,132 @@
                 %i.grcicon-clause-color
               .btn
                 %i.grcicon-clause-danger
-                
             %p
               %strong Example:
-            
             %textarea
-              :escaped
-                %i.grcicon-add
-                %i.grcicon-admin
-                %i.grcicon-dashboard
-                %i.grcicon-demo
-                %i.grcicon-desktop
-                %i.grcicon-help
-                %i.grcicon-logout
-                %i.grcicon-normal
-                %i.grcicon-user
-                %i.grcicon-wide
-                %i.grcicon-search-circle
-                %i.grcicon-edit-white
-                %i.grcicon-add-black
-                %i.grcicon-admin-black
-                %i.grcicon-dashboard-black
-                %i.grcicon-demo-black
-                %i.grcicon-desktop-black
-                %i.grcicon-help-black
-                %i.grcicon-logout-black
-                %i.grcicon-normal-black
-                %i.grcicon-user-black
-                %i.grcicon-wide-black
-                %i.grcicon-search-black
-                %i.grcicon-edit
-                %i.grcicon-audit-white
-                %i.grcicon-audit
-                %i.grcicon-reg-map-white
-                %i.grcicon-reg-map
-                %i.grcicon-imp-exp-white
-                %i.grcicon-imp-exp
-                %i.grcicon-export-white
-                %i.grcicon-export
-                %i.grcicon-goto-white
-                %i.grcicon-goto
-                %i.grcicon-search-white
-                %i.grcicon-search
-                %i.grcicon-carot-white
-                %i.grcicon-carot
-                %i.grcicon-demo-stop-white
-                %i.grcicon-demo-stop
-                %i.grcicon-goto-left-white
-                %i.grcicon-goto-left
-                %i.grcicon-link-white
-                %i.grcicon-link
-                %i.grcicon-x-grey-white
-                %i.grcicon-x-white
-                %i.grcicon-check-white
-                %i.grcicon-check-green
-                %i.grcicon-comment-white
-                %i.grcicon-comment
-                %i.grcicon-ok
-                %i.grcicon-process
-                %i.grcicon-system
-                %i.grcicon-document
-                %i.grcicon-populationsample
-                %i.grcicon-calendar
-                %i.grcicon-remove
-                %i.grcicon-edit-grey
-                %i.grcicon-chevron-right
-                %i.grcicon-people-warning
-                %i.grcicon-eye-inprogress
-                %i.grcicon-eye-completed
-                %i.grcicon-eye-danger
-                
-                %i.grcicon-program
-                %i.grcicon-contract
-                %i.grcicon-policy
-                %i.grcicon-regulation
-                %i.grcicon-section
-                %i.grcicon-market
-                %i.grcicon-facility
-                %i.grcicon-project
-                %i.grcicon-product
-                %i.grcicon-orggroup
-                %i.grcicon-dataasset
-                %i.grcicon-businessprocess
-                %i.grcicon-system
-                %i.grcicon-control
-                %i.grcicon-risk
-                %i.grcicon-attribute
-                %i.grcicon-clause
-                %i.grcicon-program-black
-                %i.grcicon-contract-black
-                %i.grcicon-policy-black
-                %i.grcicon-regulation-black
-                %i.grcicon-section-black
-                %i.grcicon-market-black
-                %i.grcicon-facility-black
-                %i.grcicon-project-black
-                %i.grcicon-product-black
-                %i.grcicon-orggroup-black
-                %i.grcicon-dataasset-black
-                %i.grcicon-businessprocess-black
-                %i.grcicon-system-black
-                %i.grcicon-control-black
-                %i.grcicon-risk-black
-                %i.grcicon-attribute-black
-                %i.grcicon-clause-black
-                
-                %i.grcicon-program-color
-                %i.grcicon-contract-color
-                %i.grcicon-policy-color
-                %i.grcicon-regulation-color
-                %i.grcicon-section-color
-                %i.grcicon-section-danger
-                %i.grcicon-market-color
-                %i.grcicon-facility-color
-                %i.grcicon-project-color
-                %i.grcicon-product-color
-                %i.grcicon-orggroup-color
-                %i.grcicon-dataasset-color
-                %i.grcicon-businessprocess-color
-                %i.grcicon-businessprocess-danger
-                %i.grcicon-system-color
-                %i.grcicon-system-danger
-                %i.grcicon-control-color
-                %i.grcicon-control-danger
-                %i.grcicon-risk-color
-                %i.grcicon-attribute-color
-                %i.grcicon-clause-color
-                %i.grcicon-clause-danger
-                
+              %i.grcicon-add
+              %i.grcicon-admin
+              %i.grcicon-dashboard
+              %i.grcicon-demo
+              %i.grcicon-desktop
+              %i.grcicon-help
+              %i.grcicon-logout
+              %i.grcicon-normal
+              %i.grcicon-user
+              %i.grcicon-wide
+              %i.grcicon-search-circle
+              %i.grcicon-edit-white
+              %i.grcicon-add-black
+              %i.grcicon-admin-black
+              %i.grcicon-dashboard-black
+              %i.grcicon-demo-black
+              %i.grcicon-desktop-black
+              %i.grcicon-help-black
+              %i.grcicon-logout-black
+              %i.grcicon-normal-black
+              %i.grcicon-user-black
+              %i.grcicon-wide-black
+              %i.grcicon-search-black
+              %i.grcicon-edit
+              %i.grcicon-audit-white
+              %i.grcicon-audit
+              %i.grcicon-reg-map-white
+              %i.grcicon-reg-map
+              %i.grcicon-imp-exp-white
+              %i.grcicon-imp-exp
+              %i.grcicon-export-white
+              %i.grcicon-export
+              %i.grcicon-goto-white
+              %i.grcicon-goto
+              %i.grcicon-search-white
+              %i.grcicon-search
+              %i.grcicon-carot-white
+              %i.grcicon-carot
+              %i.grcicon-demo-stop-white
+              %i.grcicon-demo-stop
+              %i.grcicon-goto-left-white
+              %i.grcicon-goto-left
+              %i.grcicon-link-white
+              %i.grcicon-link
+              %i.grcicon-x-grey-white
+              %i.grcicon-x-white
+              %i.grcicon-check-white
+              %i.grcicon-check-green
+              %i.grcicon-comment-white
+              %i.grcicon-comment
+              %i.grcicon-ok
+              %i.grcicon-process
+              %i.grcicon-system
+              %i.grcicon-document
+              %i.grcicon-populationsample
+              %i.grcicon-calendar
+              %i.grcicon-remove
+              %i.grcicon-edit-grey
+              %i.grcicon-chevron-right
+              %i.grcicon-people-warning
+              %i.grcicon-eye-inprogress
+              %i.grcicon-eye-completed
+              %i.grcicon-eye-danger
+              %i.grcicon-program
+              %i.grcicon-contract
+              %i.grcicon-policy
+              %i.grcicon-regulation
+              %i.grcicon-section
+              %i.grcicon-market
+              %i.grcicon-facility
+              %i.grcicon-project
+              %i.grcicon-product
+              %i.grcicon-orggroup
+              %i.grcicon-dataasset
+              %i.grcicon-businessprocess
+              %i.grcicon-system
+              %i.grcicon-control
+              %i.grcicon-risk
+              %i.grcicon-attribute
+              %i.grcicon-clause
+              %i.grcicon-program-black
+              %i.grcicon-contract-black
+              %i.grcicon-policy-black
+              %i.grcicon-regulation-black
+              %i.grcicon-section-black
+              %i.grcicon-market-black
+              %i.grcicon-facility-black
+              %i.grcicon-project-black
+              %i.grcicon-product-black
+              %i.grcicon-orggroup-black
+              %i.grcicon-dataasset-black
+              %i.grcicon-businessprocess-black
+              %i.grcicon-system-black
+              %i.grcicon-control-black
+              %i.grcicon-risk-black
+              %i.grcicon-attribute-black
+              %i.grcicon-clause-black
+              %i.grcicon-program-color
+              %i.grcicon-contract-color
+              %i.grcicon-policy-color
+              %i.grcicon-regulation-color
+              %i.grcicon-section-color
+              %i.grcicon-section-danger
+              %i.grcicon-market-color
+              %i.grcicon-facility-color
+              %i.grcicon-project-color
+              %i.grcicon-product-color
+              %i.grcicon-orggroup-color
+              %i.grcicon-dataasset-color
+              %i.grcicon-businessprocess-color
+              %i.grcicon-businessprocess-danger
+              %i.grcicon-system-color
+              %i.grcicon-system-danger
+              %i.grcicon-control-color
+              %i.grcicon-control-danger
+              %i.grcicon-risk-color
+              %i.grcicon-attribute-color
+              %i.grcicon-clause-color
+              %i.grcicon-clause-danger
             %p
-              <span class="label label-info">Note!</span>
-              As you can see on real example there is green button surrounding icons. That is just for example purpose so you can see white icons also.
+              %span.label.label-info
+                Note!
+              &nbsp; As you can see on real example there is green button surrounding icons. That is just for example purpose so you can see white icons also.
 
         %section#list.widget
           %section.header
@@ -704,27 +669,26 @@
                   .item-title
                     .row-fluid
                       .span8
-                        .oneline.expand-on-hover{'rel' : "tooltip", 'title' : "click to view more"}
+                        .oneline.expand-on-hover{ 'rel': 'tooltip', 'title': 'click to view more' }
                           %span.title
                             .grcobject.governance
                               %i.grcicon-program
                             Lorem ipsum dolor sit amet
                             %i.description-inline
-                              consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
+                              Consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
                         .note
-                          %a.note-trigger{'href' : '#'}
+                          %a.note-trigger{ 'href': '#' }
                             %i.grcicon-add-black
                             Abstract/Note
-                          
                           .note-text
                             %textarea
-                            %a.btn.btn-mini.btn-add{'href' : '#'}
+                            %a.btn.btn-mini.btn-add{ 'href': '#' }
                               %i.grcicon-check-white
                               Save
-                              %a.cancel-link{'href' : '#'}
-                                cancel
+                              %a.cancel-link{ 'href': '#' }
+                                Cancel
                           .note-content
-                            %a{'href' : '#'}
+                            %a{ 'href': '#' }
                               %i.grcicon-edit
                             .rtf
                               Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia
@@ -733,10 +697,9 @@
                                 by Admin, 2013-02-18 5:35PM
                         .description
                           .rtf
-                            Lorem 
+                            Lorem
                             %strong
-                              ipsum dolor sit amet
-                            , consectetur adipiscing elit. Sed tortor libero, 
+                              ipsum dolor sit amet, consectetur adipiscing elit. Sed tortor libero,
                             %em
                               convallis eget congue quis, fringilla eget mi.
                             Maecenas dignissim tempus adipiscing.
@@ -751,8 +714,7 @@
                                 maecenas dignissim tempus adipiscing
                             %strong
                               %em
-                                Lorem ipsum dolor sit amet, 
-                            consectetur adipiscing elit. Sed tortor libero, convallis eget congue quis, fringilla eget mi. Maecenas dignissim tempus adipiscing.
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tortor libero, convallis eget congue quis, fringilla eget mi. Maecenas dignissim tempus adipiscing.
                             %ol
                               %li
                                 ipsum dolor sit amet
@@ -764,19 +726,19 @@
                                 maecenas dignissim tempus adipiscing
                             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tortor libero, convallis eget congue quis, fringilla eget mi. Maecenas dignissim tempus adipiscing.
                       .span1
-                        %a.view-more{'href' : '#'}
+                        %a.view-more{ 'href': '#' }
                           view
                       .objects-count
-                        %a{'href' : '#'}
+                        %a{ 'href': '#' }
                           %i.grcicon-control-black
                           5
-                        %a{'href' : '#'}
+                        %a{ 'href': '#' }
                           %i.grcicon-section-black
                           0
                     .item-actions
-                      %a{'href' : "#", 'class' : "btn btn-mini"}
+                      %a{ 'href': '#', 'class': 'btn btn-mini' }
                         %i.grcicon-goto
-                      %a{'href' : "#", 'class' : "btn btn-mini"}
+                      %a{ 'href': '#', 'class': 'btn btn-mini' }
                         %i.grcicon-link
                 .item-content
                   %ul.tree-structure
@@ -786,7 +748,7 @@
                         .item-title
                           .row-fluid
                             .span8
-                              .oneline.expand-on-hover{'rel' : "tooltip", 'title' : "click to view more"}
+                              .oneline.expand-on-hover{ 'rel': 'tooltip', 'title': 'click to view more' }
                                 %span.title
                                   %i.grcicon-comment
                                   Lorem ipsum dolor sit amet
@@ -795,25 +757,24 @@
                                   DEEP2
                                 %span.description-inline
                                   %i.description-inline
-                                    consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
+                                    Consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
                               .description
                                 .rtf
-                                  consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
-                                  consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
+                                  Consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
                             .span1
-                              %a.view-more{'href' : '#'}
+                              %a.view-more{ 'href': '#' }
                                 view
                             .objects-count
-                              %a{'href' : '#'}
+                              %a{ 'href': '#' }
                                 %i.grcicon-control-black
                                 5
-                              %a{'href' : '#'}
+                              %a{ 'href': '#' }
                                 %i.grcicon-section-black
                                 0
                           .item-actions
-                            %a{'href' : "#", 'class' : "btn btn-mini"}
+                            %a{ 'href': '#', 'class': 'btn btn-mini' }
                               %i.grcicon-goto
-                            %a{'href' : "#", 'class' : "btn btn-mini"}
+                            %a{ 'href': '#', 'class': 'btn btn-mini' }
                               %i.grcicon-link
                       .item-content
                         %ul.tree-structure
@@ -823,7 +784,7 @@
                               .item-title
                                 .row-fluid
                                   .span8
-                                    .oneline.expand-on-hover{'rel' : "tooltip", 'title' : "click to view more"}
+                                    .oneline.expand-on-hover{ 'rel': 'tooltip', 'title': 'click to view more' }
                                       %span.title
                                         Lorem ipsum dolor sit amet 3
                                       %span.code
@@ -836,19 +797,19 @@
                                       .rtf
                                         consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
                                   .span1
-                                    %a.view-more{'href' : '#'}
+                                    %a.view-more{ 'href': '#' }
                                       view
                                   .objects-count
-                                    %a{'href' : '#'}
+                                    %a{ 'href': '#' }
                                       %i.grcicon-control-black
                                       5
-                                    %a{'href' : '#'}
+                                    %a{ 'href': '#' }
                                       %i.grcicon-section-black
                                       0
                                 .item-actions
-                                  %a{'href' : "#", 'class' : "btn btn-mini"}
+                                  %a{ 'href': '#', 'class': 'btn btn-mini' }
                                     %i.grcicon-goto
-                                  %a{'href' : "#", 'class' : "btn btn-mini"}
+                                  %a{ 'href': '#', 'class': 'btn btn-mini' }
                                     %i.grcicon-link
                             .item-content
                               %ul.tree-structure
@@ -866,16 +827,16 @@
                                               %i.grcicon-control-black
                                               CTR1
                                         .objects-count
-                                          %a{'href' : '#'}
+                                          %a{ 'href': '#' }
                                             %i.grcicon-control-black
                                             5
-                                          %a{'href' : '#'}
+                                          %a{ 'href': '#' }
                                             %i.grcicon-section-black
                                             0
                                       .item-actions
-                                        %a{'href' : "#", 'class' : "btn btn-mini"}
+                                        %a{ 'href': '#', 'class': 'btn btn-mini' }
                                           %i.grcicon-goto
-                                        %a{'href' : "#", 'class' : "btn btn-mini"}
+                                        %a{ 'href': '#', 'class': 'btn btn-mini' }
                                           %i.grcicon-link
                                   .item-content
                                 %li
@@ -884,7 +845,7 @@
                                     .item-title
                                       .row-fluid
                                         .span8
-                                          .oneline.expand-on-hover{'rel' : "tooltip", 'title' : "click to view more"}
+                                          .oneline.expand-on-hover{ 'rel': 'tooltip', 'title': 'click to view more' }
                                             %span.title
                                               Title with Description
                                             %span.code
@@ -897,19 +858,19 @@
                                             .rtf
                                               consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
                                         .span1
-                                          %a.view-more{'href' : '#'}
+                                          %a.view-more{ 'href': '#' }
                                             view
                                         .objects-count
-                                          %a{'href' : '#'}
+                                          %a{ 'href': '#' }
                                             %i.grcicon-control-black
                                             5
-                                          %a{'href' : '#'}
+                                          %a{ 'href': '#' }
                                             %i.grcicon-section-black
                                             0
                                       .item-actions
-                                        %a{'href' : "#", 'class' : "btn btn-mini"}
+                                        %a{ 'href': '#', 'class': 'btn btn-mini' }
                                           %i.grcicon-goto
-                                        %a{'href' : "#", 'class' : "btn btn-mini"}
+                                        %a{ 'href': '#', 'class': 'btn btn-mini' }
                                           %i.grcicon-link
                                   .item-content
                                 %li
@@ -918,7 +879,7 @@
                                     .item-title
                                       .row-fluid
                                         .span8
-                                          .oneline.expand-on-hover{'rel' : "tooltip", 'title' : "click to view more"}
+                                          .oneline.expand-on-hover{ 'rel': 'tooltip', 'title': 'click to view more' }
                                             %span.title
                                               %i.grcicon-comment
                                               Title with Description
@@ -932,19 +893,19 @@
                                             .rtf
                                               consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
                                         .span1
-                                          %a.view-more{'href' : '#'}
+                                          %a.view-more{ 'href': '#' }
                                             view
                                         .objects-count
-                                          %a{'href' : '#'}
+                                          %a{ 'href': '#' }
                                             %i.grcicon-control-black
                                             5
-                                          %a{'href' : '#'}
+                                          %a{ 'href': '#' }
                                             %i.grcicon-section-black
                                             0
                                       .item-actions
-                                        %a{'href' : "#", 'class' : "btn btn-mini"}
+                                        %a{ 'href': '#', 'class': 'btn btn-mini' }
                                           %i.grcicon-goto
-                                        %a{'href' : "#", 'class' : "btn btn-mini"}
+                                        %a{ 'href': '#', 'class': 'btn btn-mini' }
                                           %i.grcicon-link
                                   .item-content
                           %li
@@ -960,16 +921,16 @@
                                         %i.grcicon-section-black
                                         DEEP3.1
                                   .objects-count
-                                    %a{'href' : '#'}
+                                    %a{ 'href': '#' }
                                       %i.grcicon-control-black
                                       5
-                                    %a{'href' : '#'}
+                                    %a{ 'href': '#' }
                                       %i.grcicon-section-black
                                       0
                                 .item-actions
-                                  %a{'href' : "#", 'class' : "btn btn-mini"}
+                                  %a{ 'href': '#', 'class': 'btn btn-mini' }
                                     %i.grcicon-goto
-                                  %a{'href' : "#", 'class' : "btn btn-mini"}
+                                  %a{ 'href': '#', 'class': 'btn btn-mini' }
                                     %i.grcicon-link
                             .item-content
                     %li
@@ -985,16 +946,16 @@
                                   %i.grcicon-section-black
                                   DEEP2.1
                             .objects-count
-                              %a{'href' : '#'}
+                              %a{ 'href': '#' }
                                 %i.grcicon-control-black
                                 5
-                              %a{'href' : '#'}
+                              %a{ 'href': '#' }
                                 %i.grcicon-section-black
                                 0
                           .item-actions
-                            %a{'href' : "#", 'class' : "btn btn-mini"}
+                            %a{ 'href': '#', 'class': 'btn btn-mini' }
                               %i.grcicon-goto
-                            %a{'href' : "#", 'class' : "btn btn-mini"}
+                            %a{ 'href': '#', 'class': 'btn btn-mini' }
                               %i.grcicon-link
                       .item-content
               %li
@@ -1011,16 +972,16 @@
                               %i.grcicon-risk
                             RISKYATTR333
                       .objects-count
-                        %a{'href' : '#'}
+                        %a{ 'href': '#' }
                           %i.grcicon-control-black
                           5
-                        %a{'href' : '#'}
+                        %a{ 'href': '#' }
                           %i.grcicon-section-black
                           0
                     .item-actions
-                      %a{'href' : "#", 'class' : "btn btn-mini"}
+                      %a{ 'href': '#', 'class': 'btn btn-mini' }
                         %i.grcicon-goto
-                      %a{'href' : "#", 'class' : "btn btn-mini"}
+                      %a{ 'href': '#', 'class': 'btn btn-mini' }
                         %i.grcicon-link
                 .item-content
               %li
@@ -1029,7 +990,7 @@
                   .item-title
                     .row-fluid
                       .span8
-                        .oneline.description-only.expand-on-hover{'rel' : "tooltip", 'title' : "click to view more"}
+                        .oneline.description-only.expand-on-hover{ 'rel': 'tooltip', 'title': 'click to view more' }
                           %span.title
                           %span.code
                             .grcobject.compliance
@@ -1045,19 +1006,19 @@
                             consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
                             consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
                       .span1
-                        %a.view-more{'href' : '#'}
+                        %a.view-more{ 'href': '#' }
                           view
                       .objects-count
-                        %a{'href' : '#'}
+                        %a{ 'href': '#' }
                           %i.grcicon-control-black
                           5
-                        %a{'href' : '#'}
+                        %a{ 'href': '#' }
                           %i.grcicon-section-black
                           0
                     .item-actions
-                      %a{'href' : "#", 'class' : "btn btn-mini"}
+                      %a{ 'href': '#', 'class': 'btn btn-mini' }
                         %i.grcicon-goto
-                      %a{'href' : "#", 'class' : "btn btn-mini"}
+                      %a{ 'href': '#', 'class': 'btn btn-mini' }
                         %i.grcicon-link
                 .item-content
                   %ul.tree-structure
@@ -1067,7 +1028,7 @@
                         .item-title
                           .row-fluid
                             .span8
-                              .oneline.expand-on-hover{'rel' : "tooltip", 'title' : "click to view more"}
+                              .oneline.expand-on-hover{ 'rel': 'tooltip', 'title': 'click to view more' }
                                 %span.title
                                   Lorem ipsum dolor sit amet
                                 %span.code
@@ -1079,19 +1040,19 @@
                                 .rtf
                                   consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
                             .span1
-                              %a.view-more{'href' : '#'}
+                              %a.view-more{ 'href': '#' }
                                 view
                             .objects-count
-                              %a{'href' : '#'}
+                              %a{ 'href': '#' }
                                 %i.grcicon-control-black
                                 5
-                              %a{'href' : '#'}
+                              %a{ 'href': '#' }
                                 %i.grcicon-section-black
                                 0
                           .item-actions
-                            %a{'href' : "#", 'class' : "btn btn-mini"}
+                            %a{ 'href': '#', 'class': 'btn btn-mini' }
                               %i.grcicon-goto
-                            %a{'href' : "#", 'class' : "btn btn-mini"}
+                            %a{ 'href': '#', 'class': 'btn btn-mini' }
                               %i.grcicon-link
                       .item-content
                         %ul.tree-structure
@@ -1114,22 +1075,21 @@
                                       .rtf
                                         consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
                                   .span1
-                                    %a.view-more{'href' : '#'}
+                                    %a.view-more{ 'href': '#' }
                                       view
                                   .objects-count
-                                    %a{'href' : '#'}
+                                    %a{ 'href': '#' }
                                       %i.grcicon-control-black
                                       5
-                                    %a{'href' : '#'}
+                                    %a{ 'href': '#' }
                                       %i.grcicon-section-black
                                       0
                                 .item-actions
-                                  %a{'href' : "#", 'class' : "btn btn-mini"}
+                                  %a{ 'href': '#', 'class': 'btn btn-mini' }
                                     %i.grcicon-goto
-                                  %a{'href' : "#", 'class' : "btn btn-mini"}
+                                  %a{ 'href': '#', 'class': 'btn btn-mini' }
                                     %i.grcicon-link
                             .item-content
-                          
                           %li
                             .item-main
                               .openclose.lastchild
@@ -1140,10 +1100,10 @@
                                       %span.title
                                         No Title or Description (shouldn't happen)
                                   .objects-count
-                                    %a{'href' : '#'}
+                                    %a{ 'href': '#' }
                                       %i.grcicon-control-black
                                       5
-                                    %a{'href' : '#'}
+                                    %a{ 'href': '#' }
                                       %i.grcicon-section-black
                                       0
 
@@ -1178,36 +1138,35 @@
             %p
               %strong
                 Example:
-                
             %textarea
-              :escaped
-                .row-fluid
-                  .span12
-                    Fluid 12
-                    .row-fluid
-                      .span6
-                        Fluid 6
-                        .row-fluid
-                          .span3
-                            Fluid 3
-                          .span9
-                            Fluid 9
-                      .span6
-                        Fluid 6
-                        .row-fluid
-                          .span3
-                            Fluid 3
-                          .span3
-                            Fluid 3
-                          .span3
-                            Fluid 3
-                          .span3
-                            Fluid 3
+              .row-fluid
+                .span12
+                  Fluid 12
+                  .row-fluid
+                    .span6
+                      Fluid 6
+                      .row-fluid
+                        .span3
+                          Fluid 3
+                        .span9
+                          Fluid 9
+                    .span6
+                      Fluid 6
+                      .row-fluid
+                        .span3
+                          Fluid 3
+                        .span3
+                          Fluid 3
+                        .span3
+                          Fluid 3
+                        .span3
+                          Fluid 3
             %p
-              <span class="label label-info">Note!</span>
-              This is how nesting work. If you forgot to implement something or you put some element into wrong place it will not work properly.
+              %span.label.label-info
+                Note!
+              &nbsp; This is how nesting work. If you forgot to implement something or you put some element into wrong place it will not work properly.
               Each nested level of columns should add up to 12 columns. This is because the fluid grid uses percentages, not pixels, for setting widths.
-        
+
         %section#buttons.widget
           %section.header
             %h2
@@ -1250,21 +1209,74 @@
               .btn.btn-large.pending-ajax
                 Large Button - Default
               .btn.btn-add.pending-ajax
-                Default Button - Add 
+                Default Button - Add
               .btn.btn-small.btn-warning.pending-ajax
                 Small Button - Warning
               .btn.btn-mini.btn-danger.pending-ajax
                 Mini Button - Danger
             %p
-              <span class="label label-info">Note!</span>
-              When you add class 
-              %strong .pending-ajax 
+              %span.label.label-info
+                Note!
+              &nbsp; When you add class
+              %strong
+                \.pending-ajax 
               all buttons will look like default and disabled, no matter what other classes they have. Only classes for size will work.
-            
             %p
               %strong
                 Disabled:
             .real-example
+              .btn.btn-large.disabled
+                Large Button - Default
+              .btn.btn-add.disabled
+                Default Button - Add
+              .btn.btn-small.btn-warning.disabled
+                Small Button - Warning
+              .btn.btn-mini.btn-danger.disabled
+                Mini Button - Danger
+            %p
+              %span.label.label-info
+                Note!
+              &nbsp; When you add class
+              %strong .disabled 
+              all buttons will be disabled.
+            %p
+              %strong
+                Example:
+            %textarea
+              Types:
+              .btn
+                Default
+              .btn.btn-primary
+                Primary
+              .btn.btn-info
+                Info
+              .btn.btn-add
+                Add
+              .btn.btn-warning
+                Warning
+              .btn.btn-danger
+                Danger
+              .btn.btn-inverse
+                Inverse
+              Sizes:
+              .btn.btn-large.disabled
+                Large Button
+              .btn
+                Default Button
+              .btn.btn-small
+                Small Button
+              .btn.btn-mini
+                Mini Button
+              Pending AJAX:
+              .btn.btn-large.pending-ajax
+                Large Button - Default
+              .btn.btn-add.pending-ajax
+                Default Button - Add 
+              .btn.btn-small.btn-warning.pending-ajax
+                Small Button - Warning
+              .btn.btn-mini.btn-danger.pending-ajax
+                Mini Button - Danger
+              Disabled:
               .btn.btn-large.disabled
                 Large Button - Default
               .btn.btn-add.disabled
@@ -1273,69 +1285,7 @@
                 Small Button - Warning
               .btn.btn-mini.btn-danger.disabled
                 Mini Button - Danger
-            
-            %p
-              <span class="label label-info">Note!</span>
-              When you add class
-              %strong .disabled 
-              all buttons will be disabled.
-            
-            %p
-              %strong
-                Example:
-                    
-            %textarea
-              :escaped
-                Types:
-                
-                .btn
-                  Default
-                .btn.btn-primary
-                  Primary
-                .btn.btn-info
-                  Info
-                .btn.btn-add
-                  Add
-                .btn.btn-warning
-                  Warning
-                .btn.btn-danger
-                  Danger
-                .btn.btn-inverse
-                  Inverse
-                  
-                Sizes:
-                
-                .btn.btn-large.disabled
-                  Large Button
-                .btn
-                  Default Button
-                .btn.btn-small
-                  Small Button
-                .btn.btn-mini
-                  Mini Button
-                
-                Pending AJAX:
-                
-                .btn.btn-large.pending-ajax
-                  Large Button - Default
-                .btn.btn-add.pending-ajax
-                  Default Button - Add 
-                .btn.btn-small.btn-warning.pending-ajax
-                  Small Button - Warning
-                .btn.btn-mini.btn-danger.pending-ajax
-                  Mini Button - Danger
-                
-                Disabled:
-                
-                .btn.btn-large.disabled
-                  Large Button - Default
-                .btn.btn-add.disabled
-                  Default Button - Add 
-                .btn.btn-small.btn-warning.disabled
-                  Small Button - Warning
-                .btn.btn-mini.btn-danger.disabled
-                  Mini Button - Danger
-                  
+
         %section#progress.widget
           %section.header
             %h2
@@ -1343,52 +1293,48 @@
           %section.content
             .real-example
               .progress
-                .bar{'style' : "width:30%;"}
+                .bar{ 'style': 'width:30%;' }
               .progress
-                .bar.bar-success{'style' : "width:40%;"}
+                .bar.bar-success{ 'style': 'width:40%;' }
               .progress
-                .bar.bar-danger{'style' : "width:50%;"}
+                .bar.bar-danger{ 'style': 'width:50%;' }
               .progress
-                .bar.bar-warning{'style' : "width:60%;"}
+                .bar.bar-warning{ 'style': 'width:60%;' }
             %p
               %strong
                 Example:
-            
             %textarea
-              :escaped
-                .progress
-                  .bar{'style' : "width:30%;"}
-                .progress
-                  .bar.bar-success{'style' : "width:40%;"}
-                .progress
-                  .bar.bar-danger{'style' : "width:50%;"}
-                .progress
-                  .bar.bar-warning{'style' : "width:60%;"}
-            
+              .progress
+                .bar{ 'style': 'width:30%;' }
+              .progress
+                .bar.bar-success{ 'style': 'width:40%;' }
+              .progress
+                .bar.bar-danger{ 'style': 'width:50%;' }
+              .progress
+                .bar.bar-warning{ 'style': 'width:60%;' }
             .real-example
               %p
                 %strong
                   You can also combine multiple progress bars into one row. See example below:
               .progress
-                .bar{'style' : "width:25%;"}
-                .bar.bar-success{'style' : "width:25%;"}
-                .bar.bar-danger{'style' : "width:25%;"}
-                .bar.bar-warning{'style' : "width:25%;"}
-            
+                .bar{ 'style': 'width:25%;' }
+                .bar.bar-success{ 'style': 'width:25%;' }
+                .bar.bar-danger{ 'style': 'width:25%;' }
+                .bar.bar-warning{ 'style': 'width:25%;' }
             %textarea
-              :escaped
-                .progress
-                  .bar{'style' : "width:25%;"}
-                  .bar.bar-success{'style' : "width:25%;"}
-                  .bar.bar-danger{'style' : "width:25%;"}
-                  .bar.bar-warning{'style' : "width:25%;"}
-            
+              .progress
+                .bar{ 'style': 'width:25%;' }
+                .bar.bar-success{ 'style': 'width:25%;' }
+                .bar.bar-danger{ 'style': 'width:25%;' }
+                .bar.bar-warning{ 'style': 'width:25%;' }
             %p
-              <span class="label label-info">Note!</span>
-              When you adding progress bars please note that instead of 
-              %strong 'style' : "width:20%;" 
+              %span.label.label-info
+                Note!
+              &nbsp; When you're adding progress bars please note that instead of
+              %strong
+                'style': 'width:20%;' 
               you should import code that will calculate required percentage. This percentages are only for demonstration.
-        
+
         %section#actions.widget
           %section.header
             %h2
@@ -1397,87 +1343,85 @@
             .real-example.clearfix
               %ul.actions.pull-right
                 %li
-                  %a{'href' : "#"}
+                  %a{ 'href': '#' }
                     %i.grcicon-edit
                     Edit Program
                 %li.btn-group
-                  %a.dropdown-toggle{'href' : '#', 'data-toggle' : 'dropdown'}
+                  %a.dropdown-toggle{ 'href': '#', 'data-toggle': 'dropdown' }
                     %i.grcicon-imp-exp
                     Import/Export
                     %span.caret
                   %ul.dropdown-menu
                     %li.divider
                     %li
-                      %a{'href' : "#"}
+                      %a{ 'href': '#' }
                         Import Regs
                     %li
-                      %a{'href' : "#"}
+                      %a{ 'href': '#' }
                         Import Controls
                     %li.divider
                     %li
-                      %a{'href' : "#"}
+                      %a{ 'href': '#' }
                         Export Regs
                     %li
-                      %a{'href' : "#"}
+                      %a{ 'href': '#' }
                         Export Controls
                 %li
-                  %a{'href' : "#"}
+                  %a{ 'href': '#' }
                     %i.grcicon-reg-map
                     Reg Mapper
                 %li
-                  %a{'href' : "#"}
+                  %a{ 'href': '#' }
                     %i.grcicon-audit
                     Start Audit
             %p
               %strong
                 Example:
-                
             %textarea
-              :escaped
-                %ul.actions.pull-right
-                  %li
-                    %a{'href' : "#"}
-                      %i.grcicon-edit-new
-                      Edit Program
-                  %li.btn-group
-                    %a.dropdown-toggle{'href' : '#', 'data-toggle' : 'dropdown'}
-                      %i.grcicon-imp-exp
-                      Import/Export
-                      %span.caret
-                    %ul.dropdown-menu
-                      %li.divider
-                      %li
-                        %a{'href' : "#"}
-                          Import Regs
-                      %li
-                        %a{'href' : "#"}
-                          Import Controls
-                      %li.divider
-                      %li
-                        %a{'href' : "#"}
-                          Export Regs
-                      %li
-                        %a{'href' : "#"}
-                          Export Controls
-                  %li
-                    %a{'href' : "#"}
-                      %i.grcicon-reg-map
-                      Reg Mapper
-                  %li
-                    %a{'href' : "#"}
-                      %i.grcicon-audit
-                      Start Audit
+              %ul.actions.pull-right
+                %li
+                  %a{ 'href': '#' }
+                    %i.grcicon-edit-new
+                    Edit Program
+                %li.btn-group
+                  %a.dropdown-toggle{ 'href': '#', 'data-toggle': 'dropdown' }
+                    %i.grcicon-imp-exp
+                    Import/Export
+                    %span.caret
+                  %ul.dropdown-menu
+                    %li.divider
+                    %li
+                      %a{ 'href': '#' }
+                        Import Regs
+                    %li
+                      %a{ 'href': '#' }
+                        Import Controls
+                    %li.divider
+                    %li
+                      %a{ 'href': '#' }
+                        Export Regs
+                    %li
+                      %a{ 'href': '#' }
+                        Export Controls
+                %li
+                  %a{ 'href': '#' }
+                    %i.grcicon-reg-map
+                    Reg Mapper
+                %li
+                  %a{ 'href': '#' }
+                    %i.grcicon-audit
+                    Start Audit
             %p
-              <span class="label label-info">Note!</span>
-              You can combine every icon you want and insert any text you want. Also it this example we added dropdown list.
-        
+              %span.label.label-info
+              &nbsp; You can combine every icon you want and insert any text you want. Also it this example we added dropdown list.
+
         %section#widgets.widget
           %section.header
             %h2
               Widgets
           %section.content
             %p
-              Examples of proper widget implementation. Every widget that is corespodent to some widget group have additional class. Those classes are:
+              Examples of proper widget implementation. Every widget that is correspond to some widget group have additional class. Those classes are:
             %ul
               %li
                 %strong .governance
@@ -1486,180 +1430,151 @@
               %li
                 %strong .risk
               %li
-                %strong .business
-                
+                %strong .business 
             %p
               If widget have left tabs structure like examples below it needs additional class
               %strong .widget-tabs
-            
             %p
-              On widget hover you can see 3 dots left from widget title. That 3 dots "tells" user that he can drag/drop widget.
+              On widget hover you can see 3 dots left from widget title. That 3 dots 'tells' user that he can drag/drop widget.
             %p
-              Also left from widget title you can see icons. Those icons corespodent to specific group.
+              Also left from widget title you can see icons. Those icons correspond to specific group.
             %p
               On the right from widget title you can see 3 icons. Help (always visible), close (it is shown only on widgets that are made by user) and contract/expand (also always visible). Contract/expand function is to contract or expand whole widget, leaving only widget header (title) and widget filter (search) sections.
             .row-fluid
               .span6
-                %section{ 'class' : "widget widget-tabs governance"}
+                %section{ 'class': 'widget widget-tabs governance' }
                   %header.header
                     .row-fluid
                       .span8
                         %h2
                           %i.grcicon-program
                           Governance
-                      
                       .span4
                         .widget-action.pull-right.widget-showhide
-                          %a.active{'href' : "#", 'rel' : "tooltip", 'title' : "Contract widget", 'data-placement' :"top"}
-                                              
+                          %a.active{ 'href': '#', 'rel': 'tooltip', 'title': 'Contract widget', 'data-placement': 'top' }
                   %section.content
                     .filter
-                      %input.ui-corner-all.widgetsearch.clear-value{type : 'text', placeholder : 'Search'}
-                    
+                      %input.ui-corner-all.widgetsearch.clear-value{ 'type': 'text', 'placeholder': 'Search' }
                     -set quick_result = quick_result if quick_result is defined else None
-                    -set prefix = "qf" if quick_result else "dash"
-                    
-                    .tabbable.tabs-left{ 'id' : "{{ nil if quick_result else \"quick_find\" }}" }
+                    -set prefix = 'qf' if quick_result else 'dash'
+                    .tabbable.tabs-left{ 'id': '{{ nil if quick_result else \'quick_find\' }}' }
                       %ul.nav.nav-tabs
                         %li.active
-                          %a{ 'href' : "##{prefix}_programs", 'data-tab-href' : "/programs?quick=true&qr=={quick_result}", 'data-toggle' : 'tab' }
+                          %a{ 'href': '#{prefix}_programs', 'data-tab-href': '/programs?quick=true&qr=={quick_result}', 'data-toggle': 'tab' }
                             %i.grcicon-program-black 
                             Programs
-
                       .tab-content
-                        .tab-pane{ 'id' : "#{prefix}_programs" }
-                  
-                  
-                %section{ 'class' : "widget widget-tabs compliance"}
+                        .tab-pane{ 'id': '#{prefix}_programs' }
+                %section{ 'class': 'widget widget-tabs compliance' }
                   %header.header
                     .row-fluid
                       .span8
                         %h2
                           %i.grcicon-system
                           Compliance
-                      
                       .span4
                         .widget-action.pull-right.widget-showhide
-                          %a.active{'href' : "#", 'rel' : "tooltip", 'title' : "Contract widget", 'data-placement' :"top"}
-                                              
+                          %a.active{ 'href': '#', 'rel': 'tooltip', 'title': 'Contract widget', 'data-placement': 'top' }
                   %section.content
                     .filter
-                      %input.ui-corner-all.widgetsearch.clear-value{type : 'text', placeholder : 'Search'}
-                    
+                      %input.ui-corner-all.widgetsearch.clear-value{ 'type': 'text', 'placeholder': 'Search' }
                     -set quick_result = quick_result if quick_result is defined else None
-                    -set prefix = "qf" if quick_result else "dash"
-                    
-                    .tabbable.tabs-left{ 'id' : "{{ nil if quick_result else \"quick_find\" }}" }
+                    -set prefix = 'qf' if quick_result else 'dash'
+                    .tabbable.tabs-left{ 'id': '{{ nil if quick_result else \'quick_find\' }}' }
                       %ul.nav.nav-tabs
                         %li
-                          %a{'href' : "##{prefix}_controls", 'data-tab-href' : "/controls?quick=true&qr=#{quick_result}", 'data-toggle' : 'tab' }
-                            %i.grcicon-control-black 
+                          %a{ 'href': '##{prefix}_controls', 'data-tab-href': '/controls?quick=true&qr=#{quick_result}', 'data-toggle': 'tab' }
+                            %i.grcicon-control-black
                             Controls
                         %li
-                          %a{ 'href' : "##{prefix}_processes", 'data-tab-href' : "/systems?quick=true&qr=={quick_result}&is_biz_process=true", 'data-toggle' : 'tab' }
-                            %i.grcicon-process-black 
+                          %a{ 'href': '##{prefix}_processes', 'data-tab-href': '/systems?quick=true&qr=={quick_result}&is_biz_process=true', 'data-toggle': 'tab' }
+                            %i.grcicon-process-black
                             Processes
                         %li.active
-                          %a{ 'href' : "##{prefix}_systems", 'data-tab-href' : "/systems?quick=true&qr=#{quick_result}&is_biz_process=false", 'data-toggle' : 'tab' }
-                            %i.grcicon-system-black 
+                          %a{ 'href': '##{prefix}_systems', 'data-tab-href': '/systems?quick=true&qr=#{quick_result}&is_biz_process=false', 'data-toggle': 'tab' }
+                            %i.grcicon-system-black
                             Systems
                       .tab-content
-                        .tab-pane{ 'id' : "#{prefix}_controls" }
-                        .tab-pane{ 'id' : "#{prefix}_processes" }
-                        .tab-pane{ 'id' : "#{prefix}_systems" }
-                  
-                  
+                        .tab-pane{ 'id': '#{prefix}_controls' }
+                        .tab-pane{ 'id': '#{prefix}_processes' }
+                        .tab-pane{ 'id': '#{prefix}_systems' }
               .span6
-                %section{ 'class' : "widget widget-tabs risk"}
+                %section{ 'class': 'widget widget-tabs risk' }
                   %header.header
                     .row-fluid
                       .span8
                         %h2
                           %i.grcicon-risk
                           Risk
-                      
                       .span4
                         .widget-action.pull-right.widget-showhide
-                          %a.active{'href' : "#", 'rel' : "tooltip", 'title' : "Contract widget", 'data-placement' :"top"}
-                          
-                      
+                          %a.active{ 'href': '#', 'rel': 'tooltip', 'title': 'Contract widget', 'data-placement': 'top' }
                   %section.content
                     .filter
-                      %input.ui-corner-all.widgetsearch.clear-value{ type : 'text', placeholder : 'Search'}
-                    
+                      %input.ui-corner-all.widgetsearch.clear-value{ 'type': 'text', 'placeholder': 'Search' }
                     -set quick_result = quick_result if quick_result is defined else None
-                    -set prefix = "qf" if quick_result else "dash"
-                    
-                    .tabbable.tabs-left{ 'id' : "{{ nil if quick_result else \"quick_find\" }}" }
+                    -set prefix = 'qf' if quick_result else 'dash'
+                    .tabbable.tabs-left{ 'id': '{{ nil if quick_result else \'quick_find\' }}' }
                       %ul.nav.nav-tabs
                         %li.active
-                          %a{ 'href' : "##{prefix}_risks", 'data-tab-href' : "/risks?quick=true&qr=={quick_result}", 'data-toggle' : 'tab' }
+                          %a{ 'href': '#{prefix}_risks', 'data-tab-href': '/risks?quick=true&qr=={quick_result}', 'data-toggle': 'tab' }
                             %i.grcicon-risk-black 
                             Risks
                         %li
-                          %a{ 'href' : "##{prefix}_risky_attributes", 'data-tab-href' : "/risky_attributes?quick=true&qr=={quick_result}", 'data-toggle' : 'tab' }
+                          %a{ 'href': '#{prefix}_risky_attributes', 'data-tab-href': '/risky_attributes?quick=true&qr=={quick_result}', 'data-toggle': 'tab' }
                             %i.grcicon-attribute-black 
                             Attributes
-
                       .tab-content
-                        .tab-pane{ 'id' : "#{prefix}_risks" }
-                        .tab-pane{ 'id' : "#{prefix}_risky_attributes" }
-                  
-                  
-                %section{ 'class' : "widget widget-tabs business"}
+                        .tab-pane{ 'id': '#{prefix}_risks' }
+                        .tab-pane{ 'id': '#{prefix}_risky_attributes' }
+                %section{ 'class': 'widget widget-tabs business' }
                   %header.header
                     .row-fluid
                       .span8
                         %h2
                           %i.grcicon-product
                           Business
-                      
                       .span4
                         .widget-action.pull-right.widget-showhide
-                          %a.active{'href' : "#", 'rel' : "tooltip", 'title' : "Contract widget", 'data-placement' :"top"}
-                                              
+                          %a.active{ 'href': '#', 'rel': 'tooltip', 'title': 'Contract widget', 'data-placement': 'top' }
                   %section.content
                     .filter
-                      %input.ui-corner-all.widgetsearch.clear-value{type : 'text', placeholder : 'Search'}
-                    
+                      %input.ui-corner-all.widgetsearch.clear-value{ 'type': 'text', 'placeholder': 'Search' }
                     -set quick_result = quick_result if quick_result is defined else None
-                    -set prefix = "qf" if quick_result else "dash"
-                    
-                    .tabbable.tabs-left{ 'id' : "{{nil if quick_result else \"quick_find\" }}" }
+                    -set prefix = 'qf' if quick_result else 'dash'
+                    .tabbable.tabs-left{ 'id': '{{nil if quick_result else \'quick_find\' }}' }
                       %ul.nav.nav-tabs
                         %li
-                          %a{ 'href' : "##{prefix}_products", 'data-tab-href' : "/products?quick=true&qr=={quick_result}", 'data-toggle' : 'tab' }
+                          %a{ 'href': '#{prefix}_products', 'data-tab-href': '/products?quick=true&qr=={quick_result}', 'data-toggle': 'tab' }
                             %i.grcicon-product-black 
                             Products
                         %li.active
-                          %a{'href' : "##{prefix}_org_groups", 'data-tab-href' : "/org_groups_path?quick=true&qr=={quick_result}", 'data-toggle' : 'tab' }
+                          %a{ 'href': '#{prefix}_org_groups', 'data-tab-href': '/org_groups_path?quick=true&qr=={quick_result}', 'data-toggle': 'tab' }
                             %i.grcicon-orggroup-black 
                             Org Groups
                         %li
-                          %a{ 'href' : "##{prefix}_facilities", 'data-tab-href' : "/facilities?quick=true&qr=={quick_result}", 'data-toggle' : 'tab' }
+                          %a{ 'href': '#{prefix}_facilities', 'data-tab-href': '/facilities?quick=true&qr=={quick_result}', 'data-toggle': 'tab' }
                             %i.grcicon-facility-black 
                             Facilities
                         %li
-                          %a{ 'href' : "##{prefix}_markets", 'data-tab-href' : "/markets?quick=true&qr=={quick_result}", 'data-toggle' : 'tab' }
+                          %a{ 'href': '#{prefix}_markets', 'data-tab-href': '/markets?quick=true&qr=={quick_result}', 'data-toggle': 'tab' }
                             %i.grcicon-market-black 
                             Markets
                         %li
-                          %a{'href' : "##{prefix}_data_assets", 'data-tab-href' : "/data_assets?quick=true&qr=={quick_result}", 'data-toggle' : 'tab' }
+                          %a{ 'href': '#{prefix}_data_assets', 'data-tab-href': '/data_assets?quick=true&qr=={quick_result}', 'data-toggle': 'tab' }
                             %i.grcicon-dataasset-black 
                             Data Assets
                         %li
-                          %a{ "href" : "##{prefix}_projects", 'data-tab-href' : "/projects?quick=true&qr=={quick_result}", 'data-toggle' : 'tab' }
+                          %a{ 'href': '#{prefix}_projects', 'data-tab-href': '/projects?quick=true&qr=={quick_result}', 'data-toggle': 'tab' }
                             %i.grcicon-project-black 
                             Projects
-                    
                       .tab-content
-                        .tab-pane{ 'id' : "#{prefix}_products" }
-                        .tab-pane{ 'id' : "#{prefix}_org_groups" }
-                        .tab-pane{ 'id' : "#{prefix}_facilities" }
-                        .tab-pane{ 'id' : "#{prefix}_markets" }
-                        .tab-pane{ 'id' : "#{prefix}_projects" }
-                        .tab-pane{ 'id' : "#{prefix}_data_assets" }
-                  
+                        .tab-pane{ 'id': '#{prefix}_products' }
+                        .tab-pane{ 'id': '#{prefix}_org_groups' }
+                        .tab-pane{ 'id': '#{prefix}_facilities' }
+                        .tab-pane{ 'id': '#{prefix}_markets' }
+                        .tab-pane{ 'id': '#{prefix}_projects' }
+                        .tab-pane{ 'id': '#{prefix}_data_assets' }
 
         %section#flash-notice.widget
           %section.header
@@ -1667,10 +1582,10 @@
               Flash notice
           %section.content
             .flash
-              %a.close{'href' :"#{}", 'data-dismiss' : "alert"}
+              %a.close{ 'href': '#', 'data-dismiss': 'alert' }
                 &times;
-              .notice            
-                %p 
+              .notice
+                %p
                   %i.grcicon-ok
                   Requests are imported successfully!
 
@@ -1687,10 +1602,9 @@
                     %span.title Program Title
                     %span.code.governance PROGRAM-XXX
                 .span2
-                  %a.btn.btn-mini.btn-primary.pull-right{'href' :"#", 'rel' : "tooltip", 'title' : "View Program"}
+                  %a.btn.btn-mini.btn-primary.pull-right{ 'href': '#', 'rel': 'tooltip', 'title': 'View Program' }
                     %i.grcicon-goto-white
             -endmacro
-                
             -macro program_popover_content_inprogress()
               .popover-inner-content
                 .row-fluid
@@ -1715,14 +1629,16 @@
                       %strong
                         report date:
                         04/01/2013
-
                   .span6
                     %h4
                       Controls (200)
                       .progress
-                        .bar.bar-success{'style' : "width:50%", 'rel' : "tooltip", 'title' : "100 Done"}=100
-                        .bar.bar-danger{'style' : "width:35%", 'rel' : "tooltip", 'title' : "70 N/A"}=70
-                        .bar.bar-warning{'style' : "width:15%", 'rel' : "tooltip", 'title' : "30 Pending"}=30
+                        .bar.bar-success{ 'style': 'width:50%', 'rel': 'tooltip', 'title': '100 Done' }
+                          100
+                        .bar.bar-danger{ 'style': 'width:35%', 'rel': 'tooltip', 'title': '70 N/A' }
+                          70
+                        .bar.bar-warning{ 'style': 'width:15%', 'rel': 'tooltip', 'title': '30 Pending' }
+                          30
                     %h4
                       Directives (14)
                     %i.grcicon-regulation-color
@@ -1734,7 +1650,6 @@
                     %i.grcicon-policy-color
                     4
             -endmacro
-
             -macro program_popover_content_none()
               .popover-inner-content
                 .row-fluid
@@ -1748,14 +1663,16 @@
                       Audit Status
                     %p.audit-status
                       %span.status.none No scheduled audits
-
                   .span6
                     %h4
                       Controls (200)
                       .progress
-                        .bar.bar-success{'style' : "width:50%", 'rel' : "tooltip", 'title' : "100 Done"}=100
-                        .bar.bar-danger{'style' : "width:35%", 'rel' : "tooltip", 'title' : "70 N/A"}=70
-                        .bar.bar-warning{'style' : "width:15%", 'rel' : "tooltip", 'title' : "30 Pending"}=30
+                        .bar.bar-success{ 'style': 'width:50%', 'rel': 'tooltip', 'title': '100 Done' }
+                          100
+                        .bar.bar-danger{ 'style': 'width:35%', 'rel': 'tooltip', 'title': '70 N/A' }
+                          70
+                        .bar.bar-warning{ 'style': 'width:15%', 'rel': 'tooltip', 'title': '30 Pending' }
+                          30
                     %h4
                       Directives (14)
                     %i.grcicon-regulation-color
@@ -1767,7 +1684,6 @@
                     %i.grcicon-policy-color
                     4
             -endmacro
-
             -macro program_popover_content_danger()
               .popover-inner-content
                 .row-fluid
@@ -1805,7 +1721,6 @@
                     %i.grcicon-contract-color
                     1
             -endmacro
-
             -macro program_popover_content_completed()
               .popover-inner-content
                 .row-fluid
@@ -1843,15 +1758,11 @@
                     %i.grcicon-contract-color
                     1
             -endmacro
-
-
-
-
             .row-fluid
               .span6
                 %ul.tree-structure.simple.single-row-tabs
                   %li.program
-                    %a{'href' : "#", 'data-popover-trigger' :  "sticky-hover", 'data-placement' :  "right", 'data-original-title' : "={program_popover_title()|escape}", 'data-content' : "={program_popover_content_none()|escape}" }
+                    %a{ 'href': '#', 'data-popover-trigger': 'sticky-hover', 'data-placement': 'right', 'data-original-title': '={program_popover_title()|escape}', 'data-content': '={program_popover_content_none()|escape}' }
                       .row-fluid
                         .span11
                           .item-identifier
@@ -1864,7 +1775,7 @@
                           .objects-count
                             &nbsp;
                   %li.program
-                    %a{'href' : "#", 'data-popover-trigger' :  "sticky-hover", 'data-placement' :  "right", 'data-original-title' : "={program_popover_title()|escape}", 'data-content' : "={program_popover_content_inprogress()|escape}" }
+                    %a{ 'href': '#', 'data-popover-trigger': 'sticky-hover', 'data-placement':  'right', 'data-original-title': '={program_popover_title()|escape}', 'data-content': '={program_popover_content_inprogress()|escape}' }
                       .row-fluid
                         .span11
                           .item-identifier
@@ -1877,7 +1788,7 @@
                           .objects-count.pull-right
                             %i.grcicon-eye-inprogress
                   %li.program
-                    %a{'href' : "#", 'data-popover-trigger' :  "sticky-hover", 'data-placement' :  "right", 'data-original-title' : "={program_popover_title()|escape}", 'data-content' : "={program_popover_content_danger()|escape}" }
+                    %a{ 'href': '#', 'data-popover-trigger': 'sticky-hover', 'data-placement': 'right', 'data-original-title': '={program_popover_title()|escape}', 'data-content': '={program_popover_content_danger()|escape}' }
                       .row-fluid
                         .span11
                           .item-identifier
@@ -1890,7 +1801,7 @@
                           .objects-count.pull-right
                             %i.grcicon-eye-danger
                   %li.program
-                    %a{'href' : "#", 'data-popover-trigger' :  "sticky-hover", 'data-placement' :  "right", 'data-original-title' : "={program_popover_title()|escape}", 'data-content' : "={program_popover_content_completed()|escape}" }
+                    %a{ 'href': '#', 'data-popover-trigger': 'sticky-hover', 'data-placement': 'right', 'data-original-title': '={program_popover_title()|escape}', 'data-content': '={program_popover_content_completed()|escape}' }
                       .row-fluid
                         .span11
                           .item-identifier
@@ -1903,47 +1814,40 @@
                           .objects-count.pull-right
                             %i.grcicon-eye-completed
 
-
-
-
-
         %section#helper.widget
           %section.header
             %h2
               Helper classes
           %section.content
             %p
-              %strong .pull-left - 
+              %strong .pull-left -
               Float an element left
             %p
-              %strong .pull-right - 
+              %strong .pull-right -
               Float an element right
             %p
-              %strong .oneline - 
+              %strong .oneline -
               Preventing content to go into multiple rows.
-              <span class="label label-info">Note!</span>
+              <span class='label label-info'>Note!</span>
               That element needs to be block or inline-block element.
               %strong
                 Please note that you should use mixin oneline when it's possible. Just in cases when you cannot use mixin add class to specific element.
-              
             %p
-              %strong .input-block-level - 
+              %strong .input-block-level -
               Add this class to input field that needs to have width of his parent.
             %p
-              %strong .date - 
+              %strong .date -
               Add this class to input field that represent date field.
             %p
-              %strong .centered - 
+              %strong .centered -
               This class make text or inline elements centered relative on parent element.
             %p
               %strong
                 Example:
-                    
             %textarea
-              :escaped
-                .pull-left
-                .pull-right
-                .oneline
-                .input-block-level
-                .date
-                .centered
+              .pull-left
+              .pull-right
+              .oneline
+              .input-block-level
+              .date
+              .centered
