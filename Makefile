@@ -3,6 +3,7 @@ SHELL := /bin/bash
 PREFIX := $(shell pwd)
 
 DEV_PREFIX ?= $(PREFIX)
+DEV_PREFIX := $(shell cd $(DEV_PREFIX); pwd)
 
 APPENGINE_SDK_VERSION=1.7.6
 APPENGINE_ZIP_NAME=google_appengine_$(APPENGINE_SDK_VERSION).zip
@@ -62,13 +63,16 @@ $(APPENGINE_PACKAGES_DIR) : $(APPENGINE_ENV_DIR)
 
 appengine_packages : $(APPENGINE_PACKAGES_DIR)
 
-$(APPENGINE_PACKAGES_ZIP) : $(APPENGINE_PACKAGES_DIR)
+$(APPENGINE_PACKAGES_DIR)/../packages.zip : $(APPENGINE_PACKAGES_DIR)
 	cd "$(APPENGINE_PACKAGES_DIR)"; \
 		find . -name "*.pyc" -delete; \
 		find . -name "*.egg-info" | xargs rm -rf; \
-		zip -9rv "../packages.zip.tmp" .; \
-		touch "../packages.zip.tmp"; \
-		mv "../packages.zip.tmp" "$(APPENGINE_PACKAGES_ZIP)"
+		zip -9rv "../packages.zip" .; \
+		touch "../packages.zip"
+
+$(APPENGINE_PACKAGES_ZIP) : $(APPENGINE_PACKAGES_DIR)/../packages.zip
+	cd "$(APPENGINE_PACKAGES_DIR)"; \
+		cp "../packages.zip" "$(APPENGINE_PACKAGES_ZIP)"
 
 appengine_packages_zip : $(APPENGINE_PACKAGES_ZIP)
 
@@ -76,6 +80,26 @@ appengine : appengine_sdk appengine_packages appengine_packages_zip
 
 clean_appengine : clean_appengine_sdk clean_appengine_packages
 
+
+## Local environment
+
+$(DEV_PREFIX)/opt/dev_virtualenv :
+	virtualenv $(DEV_PREFIX)/opt/dev_virtualenv
+
+dev_virtualenv : $(DEV_PREFIX)/opt/dev_virtualenv
+
+dev_virtualenv_packages : dev_virtualenv src/dev-requirements.txt src/requirements.txt
+	source bin/init_env; \
+		pip install -r src/dev-requirements.txt; \
+		pip install --no-deps -r src/requirements.txt
+
+git_submodules :
+	git submodule update --init
+
+setup_dev : dev_virtualenv_packages git_submodules
+
+
+## Deployment!
 
 src/ggrc/assets/stylesheets/dashboard.css : src/ggrc/assets/stylesheets/*.scss
 	bin/build_compass
@@ -90,7 +114,7 @@ src/app.yaml : src/app.yaml.dist
 		SETTINGS_MODULE=$(SETTINGS_MODULE) \
 		DATABASE_URI=$(DATABASE_URI)
 
-deploy : src/ggrc/static/assets.manifest src/app.yaml
+deploy : appengine_packages_zip src/ggrc/static/assets.manifest src/app.yaml
 
 clean_deploy :
 	rm -f src/ggrc/assets/stylesheets/dashboard.css
