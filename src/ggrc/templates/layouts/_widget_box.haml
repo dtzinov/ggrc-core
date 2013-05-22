@@ -24,7 +24,13 @@
             %a.active{ 'href': "javascript://" }
           -if widget_help is not none
             .widget-action.pull-right.widget-action-help
-              %a{ 'href': "/help/{{ widget_help }}", 'data-toggle': 'modal-ajax', 'rel': "tooltip", 'title': "Help", 'data-placement': "top" }
+              %a{ 'href': "javascript://", 
+                  'data-toggle': 'modal-ajax', 
+                  'rel': "tooltip", 
+                  'title': "Help", 
+                  'data-placement': "top",
+                  'data-modal-type' : "helpform" 
+                }
                 %i.grcicon-help
 
     -block widget_buttons

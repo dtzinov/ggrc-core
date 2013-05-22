@@ -3,6 +3,7 @@ dashboard-js-files:
   - jquery.js
   - rails.js
   - jquery-ui.js
+  - sha1.js
   - bootstrap-transition.js
   - bootstrap-alert.js
   - bootstrap-button.js
@@ -39,6 +40,7 @@ dashboard-js-files:
   - controllers/add_widgets.js
   - controllers/filterable_controller.js
   - controllers/dashboard_widgets.js
+  - controllers/help_controller.js
   - controllers/quick_search_controller.js
   - controllers/resize_widgets_controller.js
   - controllers/sortable_widgets_controller.js

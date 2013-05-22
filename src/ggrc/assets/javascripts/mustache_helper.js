@@ -481,4 +481,9 @@ Mustache.registerHelper("show_expander", function() {
   }, false) ? options.fn(this) : options.inverse(this); 
 });
 
+Mustache.registerHelper("allow_help_edit", function() {
+  var options = arguments[arguments.length - 1];
+  return options.fn(this); //always true for now
+});
+
 })(this, jQuery, can);

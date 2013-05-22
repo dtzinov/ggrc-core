@@ -1,0 +1,37 @@
+{{!<div class="modal-body">}}
+  <div class="help">
+  {{#if content}}
+    <div class="help-content rtf">
+        {{{content}}}
+    </div>
+  {{else}}
+    <div class="help-content rtf">
+      <p>This content is coming soon.  We are working on it.</p>
+    </div>
+  {{/if}}
+
+  {{#allow_help_edit}}
+    <div id="helpedit" class="collapse">
+      <div class="row-fluid">
+        <div class="well">     
+          <label for="help_help_title">Help title</label>
+          <input class="span12" id="help_title" name="help[title]" size="30" type="text" value="{{title}}">
+          <label for="help_help_content">Help content</label>
+          <div class="wysiwyg-area">
+            <textarea class="span12 double wysihtml5 rtftextarea" id="help_content" name="help[content]" rows="8">
+              {{{content}}}
+            </textarea>
+          </div>
+          <div class="row-fluid">
+            <div class="span12">
+              <input class="btn btn-warning pull-right" name="commit" type="submit" value="Save">
+            </div>
+          </div>
+          <input id="help_slug" name="help[slug]" type="hidden" value="{{slug}}">
+
+        </div>
+      </div>
+    </div>
+  {{/allow_help_edit}}
+  </div>
+{{!</div>}}

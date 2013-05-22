@@ -50,6 +50,17 @@ jQuery.migrateMute = true; //turn off console warnings for jQuery-migrate
     return type;
   }
 
+jQuery.ajaxPrefilter(function( options, originalOptions, jqXHR ) {
+  var data;
+  if ( /^\/api\//.test(options.url) && options.type.toUpperCase() === "PUT" ) {
+    data = can.deparam(options.data);
+    options.dataType = "json";
+    options.data = JSON.stringify(data);
+    options.contentType = "application/json";
+    jqXHR.setRequestHeader("If-Match", '"' + CryptoJS.SHA1(data.updated_at).toString(16) + '"');
+    jqXHR.setRequestHeader("If-Unmodified-Since", data.updated_at);
+  }
+});
 
 jQuery(document).ready(function($) {
   // TODO: Not AJAX friendly

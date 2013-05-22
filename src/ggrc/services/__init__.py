@@ -21,6 +21,7 @@ def all_collections():
     ('directives', models.Directive),
     ('documents', models.Document),
     ('facilities', models.Facility),
+    ('help', models.Help),
     ('markets', models.Market),
     ('meetings', models.Meeting),
     ('object_documents', models.ObjectDocument),
