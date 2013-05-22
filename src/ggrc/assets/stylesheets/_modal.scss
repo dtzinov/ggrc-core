@@ -216,9 +216,10 @@
     h2 {
       color: $white;
       text-shadow: 0;
+      line-height:26px;
       span {
         display: block;
-        line-height: 18px;
+        line-height: 26px;
         font-size: $f-regular;
       }
       i {
@@ -336,6 +337,11 @@
       ul.wysihtml5-toolbar > li {
         margin-bottom:4px;
         margin-top:4px;
+        a.btn {
+          i {
+            margin-top:2px !important;
+          }
+        }
       }
       .inner-modal-header {
         .btn {

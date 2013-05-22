@@ -5,6 +5,7 @@
 
 
 [class^="grcicon-"],
+[class^="icon-"],
 .showhide,
 .openclose,
 .widget-showhide {
@@ -485,3 +486,13 @@
 i.short {
   margin-top:5px !important;
 }
+
+
+// WYSIWYG Icons
+
+.icon-share { background-position:-30px -104px; }
+.icon-th-list { background-position:-126px -200px; }
+.icon-list { background-position:-174px -200px; }
+.icon-indent-right { background-position:-198px -200px; }
+.icon-indent-left { background-position:-222px -200px; }
+.icon-pencil { background-position:-150px -200px; } // HTML view
