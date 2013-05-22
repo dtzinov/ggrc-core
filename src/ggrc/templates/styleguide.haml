@@ -167,9 +167,61 @@
                   %br
                   \%a{'href': '\={something}'}
 
+            %h3
+              5. Always use \={ var } when using variables in attributes
+            .row-fluid
+              .span6
+                .coding.good
+                  %strong
+                    Good
+                  %br
+                  \%a{ 'href': '\={ var }' }
+              .span6
+                .coding.bad
+                  %strong
+                    Wrong
+                  %br
+                  \%a{ 'href': '\#{var}' }
 
+            %h3
+              6. No space after - or = at the beginning of the line
+            .row-fluid
+              .span6
+                .coding.good
+                  %strong
+                    Good
+                  %br
+                  \-something
+                  %br
+                  \=var
+              .span6
+                .coding.bad
+                  %strong
+                    Wrong
+                  %br
+                  \- something
+                  %br
+                  \= var
 
-
+            %h3
+              7. If the tag uses attribute specified in braces ({...}), don't use a trailing = or trailing text.
+            .row-fluid
+              .span6
+                .coding.good
+                  %strong
+                    Good
+                  %br
+                  \%a.someclass=var
+                  %br
+                  \%a{ 'class': 'someclass', 'data-title': 'gGRC' }
+                  %br
+                  &nbsp;&nbsp;=var
+              .span6
+                .coding.bad
+                  %strong
+                    Wrong
+                  %br
+                  \%a{ 'class': 'someclass', 'data-title': 'gGRC' }=var
 
         %section#headers.widget
           %section.header
