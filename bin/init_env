@@ -13,7 +13,6 @@ export GGRC_SETTINGS_MODULE="development"
 
 source "${DEV_PREFIX}/opt/dev_virtualenv/bin/activate"
 
-export PYTHONPATH="${PREFIX}/src:${DEV_PREFIX}/opt/linked_packages:${PYTHONPATH}"
+export PYTHONPATH="${PREFIX}/src:${DEV_PREFIX}/opt/google_appengine:${DEV_PREFIX}/opt/linked_packages:${PYTHONPATH}"
 
 export PATH="${PREFIX}/bin:${DEV_PREFIX}/opt/google_appengine:$PATH"
-
