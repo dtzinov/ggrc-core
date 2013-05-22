@@ -24,6 +24,10 @@
 
         %ul.nav.nav-list.bs-docs-sidenav{ 'data-spy': 'affix', 'data-offset-top': '25' }
           %li
+            %a{ 'href': '#code' }
+              %i.icon-chevron-right
+              Code Guidelines
+          %li
             %a{ 'href': '#headers' }
               %i.icon-chevron-right
               Headers
@@ -81,6 +85,91 @@
               Helper classes
 
       .span9.styleguide-content
+
+        %section#headers.widget
+          %section.header
+            %h2
+              Code Guidelines
+          %section.content
+            %h2
+              HamlPy
+            %p
+              Please follow these rules when creating HamlPy templates.
+              There are many alternatives to proposed code style, but
+              these are chosen and all templates need to follow these
+              rules for code consistency and understanding.
+
+            %h3
+              1. Use 2 spaces for indentation
+            .row-fluid
+              .span6
+                .coding.good
+                  %strong
+                    Good
+                  %br
+                  \%p
+                  %br
+                  &nbsp;&nbsp;Hello World
+              .span6
+                .coding.bad
+                  %strong
+                    Wrong
+                  %br
+                  \%p
+                  %br
+                  &nbsp;&nbsp;&nbsp;&nbsp;Hello World
+
+            %h3
+              2. Always single-quote attribute names
+            .row-fluid
+              .span6
+                .coding.good
+                  %strong
+                    Good
+                  %br
+                  \%a{ 'href': 'blah', 'data-popover': 'yar' }
+              .span6
+                .coding.bad
+                  %strong
+                    Wrong
+                  %br
+                  \%a{ 'href': "blah", 'data-popover': "yar" }
+
+            %h3
+              3. No whitespace before colons or commas
+            .row-fluid
+              .span6
+                .coding.good
+                  %strong
+                    Good
+                  %br
+                  \%a{ 'href': 'blah', 'data-popover': 'yar' }
+              .span6
+                .coding.bad
+                  %strong
+                    Wrong
+                  %br
+                  \%a{ 'href' : "blah" , 'data-popover' : "yar" }
+
+            %h3
+              4. One space after each colon or comma, and inside each { or } (but not "(" or ")")
+            .row-fluid
+              .span6
+                .coding.good
+                  %strong
+                    Good
+                  %br
+                  \%a{ 'href': '\={ something }' }
+              .span6
+                .coding.bad
+                  %strong
+                    Wrong
+                  %br
+                  \%a{'href': '\={something}'}
+
+
+
+
 
         %section#headers.widget
           %section.header
@@ -1403,17 +1492,99 @@
             %p
               On the right from widget title you can see 3 icons. Help (always visible), close (it is shown only on widgets that are made by user) and contract/expand (also always visible). Contract/expand function is to contract or expand whole widget, leaving only widget header (title) and widget filter (search) sections.
             .row-fluid
-              .span6
-                %section{ 'class': 'widget widget-tabs governance' }
+              .span8
+
+                -# PROGRAMS
+                %section{ 'class': 'widget widget-tabs programs' }
                   %header.header
                     .row-fluid
                       .span8
                         %h2
-                          %i.grcicon-program
+                          Programs
+                      .span4
+                        .widget-action.pull-right.widget-showhide
+                          %a.active{ 'href': '#', 'rel': 'tooltip', 'title': 'Contract widget', 'data-placement': 'top' }
+                        .widget-action.pull-right.widget-action-help
+                          %a{ 'href': '#', 'rel': 'tooltip', 'title': 'Help', 'data-placement': 'left' }
+                            %i.grcicon-help
+                  %section.content
+                    .filter
+                      .row-fluid
+                        .span8
+                          %input.ui-corner-all.widgetsearch.clear-value{ 'type': 'text', 'placeholder': 'Search' }
+                        .span4
+                          %a{ 'href': '#', 'class': 'btn btn-add pull-right' }
+                            %i.grcicon-add
+                            Program
+                    %ul.tree-structure.simple.single-row-tabs
+                      %li.program
+                        %a{ 'href': "#" }
+                          .row-fluid
+                            .span11
+                              .item-identifier
+                                %span.title
+                                  Company Controls
+                                %i.grcicon-control-color
+                                %span.code
+                                  %span.text-governance
+                                    CCPROGRAM-0005
+                      %li.program
+                        %a{ 'href': "#" }
+                          .row-fluid
+                            .span11
+                              .item-identifier
+                                %span.title
+                                  Test Program
+                                %i.grcicon-program-color
+                                %span.code
+                                  %span
+                                    PROGRAM-0006
+                            .span1
+                              .objects-count.pull-right
+                                %i.grcicon-eye-inprogress
+                      %li.program
+                        %a{ 'href': "#" }
+                          .row-fluid
+                            .span11
+                              .item-identifier
+                                %span.title
+                                  New Program K1
+                                %i.grcicon-program-color
+                                %span.code
+                                  %span
+                                    PROGRAM-J1
+                            .span1
+                              .objects-count.pull-right
+                                %i.grcicon-eye-completed
+                      %li.program
+                        %a{ 'href': "#" }
+                          .row-fluid
+                            .span11
+                              .item-identifier
+                                %span.title
+                                  Interactive
+                                %i.grcicon-program-color
+                                %span.code
+                                  %span
+                                    PRG.11
+                            .span1
+                              .objects-count.pull-right
+                                %i.grcicon-eye-danger
+
+            .row-fluid
+              .span8
+                %section{ 'class': 'widget widget-tabs governance', 'style': 'height:280px' }
+                  %header.header
+                    .row-fluid
+                      .span8
+                        %h2
                           Governance
                       .span4
                         .widget-action.pull-right.widget-showhide
                           %a.active{ 'href': '#', 'rel': 'tooltip', 'title': 'Contract widget', 'data-placement': 'top' }
+                        .widget-action.pull-right.widget-action-help
+                          %a{ 'href': '#', 'rel': 'tooltip', 'title': 'Help', 'data-placement': 'left' }
+                            %i.grcicon-help
                   %section.content
                     .filter
                       .row-fluid
@@ -1423,44 +1594,149 @@
                           %a{ 'href': '#', 'class': 'btn btn-add pull-right' }
                             %i.grcicon-add
                             Regulation
-                    -set quick_result = quick_result if quick_result is defined else None
-                    -set prefix = 'qf' if quick_result else 'dash'
-                    .tabbable.tabs-left{ 'id': '{{ nil if quick_result else \'quick_find\' }}' }
+                    .tabbable.tabs-left
                       %ul.nav.nav-tabs
                         %li.active
-                          %a{ 'href': '#', 'data-toggle': 'tab' }
+                          %a{ 'href': '#regulations', 'data-toggle': 'tab' }
                             %i.grcicon-regulation-color
                             %span.text-governance
                               Regulations
+                            %span.item-count
+                              39
                         %li
-                          %a{ 'href': '#', 'data-toggle': 'tab' }
+                          %a{ 'href': '#policies', 'data-toggle': 'tab' }
                             %i.grcicon-policy-color
                             %span.text-governance
                               Policies
+                            %span.item-count
+                              2
                         %li
-                          %a{ 'href': '#', 'data-toggle': 'tab' }
+                          %a{ 'href': '#contracts', 'data-toggle': 'tab' }
                             %i.grcicon-contract-color
                             %span.text-governance
                               Contracts
+                            %span.item-count
+                              13
                         %li
-                          %a{ 'href': '#', 'data-toggle': 'tab' }
+                          %a{ 'href': '#controls', 'data-toggle': 'tab' }
                             %i.grcicon-control-color
                             %span.text-governance
                               Controls
-
+                            %span.item-count
+                              285
                       .tab-content
-                        .tab-pane{ 'id': '#{prefix}_programs' }
-              .span6
-                %section{ 'class': 'widget widget-tabs risk' }
+                        #regulations.tab-pane.active
+                          %ul.tree-structure.simple.single-row-tabs
+                            %li.directive
+                              %a{ 'href': '#' }
+                                .row-fluid
+                                  .span12
+                                    .item-identifier
+                                      %span.title
+                                        Regulation 5
+                                      %span.code
+                                        REG5
+                            %li.directive
+                              %a{ 'href': '#' }
+                                .row-fluid
+                                  .span12
+                                    .item-identifier
+                                      %span.title
+                                        Regulation 6
+                                      %span.code
+                                        REG6
+                            %li.directive
+                              %a{ 'href': '#' }
+                                .row-fluid
+                                  .span12
+                                    .item-identifier
+                                      %span.title
+                                        Regulation 7
+                                      %span.code
+                                        REG7
+                            %li.directive
+                              %a{ 'href': '#' }
+                                .row-fluid
+                                  .span12
+                                    .item-identifier
+                                      %span.title
+                                        Regulation 8
+                                      %span.code
+                                        REG8
+                        #policies.tab-pane
+                          %ul.tree-structure.simple.single-row-tabs
+                            %li.directive
+                              %a{ 'href': '#' }
+                                .row-fluid
+                                  .span12
+                                    .item-identifier
+                                      %span.title
+                                        Policy 1
+                                      %span.code
+                                        POLICY-X
+                            %li.directive
+                              %a{ 'href': '#' }
+                                .row-fluid
+                                  .span12
+                                    .item-identifier
+                                      %span.title
+                                        User Agreement Policy
+                                      %span.code
+                                        UAP-V1
+                            %li.directive
+                              %a{ 'href': '#' }
+                                .row-fluid
+                                  .span12
+                                    .item-identifier
+                                      %span.title
+                                        User Agreement Policy Revised
+                                      %span.code
+                                        UAP-V1.1
+                            %li.directive
+                              %a{ 'href': '#' }
+                                .row-fluid
+                                  .span12
+                                    .item-identifier
+                                      %span.title
+                                        Google Global Privacy Policy
+                                      %span.code
+                                        GGPP-0
+                        #contracts.tab-pane
+                          %ul.tree-structure.simple.single-row-tabs
+                            %li.directive
+                              %a{ 'href': '#' }
+                                .row-fluid
+                                  .span12
+                                    .item-identifier
+                                      %span.title
+                                        Google Wallet Contract
+                                      %span.code
+                                        CONTRACT-GOOGLE-1
+                        #controls.tab-pane
+                          %ul.tree-structure.simple.single-row-tabs
+                            %li.directive
+                              %a{ 'href': '#' }
+                                .row-fluid
+                                  .span12
+                                    .item-identifier
+                                      %span.title
+                                        End User Login Control
+                                      %span.code
+                                        RFEED-1
+            .row-fluid
+              .span8
+                %section{ 'class': 'widget widget-tabs risk', 'style': 'height:200px' }
                   %header.header
                     .row-fluid
                       .span8
                         %h2
-                          %i.grcicon-risk
                           Risk
                       .span4
                         .widget-action.pull-right.widget-showhide
                           %a.active{ 'href': '#', 'rel': 'tooltip', 'title': 'Contract widget', 'data-placement': 'top' }
+                        .widget-action.pull-right.widget-action-help
+                          %a{ 'href': '#', 'rel': 'tooltip', 'title': 'Help', 'data-placement': 'left' }
+                            %i.grcicon-help
                   %section.content
                     .filter
                       .row-fluid
@@ -1470,24 +1746,57 @@
                           %a{ 'href': '#', 'class': 'btn btn-add pull-right' }
                             %i.grcicon-add
                             Risk
-                    -set quick_result = quick_result if quick_result is defined else None
-                    -set prefix = 'qf' if quick_result else 'dash'
-                    .tabbable.tabs-left{ 'id': '{{ nil if quick_result else \'quick_find\' }}' }
+                    .tabbable.tabs-left
                       %ul.nav.nav-tabs
                         %li.active
-                          %a{ 'href': '#{prefix}_risks', 'data-tab-href': '/risks?quick=true&qr=={quick_result}', 'data-toggle': 'tab' }
+                          %a{ 'href': '#risks', 'data-toggle': 'tab' }
                             %i.grcicon-risk-color
                             %span.text-risk
                               Risks
+                            %span.item-count
+                              1
                         %li
-                          %a{ 'href': '#{prefix}_risky_attributes', 'data-tab-href': '/risky_attributes?quick=true&qr=={quick_result}', 'data-toggle': 'tab' }
+                          %a{ 'href': '#attributes', 'data-toggle': 'tab' }
                             %i.grcicon-attribute-color
                             %span.text-risk
                               Attributes
+                            %span.item-count
+                              2
                       .tab-content
-                        .tab-pane{ 'id': '#{prefix}_risks' }
-                        .tab-pane{ 'id': '#{prefix}_risky_attributes' }
-                %section{ 'class': 'widget widget-tabs business' }
+                        #risks.tab-pane.active
+                          %ul.tree-structure.simple.single-row-tabs
+                            %li.risk
+                              %a{ 'href': '#' }
+                                .row-fluid
+                                  .span12
+                                    .item-identifier
+                                      %span.title
+                                        User Login
+                                      %span.code
+                                        LOGIN
+                        #attributes.tab-pane
+                          %ul.tree-structure.simple.single-row-tabs
+                            %li.risk
+                              %a{ 'href': '#' }
+                                .row-fluid
+                                  .span12
+                                    .item-identifier
+                                      %span.title
+                                        Possible Fraud
+                                      %span.code
+                                        P1-FRAUD
+                            %li.risk
+                              %a{ 'href': '#' }
+                                .row-fluid
+                                  .span12
+                                    .item-identifier
+                                      %span.title
+                                        Identity Theft
+                                      %span.code
+                                        GWALLET-HIGH-PRIO
+            .row-fluid
+              .span8
+                %section{ 'class': 'widget widget-tabs business', 'style': 'height:390px' }
                   %header.header
                     .row-fluid
                       .span8
@@ -1497,63 +1806,159 @@
                       .span4
                         .widget-action.pull-right.widget-showhide
                           %a.active{ 'href': '#', 'rel': 'tooltip', 'title': 'Contract widget', 'data-placement': 'top' }
+                        .widget-action.pull-right.widget-action-help
+                          %a{ 'href': '#', 'rel': 'tooltip', 'title': 'Help', 'data-placement': 'left' }
+                            %i.grcicon-help
                   %section.content
                     .filter
                       %input.ui-corner-all.widgetsearch.clear-value{ 'type': 'text', 'placeholder': 'Search' }
-                    -set quick_result = quick_result if quick_result is defined else None
-                    -set prefix = 'qf' if quick_result else 'dash'
-                    .tabbable.tabs-left{ 'id': '{{nil if quick_result else \'quick_find\' }}' }
+                    .tabbable.tabs-left
                       %ul.nav.nav-tabs
-                        %li
-                          %a{ 'href': '#{prefix}_products', 'data-tab-href': '/products?quick=true&qr=={quick_result}', 'data-toggle': 'tab' }
+                        %li.active
+                          %a{ 'href': '#systems', 'data-toggle': 'tab' }
                             %i.grcicon-system-color
                             %span.text-business
                               Systems
+                            %span.item-count
+                              1
                         %li
-                          %a{ 'href': '#{prefix}_products', 'data-tab-href': '/products?quick=true&qr=={quick_result}', 'data-toggle': 'tab' }
+                          %a{ 'href': '#processes', 'data-toggle': 'tab' }
                             %i.grcicon-process-color
                             %span.text-business
                               Processes
+                            %span.item-count
+                              1
                         %li
-                          %a{ 'href': '#{prefix}_products', 'data-tab-href': '/products?quick=true&qr=={quick_result}', 'data-toggle': 'tab' }
+                          %a{ 'href': '#products', 'data-toggle': 'tab' }
                             %i.grcicon-product-color
                             %span.text-business
                               Products
-                        %li.active
-                          %a{ 'href': '#{prefix}_org_groups', 'data-tab-href': '/org_groups_path?quick=true&qr=={quick_result}', 'data-toggle': 'tab' }
+                            %span.item-count
+                              1
+                        %li
+                          %a{ 'href': '#orggroups', 'data-toggle': 'tab' }
                             %i.grcicon-orggroup-color
                             %span.text-business
                               Org Groups
+                            %span.item-count
+                              1
                         %li
-                          %a{ 'href': '#{prefix}_facilities', 'data-tab-href': '/facilities?quick=true&qr=={quick_result}', 'data-toggle': 'tab' }
+                          %a{ 'href': '#facilities', 'data-toggle': 'tab' }
                             %i.grcicon-facility-color
                             %span.text-business
                               Facilities
+                            %span.item-count
+                              1
                         %li
-                          %a{ 'href': '#{prefix}_markets', 'data-tab-href': '/markets?quick=true&qr=={quick_result}', 'data-toggle': 'tab' }
+                          %a{ 'href': '#markets', 'data-toggle': 'tab' }
                             %i.grcicon-market-color
                             %span.text-business
                               Markets
+                            %span.item-count
+                              1
                         %li
-                          %a{ 'href': '#{prefix}_data_assets', 'data-tab-href': '/data_assets?quick=true&qr=={quick_result}', 'data-toggle': 'tab' }
+                          %a{ 'href': '#dataassets', 'data-toggle': 'tab' }
                             %i.grcicon-dataasset-color
                             %span.text-business
                               Data Assets
+                            %span.item-count
+                              1
                         %li
-                          %a{ 'href': '#{prefix}_projects', 'data-tab-href': '/projects?quick=true&qr=={quick_result}', 'data-toggle': 'tab' }
+                          %a{ 'href': '#projects', 'data-toggle': 'tab' }
                             %i.grcicon-project-color
                             %span.text-business
                               Projects
+                            %span.item-count
+                              1
                       .tab-content
-                        .tab-pane{ 'id': '#{prefix}_systems' }
-                        .tab-pane{ 'id': '#{prefix}_processes' }
-                        .tab-pane{ 'id': '#{prefix}_products' }
-                        .tab-pane{ 'id': '#{prefix}_org_groups' }
-                        .tab-pane{ 'id': '#{prefix}_facilities' }
-                        .tab-pane{ 'id': '#{prefix}_markets' }
-                        .tab-pane{ 'id': '#{prefix}_projects' }
-                        .tab-pane{ 'id': '#{prefix}_data_assets' }
-
+                        .tab-pane{ 'id': 'systems', 'class': 'active' }
+                          %ul.tree-structure.simple.single-row-tabs
+                            %li.business
+                              %a{ 'href': '#' }
+                                .row-fluid
+                                  .span12
+                                    .item-identifier
+                                      %span.title
+                                        Automated Support Email
+                                      %span.code
+                                        EML-000
+                        .tab-pane{ 'id': 'processes' }
+                          %ul.tree-structure.simple.single-row-tabs
+                            %li.business
+                              %a{ 'href': '#' }
+                                .row-fluid
+                                  .span12
+                                    .item-identifier
+                                      %span.title
+                                        Resolving Login Issues
+                                      %span.code
+                                        JR-APPROACH
+                        .tab-pane{ 'id': 'products' }
+                          %ul.tree-structure.simple.single-row-tabs
+                            %li.business
+                              %a{ 'href': '#' }
+                                .row-fluid
+                                  .span12
+                                    .item-identifier
+                                      %span.title
+                                        Google Wallet
+                                      %span.code
+                                        GW.1
+                        .tab-pane{ 'id': 'orggroups' }
+                          %ul.tree-structure.simple.single-row-tabs
+                            %li.business
+                              %a{ 'href': '#' }
+                                .row-fluid
+                                  .span12
+                                    .item-identifier
+                                      %span.title
+                                        Cloud Services
+                                      %span.code
+                                        CS-11229942-2013
+                        .tab-pane{ 'id': 'facilities' }
+                          %ul.tree-structure.simple.single-row-tabs
+                            %li.business
+                              %a{ 'href': '#' }
+                                .row-fluid
+                                  .span12
+                                    .item-identifier
+                                      %span.title
+                                        Mountain View
+                                      %span.code
+                                        GMTV
+                        .tab-pane{ 'id': 'markets' }
+                          %ul.tree-structure.simple.single-row-tabs
+                            %li.business
+                              %a{ 'href': '#' }
+                                .row-fluid
+                                  .span12
+                                    .item-identifier
+                                      %span.title
+                                        China
+                                      %span.code
+                                        ASIA-CH
+                        .tab-pane{ 'id': 'dataassets' }
+                          %ul.tree-structure.simple.single-row-tabs
+                            %li.business
+                              %a{ 'href': '#' }
+                                .row-fluid
+                                  .span12
+                                    .item-identifier
+                                      %span.title
+                                        Github Repo Base
+                                      %span.code
+                                        ASSET-GRB
+                        .tab-pane{ 'id': 'projects' }
+                          %ul.tree-structure.simple.single-row-tabs
+                            %li.business
+                              %a{ 'href': '#' }
+                                .row-fluid
+                                  .span12
+                                    .item-identifier
+                                      %span.title
+                                        Nexus 4 Marketing in Russia
+                                      %span.code
+                                        PROJECT-M1
         %section#flash-notice.widget
           %section.header
             %h2

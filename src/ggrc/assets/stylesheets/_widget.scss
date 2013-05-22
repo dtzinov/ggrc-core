@@ -26,14 +26,6 @@
       }
     }
   }
-  &.compliance {
-    .header {
-      background: $compliance;
-      .widget-action {
-        background: darken($compliance, 7%);
-      }
-    }
-  }
   &.programs {
     .header {
       background: $programs;

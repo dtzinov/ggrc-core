@@ -511,3 +511,20 @@ strong {
     }
   }
 }
+
+.coding {
+  font-family: "Courier New", Courier, monospace;
+  margin:0.5em 0 1.5em 0;
+  border:1px solid $lightGray;
+  @include border-radius();
+  padding:1em;
+  &.good {
+    border-color:$green;
+    color:$green;
+  }
+  &.bad {
+    border-color:$red;
+    color:$red;
+  }
+
+}

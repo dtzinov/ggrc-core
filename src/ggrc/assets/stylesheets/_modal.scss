@@ -142,10 +142,6 @@
       &.governance {
         color:$governance;
       }
-      &.compliance {
-        color:$compliance;
-      }
-
     }
     h4 {
       @include oneline();
