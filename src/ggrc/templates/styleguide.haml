@@ -148,15 +148,19 @@
               %table.objecticons
                 %tr
                   %th
-                    Governance Objects
+                    Program Object
+                    %i (.programs)
+                %tr
                   %td
-                    .grcobject.governance
+                    .grcobject.programs
                       %i.grcicon-program
                     Program
-                  %td
-                    .grcobject.governance
-                      %i.grcicon-contract
-                    Contract
+              %table.objecticons
+                %tr
+                  %th{ 'colspan': '5' }
+                    Governance Objects
+                    %i (.governance)
+                %tr
                   %td
                     .grcobject.governance
                       %i.grcicon-policy
@@ -169,9 +173,16 @@
                     .grcobject.governance
                       %i.grcicon-section
                     Section/Clause
+                  %td
+                    .grcobject.governance
+                      %i.grcicon-control
+                    Control
+              %table.objecticons
                 %tr
-                  %th
+                  %th{ 'colspan': '8' }
                     Business Objects
+                    %i (.business)
+                %tr
                   %td
                     .grcobject.business
                       %i.grcicon-market
@@ -196,24 +207,20 @@
                     .grcobject.business
                       %i.grcicon-dataasset
                     Data Asset
-                %tr
-                  %th
-                    Compliance Objects
                   %td
-                    .grcobject.compliance
-                      %i.grcicon-businessprocess
+                    .grcobject.business
+                      %i.grcicon-process
                     Process
                   %td
-                    .grcobject.compliance
+                    .grcobject.business
                       %i.grcicon-system
                     System
-                  %td
-                    .grcobject.compliance
-                      %i.grcicon-control
-                    Control
+              %table.objecticons
                 %tr
-                  %th
+                  %th{ 'colspan': '2' }
                     Risk Objects
+                    %i (.risk)
+                %tr
                   %td
                     .grcobject.risk
                       %i.grcicon-risk
@@ -222,58 +229,12 @@
                     .grcobject.risk
                       %i.grcicon-attribute
                     Attribute
-            %p
-              %strong
-                Example:
-            %textarea
-                .grcobject.governance
-                  %i.grcicon-program
-                Program
-                .grcobject.governance
-                  %i.grcicon-contract
-                Contract
-                .grcobject.governance
-                  %i.grcicon-policy
-                Policy
-                .grcobject.governance
-                  %i.grcicon-regulation
-                Regulation
-                .grcobject.governance
-                  %i.grcicon-section
-                Section/Clause
-                .grcobject.business
-                  %i.grcicon-market
-                Market
-                .grcobject.business
-                  %i.grcicon-facility
-                Facility
-                .grcobject.business
-                  %i.grcicon-project
-                Project
-                .grcobject.business
-                  %i.grcicon-product
-                Product
-                .grcobject.business
-                  %i.grcicon-orggroup
-                Org Group
-                .grcobject.business
-                  %i.grcicon-dataasset
-                Data Asset
-                .grcobject.compliance
-                  %i.grcicon-businessprocess
-                Process
-                .grcobject.compliance
-                  %i.grcicon-system
-                System
-                .grcobject.compliance
-                  %i.grcicon-control
-                Control
-                .grcobject.risk
-                  %i.grcicon-risk
-                Risk              
-                .grcobject.risk
-                  %i.grcicon-attribute
-                Attribute
+              %br
+              %p
+                Object icons are created with a help of another wrapper class around standard icon:
+                %textarea
+                  .grcobject.programs
+                    %i.grcicon-program
 
         %section#icons.widget
           %section.header
@@ -1413,6 +1374,7 @@
                     Start Audit
             %p
               %span.label.label-info
+                Note!
               &nbsp; You can combine every icon you want and insert any text you want. Also it this example we added dropdown list.
 
         %section#widgets.widget
@@ -1424,9 +1386,9 @@
               Examples of proper widget implementation. Every widget that is correspond to some widget group have additional class. Those classes are:
             %ul
               %li
-                %strong .governance
+                %strong .programs
               %li
-                %strong .compliance
+                %strong .governance
               %li
                 %strong .risk
               %li
