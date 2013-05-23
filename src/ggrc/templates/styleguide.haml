@@ -2482,16 +2482,15 @@
       .row-fluid
         .span3
           &nbsp;
-        .span4
+        .span3
           .modal-search
             %a.btn.btn-mini.search-reset{ 'href': '#' }
               %i.grcicon-x-grey
             %input{ 'type': 'text', 'class': 'input-block-level', 'placeholder': 'Search controls' }
-        .span2
-          %select{ 'class': 'span12' }
-            %option Show all controls
-            %option Regulation controls only
-            %option Company controls only
+        .span3.checkbox-filter
+          %input{ 'type': 'checkbox', 'id': 'control-type-filter', 'class': 'control-type-filter inline pull-right', 'checked': 'checked' }
+          %label{ 'class': 'inline pull-right', 'for': 'control-type-filter' }
+            Controls for this program only:
         .span3
           .pull-right
             %a.btn.btn-add{ 'href': '#' }
@@ -2513,20 +2512,29 @@
               %p Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
               %p Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
             %h5
-              Mapped Controls
-            %p.code.compliance
-              CTR.XYZ, CTR.221101
+              Already Mapped Controls (2)
+            %ul.linked-controls
+              %li
+                %a{ 'href': '#', 'class': 'jump-to-control' }
+                  %span
+                    this is a new control (kostya)
+                  %small
+                    CONTROL-0477
+              %li
+                %a{ 'href': '#', 'class': 'jump-to-control' }
+                  %span
+                    another control (k)
+                  %small
+                    CONTROL-0478
         .span6
           .search-title
             .row-fluid
               .span6
                 %h4
                   Search Results (3)
-              .span5
+              .span6
                 .guide
                   map/unmap all
-              .span1
-                %input{ 'type': 'checkbox', 'rel': 'tooltip', 'title': 'map' }
           .selector-list
             %ul.tree-structure.simple
               %li.control
@@ -2624,7 +2632,7 @@
             %h4
               %i.grcicon-control-color
               Verify Passwords via X
-            %p.code.compliance CTR.2201
+            %p.code.governance CTR.2201
             .rtf
               %p Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
               %ul
@@ -2652,14 +2660,13 @@
       .row-fluid
         .span3
           &nbsp;
-        .span4
+        .span3
           .modal-search
             %input{ 'type': 'text', 'class': 'input-block-level', 'placeholder': 'Search controls' }
-        .span2
-          %select{ 'class': 'span12' }
-            %option Show all controls
-            %option Regulation controls only
-            %option Company controls only
+        .span3.checkbox-filter
+          %input{ 'type': 'checkbox', 'id': 'control-type-filter', 'class': 'control-type-filter inline pull-right', 'checked': 'checked' }
+          %label{ 'class': 'inline pull-right', 'for': 'control-type-filter' }
+            Controls for this program only:
         .span3
           .pull-right
             %a.btn.btn-add{ 'href': '#' }
