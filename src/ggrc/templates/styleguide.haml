@@ -222,6 +222,98 @@
                     Wrong
                   %br
                   \%a{ 'class': 'someclass', 'data-title': 'gGRC' }=var
+            %h3
+              8. Use only simple variables, filters, and function/macro calls in attributes or output braces
+            .row-fluid
+              .span12
+                .coding.good
+                  %strong
+                    Good
+                  %br
+                  \-set link_title = instance.title if instance is defined else "default"
+                  %br
+                  \%a{ 'title': '\={ link_title|title }' }
+            .row-fluid
+              .span12
+                .coding.bad
+                  %strong
+                    Wrong
+                  %br
+                  \%a{ 'title': '\={ instance.title if instance is defined else "default" }' }
+            %h3
+              9. Always define internal variables at the earliest possible time, either at the top of the template or immediately inside a loop or if statement.  (This will make it easier to refactor into macros, context_processors, helpers, etc).
+            %br
+            %h3
+              10. Related: Always declare the required context variables in comments at the top of the file. Also mention required partial templates/helpers/macros.
+            .row-fluid
+              .span12
+                .coding.good
+                  %strong
+                    Good
+                  %br
+                  \-# Context: instance, config
+                  %br
+                  %br
+                  %strong
+                    Even better
+                  %br
+                  \-# Context: instance, config
+                  %br
+                  \-# Templates: 'shared/_show_model.haml', 'shared/_related.haml'
+                  %br
+                  \-# Macros: required_external_macro(param1, param2)
+            %h3
+              11. When passing context variables into an included template, wrap as closely as possible to the "include" itself.
+            .row-fluid
+              .span12
+                .coding.good
+                  %strong
+                    Good
+                  %br
+                  \-with widget_class = 'widget-tabs'
+                  %br
+                  &nbsp;
+                  \-include 'dashboard/_governance.haml'
+            %h3
+              12. Use the same file-name convention as rails &mdash; e.g., use _ prefix for partial templates (even though it must be specified within the template path).  No "_" prefix for templates which may be referenced directly from controller methods.
+            %br
+            %h3
+              13. No trailing whitespace ever, even on blank lines.
+            %br
+            %h3
+              14. Attributes can be specified on multiple lines. Where possible, use this to keep lines to <= 79 characters. Always double-indent attributes, to avoid aligning with nested tags, and always align the closing '}' with the attribute names (or at the end of the line of the last attribute).
+            .row-fluid
+              .span12
+                .coding.good
+                  %strong
+                    Good
+                  %br
+                  :plain
+                    %span.someclass{
+                  %br
+                  &nbsp;&nbsp;&nbsp;
+                  :plain
+                    'really-long-attribute': "\={ really_long_variable_name }"
+                  %br
+                  &nbsp;&nbsp;&nbsp;
+                  :plain
+                    }
+                  %br
+                  &nbsp;
+                  :plain
+                    %span Inside
+            %h2
+              HamlPy Template Gotchas
+            %h3
+              1. The None value:
+              %a{ 'href': 'https://github.com/jessemiller/HamlPy/blob/master/reference.md#attributes-without-values-boolean-attributes' } https://github.com/jessemiller/HamlPy/blob/master/reference.md#attributes-without-values-boolean-attributes
+              \- Basically, if used within quotes, it will resolve to the string "None" rather than the value.
+            %br
+            %h3
+              2. Variables don't work as attributes without quotes and \={ ... }
+            %br
+            %h3
+              3. Most directives (lines that start with '-' and which may have nested content) will throw an error if you try to explicitly supply the matching ending directive, e.g. -endif for -if.  However, -endmacro is required to end -macro -- put it at the same indentation level as your -macro line.
 
         %section#headers.widget
           %section.header
