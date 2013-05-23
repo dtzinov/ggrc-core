@@ -86,7 +86,7 @@
 
       .span9.styleguide-content
 
-        %section#headers.widget
+        %section#code.widget
           %section.header
             %h2
               Code Guidelines
@@ -371,7 +371,51 @@
               Section to Control Mapper
             %a.btn{ 'data-toggle': 'modal', 'href': '#selectorSectionToControlNA' }
               Section to Control Mapper N/A
+            %a.btn{ 'data-toggle': 'modal', 'href': '#helpModal' }
+              Help Modal
 
+            #helpModal{ 'class': 'modal hide fade', 'tabindex': '-1' }
+              .modal-header
+                %a.btn.btn-mini.pull-right{ 'data-dismiss': 'modal', 'href': '#' }
+                  %i.grcicon-x-grey
+                %a.btn.btn-mini.pull-right.help-edit{ 'href': '#' }
+                  %i.grcicon-edit
+                %h2
+                  %span
+                    Help Title
+              .modal-body
+                .help
+                  %h2.centered
+                    There is no content available for this topic.
+                  %p.centered
+                    Enter help title and content below:
+                  -#.help-content.rtf
+                    %ol
+                      %li
+                        The Quick Find window helps you locate specific business objects within the GRC system.
+                      %li
+                        Click the tab of the type of object you are looking for
+                        %i
+                          (ex: Controls, Products, etc)
+                      %li
+                        Type the first few letters of the name of the object you're looking for and press Enter/Return
+                    %p
+                      %strong
+                        Scroll through the short list of
+                      objects found to find the specific object you're looking for the object to go to that object page
+                  #helpedit
+                    .row-fluid
+                      .span12
+                        .well
+                          %label
+                            Help Title
+                          %input{ 'class': 'span12', 'type': 'text', 'placeholder': 'Enter Help Title Here' }
+                          %label
+                            Help Content
+                          %textarea{ 'class': 'span12 double', 'placeholder': 'Enter Help Content Here' }
+                          .row-fluid
+                            .span12
+                              %input{ 'class': 'btn btn-warning pull-right disabled', 'type': 'submit', 'value': 'Save' }
         %section#objects.widget
           %section.header
             %h2
