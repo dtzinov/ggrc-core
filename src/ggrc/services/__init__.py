@@ -55,7 +55,11 @@ def init_all_services(app):
   for k,v in all_collections():
     Resource.add_to(app, '/api/{0}'.format(k), v)
 
-  from .description import ServiceDescription
+  from .search import perform_search
+  app.add_url_rule(
+    '/search', 'search', perform_search)
 
+  from .description import ServiceDescription
   app.add_url_rule(
     '/api', view_func=ServiceDescription.as_view('ServiceDescription'))
+

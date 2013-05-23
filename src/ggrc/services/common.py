@@ -6,6 +6,8 @@ import time
 from flask import url_for, request, current_app
 from flask.views import View
 from ggrc import db
+from ggrc.fulltext import get_indexer
+from ggrc.fulltext.recordbuilder import fts_record_for
 from wsgiref.handlers import format_date_time
 
 """gGRC Collection REST services implementation. Common to all gGRC collection
@@ -235,6 +237,7 @@ class Resource(ModelView):
     db.session.add(obj)
     db.session.commit()
     obj = self.get_object(id)
+    get_indexer().update_record(fts_record_for(obj))
     return self.json_success_response(
         self.object_for_json(obj), obj.updated_at)
 
@@ -248,6 +251,7 @@ class Resource(ModelView):
       return header_error
     db.session.delete(obj)
     db.session.commit()
+    get_indexer().delete_record(self.url_for(id))
     return self.json_success_response(
       self.object_for_json(obj), obj.updated_at)
 
@@ -282,6 +286,7 @@ class Resource(ModelView):
     obj.modified_by_id = 1
     db.session.add(obj)
     db.session.commit()
+    get_indexer().create_record(fts_record_for(obj))
     return self.json_success_response(
       self.object_for_json(obj), obj.updated_at, id=obj.id, status=201)
 

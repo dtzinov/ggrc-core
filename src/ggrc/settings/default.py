@@ -2,6 +2,7 @@ DEBUG = False
 TESTING = False
 AUTOBUILD_ASSETS = False
 ENABLE_JASMINE = False
+FULLTEXT_INDEXER = None
 
 # Deployment-specific variables
 COMPANY = "Company, Inc."

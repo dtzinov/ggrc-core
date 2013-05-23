@@ -4,16 +4,13 @@ from datetime import datetime
 from flask import _request_ctx_stack, request
 from ggrc import db
 from ggrc.models.reflection import AttributeInfo
+from ggrc.services.util import url_for
 from iso8601 import parse_date
 from sqlalchemy.ext.associationproxy import AssociationProxy
 from sqlalchemy.orm.attributes import InstrumentedAttribute
 from sqlalchemy.orm.properties import RelationshipProperty
 
 """JSON resource state representation handler for gGRC models."""
-
-def url_for(obj):
-  service = getattr(ggrc.services, obj.__class__.__name__, None)
-  return service.url_for(obj) if service else None
 
 def view_url_for(obj):
   view = getattr(ggrc.views, obj.__class__.__name__, None)

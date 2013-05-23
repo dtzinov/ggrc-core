@@ -60,6 +60,7 @@ class Described(object):
 
   # REST properties
   _publish_attrs = ['description']
+  _fulltext_attrs = ['description']
 
 class Hyperlinked(object):
   url = db.Column(db.String)
@@ -124,6 +125,7 @@ class Slugged(Base):
   _publish_attrs = ['slug', 'title']
   _update_attrs = ['title']
   _create_attrs = _publish_attrs
+  _fulltext_attrs = ['slug', 'title']
 
 class BusinessObject(Slugged, Described, Hyperlinked):
   pass

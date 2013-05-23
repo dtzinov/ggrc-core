@@ -29,6 +29,10 @@ ggrc.services.init_all_services(app)
 import ggrc.views
 ggrc.views.init_all_object_views(app)
 
+# Initialize configured and default extensions
+from ggrc.fulltext import get_indexer
+ggrc.indexer = get_indexer()
+
 if settings.ENABLE_JASMINE:
   # Configure Flask-Jasmine, for dev mode unit testing
   from flask.ext.jasmine import Jasmine, Asset

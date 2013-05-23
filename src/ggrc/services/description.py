@@ -24,6 +24,7 @@ class ServiceDescription(MethodView):
           #'description': '',
           #'documentationLink': '',
           }
+    endpoints['search'] = { 'href': '/search' }
     return json.dumps({
         'service_description': {
           'name': 'gGRC-Core',
