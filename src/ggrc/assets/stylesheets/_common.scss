@@ -392,6 +392,10 @@ input.disabled.pending-ajax{
     height: 70px;
     @include input-block-level();
   }
+  .triple {
+    height: 120px;
+    @include input-block-level();
+  }
   iframe {
     width: 97.5% !important;
     margin-bottom:0 !important;
