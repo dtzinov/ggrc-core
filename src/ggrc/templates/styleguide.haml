@@ -371,51 +371,12 @@
               Section to Control Mapper
             %a.btn{ 'data-toggle': 'modal', 'href': '#selectorSectionToControlNA' }
               Section to Control Mapper N/A
+            %a.btn{ 'data-toggle': 'modal', 'href': '#helpModalEmpty' }
+              Help Modal - Empty
             %a.btn{ 'data-toggle': 'modal', 'href': '#helpModal' }
               Help Modal
 
-            #helpModal{ 'class': 'modal hide fade', 'tabindex': '-1' }
-              .modal-header
-                %a.btn.btn-mini.pull-right{ 'data-dismiss': 'modal', 'href': '#' }
-                  %i.grcicon-x-grey
-                %a.btn.btn-mini.pull-right.help-edit{ 'href': '#' }
-                  %i.grcicon-edit
-                %h2
-                  %span
-                    Help Title
-              .modal-body
-                .help
-                  %h2.centered
-                    There is no content available for this topic.
-                  %p.centered
-                    Enter help title and content below:
-                  -#.help-content.rtf
-                    %ol
-                      %li
-                        The Quick Find window helps you locate specific business objects within the GRC system.
-                      %li
-                        Click the tab of the type of object you are looking for
-                        %i
-                          (ex: Controls, Products, etc)
-                      %li
-                        Type the first few letters of the name of the object you're looking for and press Enter/Return
-                    %p
-                      %strong
-                        Scroll through the short list of
-                      objects found to find the specific object you're looking for the object to go to that object page
-                  #helpedit
-                    .row-fluid
-                      .span12
-                        .well
-                          %label
-                            Help Title
-                          %input{ 'class': 'span12', 'type': 'text', 'placeholder': 'Enter Help Title Here' }
-                          %label
-                            Help Content
-                          %textarea{ 'class': 'span12 double', 'placeholder': 'Enter Help Content Here' }
-                          .row-fluid
-                            .span12
-                              %input{ 'class': 'btn btn-warning pull-right disabled', 'type': 'submit', 'value': 'Save' }
+
         %section#objects.widget
           %section.header
             %h2
@@ -2422,3 +2383,88 @@
               .input-block-level
               .date
               .centered
+
+  -# Help Modal Empty
+  #helpModalEmpty{ 'class': 'modal hide fade', 'tabindex': '-1' }
+    .modal-header
+      %a.btn.btn-mini.pull-right{ 'data-dismiss': 'modal', 'href': '#' }
+        %i.grcicon-x-grey
+      %a.btn.btn-mini.pull-right.help-edit{ 'href': '#' }
+        %i.grcicon-edit
+      %h2
+        %span
+          Help Title
+    .modal-body
+      .help
+        %h2.centered
+          There is no content available for this topic.
+        %p.centered
+          Enter help title and content below:
+        -#.help-content.rtf
+          %ol
+            %li
+              The Quick Find window helps you locate specific business objects within the GRC system.
+            %li
+              Click the tab of the type of object you are looking for
+              %i
+                (ex: Controls, Products, etc)
+            %li
+              Type the first few letters of the name of the object you're looking for and press Enter/Return
+          %p
+            %strong
+              Scroll through the short list of
+            objects found to find the specific object you're looking for the object to go to that object page
+        #helpedit
+          .row-fluid
+            .span12
+              .well
+                %label
+                  Help Title
+                %input{ 'class': 'span12', 'type': 'text', 'placeholder': 'Enter Help Title Here' }
+                %label
+                  Help Content
+                %textarea{ 'class': 'span12 double', 'placeholder': 'Enter Help Content Here' }
+                .row-fluid
+                  .span12
+                    %input{ 'class': 'btn btn-warning pull-right disabled', 'type': 'submit', 'value': 'Save' }
+
+  -# Help Modal
+  #helpModal{ 'class': 'modal hide fade', 'tabindex': '-1' }
+    .modal-header
+      %a.btn.btn-mini.pull-right{ 'data-dismiss': 'modal', 'href': '#' }
+        %i.grcicon-x-grey
+      %a.btn.btn-mini.pull-right.help-edit{ 'href': '#' }
+        %i.grcicon-edit
+      %h2
+        %span
+          Quick Help Window
+    .modal-body
+      .help
+        .help-content.rtf
+          %ol
+            %li
+              The Quick Find window helps you locate specific business objects within the GRC system.
+            %li
+              Click the tab of the type of object you are looking for
+              %i
+                (ex: Controls, Products, etc)
+            %li
+              Type the first few letters of the name of the object you're looking for and press Enter/Return
+          %p
+            %strong
+              Scroll through the short list of
+            objects found to find the specific object you're looking for the object to go to that object page
+        #helpedit
+          .row-fluid
+            .span12
+              .well
+                %label
+                  Help Title
+                %input{ 'class': 'span12', 'type': 'text', 'value': 'Quick Help Window' }
+                %label
+                  Help Content
+                %textarea{ 'class': 'span12 double', 'placeholder': 'Enter Help Content Here' }
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                .row-fluid
+                  .span12
+                    %input{ 'class': 'btn btn-primary pull-right', 'type': 'submit', 'value': 'Save' }
