@@ -1,5 +1,6 @@
 //= require can.jquery-all
 
+(function(can) {
 can.Model("can.Model.Cacheable", {
 
   init : function() {
@@ -12,6 +13,18 @@ can.Model("can.Model.Cacheable", {
       delete can.getObject("cache", old_obj.constructor, true)[old_obj.id];
     });
     //can.getObject("cache", this, true);
+
+    var _update = this.update;
+    this.update = function() {
+      var ret = _update.apply(this, arguments).fail(function(status) {
+        if(status === 409) {
+          //handle conflict.
+        }
+      });
+      ret.flashOnFail = true;
+      return ret;
+    }
+
   }
 
   , findInCacheById : function(id) {
@@ -30,7 +43,10 @@ can.Model("can.Model.Cacheable", {
     }
   }
   , process_args : function(args, names) {
-    var pargs = {};
+    var pargs = {
+      etag : args.etag
+      , "last-modified" : args["last-modified"]
+    };
     var obj = pargs;
     if(this.root_object) {
       obj = pargs[this.root_object] = {};
@@ -120,4 +136,13 @@ can.Model("can.Model.Cacheable", {
     }
     this._triggerChange(attrName, "set", this[attrName], this[attrName].slice(0, this[attrName].length - 1));
   }
+  , refresh : function() {
+    return $.ajax({
+      url : this.selfLink
+      , type : "get"
+      , dataType : "json"
+    }).done(can.proxy(this.constructor, "model"));
+  }
 });
+
+})(window.can);

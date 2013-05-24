@@ -400,9 +400,11 @@
             $target.remove();
       });
 
-      if (new_target || $this.data('modal-reset') == 'reset') {
+      if (new_target || $this.data('modal-reset') === 'reset') {
         $target.html(preload_content());
-        $target.load(href, emit_loaded);
+        if($this.prop("protocol") === window.location.protocol) {
+          $target.load(href, emit_loaded);
+        }
       }
 
       option = $target.data('modal-help') ? 'toggle' : $.extend({}, $target.data(), $this.data());

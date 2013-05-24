@@ -29,6 +29,10 @@ var GGRC = {
 
 jQuery.migrateMute = true; //turn off console warnings for jQuery-migrate
 
+window.onerror = function(message, url, linenumber) {
+  $(document.body).trigger("ajax:flash", {"error" : message});
+  //$.post("/errors", {error : {message : message, url : url, linenumber : linenumber }});
+}
 
   window.cms_singularize = function(type) {
     type = type.trim();
@@ -50,17 +54,58 @@ jQuery.migrateMute = true; //turn off console warnings for jQuery-migrate
     return type;
   }
 
+// Set up all PUT requests to the server to respect ETags, to ensure that
+//  we are not overwriting more recent data than was viewed by the user.
 jQuery.ajaxPrefilter(function( options, originalOptions, jqXHR ) {
   var data;
   if ( /^\/api\//.test(options.url) && options.type.toUpperCase() === "PUT" ) {
     data = can.deparam(options.data);
     options.dataType = "json";
-    options.data = JSON.stringify(data);
     options.contentType = "application/json";
-    jqXHR.setRequestHeader("If-Match", '"' + CryptoJS.SHA1(data.updated_at).toString(16) + '"');
-    jqXHR.setRequestHeader("If-Unmodified-Since", data.updated_at);
+    jqXHR.setRequestHeader("If-Match", '"' + data.etag + '"');
+    jqXHR.setRequestHeader("If-Unmodified-Since", data["last-modified"]);
+    delete data.etag;
+    delete data["last-modified"];
+    options.data = JSON.stringify(data);
   }
 });
+
+//Set up default failure callbacks if nonesuch exist.
+(function($){
+  var _old_ajax = $.ajax;
+
+  var statusmsgs = {
+    401 : "The server says you are not authorized.  Are you logged in?"
+    , 409 : "There was a conflict in the object you were trying to update.  The version on the server is newer."
+    , 412 : "One of the form fields isn't right.  Check the form for any highlighted fields."
+  }
+
+  $.ajax = function() {
+    var _ajax = _old_ajax.apply($, arguments);
+    var _old_then = _ajax.then;
+    var _old_fail = _ajax.fail;
+
+    _ajax.then = function() {
+      if(arguments.length > 1) 
+        this.hasFailCallback = true;
+      return _old_then.apply(this, arguments);
+    };
+    _ajax.fail = function() {
+      this.hasFailCallback = true;
+      return _old_fail.apply(this, arguments);
+    };
+    return _ajax;
+  }
+
+  $(document).ajaxError(function(event, jqxhr, settings, exception) {
+    if(!jqxhr.hasFailCallback || settings.flashOnFail || (settings.flashOnFail == null && jqxhr.flashOnFail)) {
+      $(document.body).trigger(
+        "ajax:flash"
+        , {"error" : jqxhr.getResponseHeader("X-Flash-Error") || statusmsgs[jqxhr.status] || exception.message || exception}
+      );
+    }
+  });
+})(jQuery);
 
 jQuery(document).ready(function($) {
   // TODO: Not AJAX friendly
