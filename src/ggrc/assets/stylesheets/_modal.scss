@@ -240,12 +240,15 @@
       @include placeholder($footerBorder);
     }
     label {
-      font-weight: bold;
-      font-size: $f-regular;
-      color: $darkGray;
+      font-weight: normal;
+      color:#111;
+      font-size: 16px;
       .required {
         color: $red;
         font-weight: bold;
+      }
+      i {
+        @include opacity(0.3);
       }
     }
     h2 {
@@ -494,4 +497,25 @@
     @include background-image(linear-gradient(left, $white, $lightGray, $white));
     border-bottom:1px solid darken($lightGray,10%);
   }
+}
+
+a.show-hidden-fields {
+  font-size:16px;
+  color:#4c9deb;
+  span.hidden-fields {
+    margin-left:10px;
+    font-style:italic;
+    font-size:14px;
+    color:$gray;
+  }
+  i {
+    margin-top:1px;
+  }
+  &:hover {
+    text-decoration:none;
+  }
+}
+
+.expand-link {
+  padding:12px 0 24px 0;
 }

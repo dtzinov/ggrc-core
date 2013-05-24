@@ -375,6 +375,10 @@
               Help Modal - Empty
             %a.btn{ 'data-toggle': 'modal', 'href': '#helpModal' }
               Help Modal
+            %a.btn{ 'data-toggle': 'modal', 'href': '#programNew' }
+              Create New Program
+
+
 
 
         %section#objects.widget
@@ -2710,3 +2714,80 @@
               Save
 
 
+  -# Create New Program
+  #programNew{ 'class': 'modal modal-wide hide fade', 'tabindex': '-1' }
+    .modal-header
+      .pull-right
+        %a.btn.btn-mini{ 'data-dismiss': 'modal', 'href': '#' }
+          %i.grcicon-x-grey
+      %h2
+        Create New Program
+    .modal-body
+      .row-fluid
+        .span6
+          %label
+            Title
+            %i.grcicon-help-black
+          %input{ 'type': 'text', 'class': 'input-block-level', 'placeholder': 'Enter Title' }
+      .row-fluid
+        .span6
+          %label
+            Description
+            %i.grcicon-help-black
+          .wysiwyg-area
+            %textarea{ 'class': 'span12 double', 'placeholder': 'Enter Description' }
+        .span6
+          %label
+            Owner/Person of Contact
+            %i.grcicon-help-black
+          %input{ 'type': 'text', 'class': 'input-block-level', 'placeholder': 'Enter Title' }
+          %label
+            Direct URL
+            %i.grcicon-help-black
+          %input{ 'type': 'text', 'class': 'input-block-level', 'placeholder': 'http://www.domain.com/' }
+      .row-fluid
+        .span12
+          .expand-link
+            %a{ 'href': '#', 'class': 'show-hidden-fields' }
+              %i.grcicon-show
+              Show Advanced
+              %span.hidden-fields
+                Code, Reference URL, Scope, Organization
+      .hidden-fields-area
+        .row-fluid
+          .span6
+            %label
+              Code
+              %i.grcicon-help-black
+            %input{ 'type': 'text', 'class': 'input-block-level', 'placeholder': 'PROGRAM-XXX' }
+          .span6
+            %label
+              Reference URL
+              %i.grcicon-help-black
+            %input{ 'type': 'text', 'class': 'input-block-level', 'placeholder': 'http://www.domain.com/' }
+        .row-fluid
+          .span6
+            %label
+              Organization
+              %i.grcicon-help-black
+            %input{ 'type': 'text', 'class': 'input-block-level', 'placeholder': 'Enter Organization' }
+          .span6
+            %label
+              Program Scope
+              %i.grcicon-help-black
+            %input{ 'type': 'text', 'class': 'input-block-level', 'placeholder': 'Enter Scope' }
+        .row-fluid
+          .span12
+            .expand-link
+              %a{ 'href': '#', 'class': 'show-hidden-fields hide-hidden-fields' }
+                %i.grcicon-hide
+                Hide Advanced
+
+    .modal-footer
+      .row-fluid
+        .span6
+          .deny-buttons
+        .span6
+          .confirm-buttons
+            %a.btn.btn-primary.preventdoubleclick
+              Save
