@@ -235,6 +235,7 @@
     }
   }
   .modal-body {
+    max-height:none;
     input,
     textarea {
       @include placeholder($footerBorder);
@@ -497,6 +498,11 @@
     @include background-image(linear-gradient(left, $white, $lightGray, $white));
     border-bottom:1px solid darken($lightGray,10%);
   }
+}
+
+.hidden-fields-area {
+  border-top:1px solid lighten($gray, 20%);
+  padding-top:20px;
 }
 
 a.show-hidden-fields {
