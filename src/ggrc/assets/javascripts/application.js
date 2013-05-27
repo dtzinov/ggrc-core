@@ -31,7 +31,12 @@ jQuery.migrateMute = true; //turn off console warnings for jQuery-migrate
 
 window.onerror = function(message, url, linenumber) {
   $(document.body).trigger("ajax:flash", {"error" : message});
-  //$.post("/errors", {error : {message : message, url : url, linenumber : linenumber }});
+  $.ajax({ 
+    type : "post"
+    , url : "/api/log_events"
+    , dataType : "json"
+    , data : {logevent : {severity : "error", description : message + " (at " + url + ":" + linenumber + ")"}}
+  });
 }
 
   window.cms_singularize = function(type) {
@@ -58,7 +63,7 @@ window.onerror = function(message, url, linenumber) {
 //  we are not overwriting more recent data than was viewed by the user.
 jQuery.ajaxPrefilter(function( options, originalOptions, jqXHR ) {
   var data;
-  if ( /^\/api\//.test(options.url) && options.type.toUpperCase() === "PUT" ) {
+  if ( /^\/api\//.test(options.url) && (options.type.toUpperCase() === "PUT" || options.type.toUpperCase() === "POST" )) {
     data = can.deparam(options.data);
     options.dataType = "json";
     options.contentType = "application/json";

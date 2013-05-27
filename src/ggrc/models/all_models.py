@@ -48,3 +48,4 @@ from .transaction import Transaction
 
 # TODO: Include?
 from .version import Version
+from .log_event import LogEvent

@@ -22,6 +22,7 @@ def all_collections():
     ('documents', models.Document),
     ('facilities', models.Facility),
     ('help', models.Help),
+    ('log_events', models.LogEvent),
     ('markets', models.Market),
     ('meetings', models.Meeting),
     ('object_documents', models.ObjectDocument),
@@ -55,9 +56,9 @@ def init_all_services(app):
   for k,v in all_collections():
     Resource.add_to(app, '/api/{0}'.format(k), v)
 
-  from .search import perform_search
+  from .search import search
   app.add_url_rule(
-    '/search', 'search', perform_search)
+    '/search', 'search', search)
 
   from .description import ServiceDescription
   app.add_url_rule(
