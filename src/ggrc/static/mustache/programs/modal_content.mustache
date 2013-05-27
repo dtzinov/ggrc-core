@@ -1,11 +1,13 @@
 {{!div class="modal-body"}}
+{{#instance}}
+<form action="javascript://">
   <div class="row-fluid">
     <div class="span6">
       <label>
         Title
         <i class="grcicon-help-black"></i>
       </label>
-      <input class="input-block-level" placeholder="Enter Title" type="text">
+      <input class="input-block-level" placeholder="Enter Title" name="title" type="text" value="{{this.title}}">
     </div>
   </div>
   <div class="row-fluid">
@@ -15,7 +17,7 @@
         <i class="grcicon-help-black"></i>
       </label>
       <div class="wysiwyg-area">
-        <textarea class="span12 double" placeholder="Enter Description"></textarea>
+        <textarea class="span12 double" name="description" placeholder="Enter Description">{{{description}}}</textarea>
       </div>
     </div>
     <div class="span6">
@@ -23,12 +25,12 @@
         Owner/Person of Contact
         <i class="grcicon-help-black"></i>
       </label>
-      <input class="input-block-level" placeholder="Enter Title" type="text">
+      <input class="input-block-level" name="owner" placeholder="Enter Title" type="text" value="{{owner}}">
       <label>
         Direct URL
         <i class="grcicon-help-black"></i>
       </label>
-      <input class="input-block-level" placeholder="http://www.domain.com/" type="text">
+      <input class="input-block-level" name="url" placeholder="http://www.domain.com/" type="text" value="{{url}}">
     </div>
   </div>
   <div class="row-fluid">
@@ -51,14 +53,14 @@
           Code
           <i class="grcicon-help-black"></i>
         </label>
-        <input class="input-block-level" placeholder="PROGRAM-XXX" type="text">
+        <input class="input-block-level" name="slug" placeholder="PROGRAM-XXX" type="text" value="{{slug}}">
       </div>
       <div class="span6">
         <label>
           Reference URL
           <i class="grcicon-help-black"></i>
         </label>
-        <input class="input-block-level" placeholder="http://www.domain.com/" type="text">
+        <input class="input-block-level" name="url" placeholder="http://www.domain.com/" type="text" value="{{url}}">
       </div>
     </div>
     <div class="row-fluid">
@@ -67,14 +69,14 @@
           Organization
           <i class="grcicon-help-black"></i>
         </label>
-        <input class="input-block-level" placeholder="Enter Organization" type="text">
+        <input class="input-block-level" name="org_name" placeholder="Enter Organization" type="text" value="{{org_name}}">
       </div>
       <div class="span6">
         <label>
           Program Scope
           <i class="grcicon-help-black"></i>
         </label>
-        <input class="input-block-level" placeholder="Enter Scope" type="text">
+        <input class="input-block-level" name="scope" placeholder="Enter Scope" type="text" value="{{scope}}">
       </div>
     </div>
     <div class="row-fluid">
@@ -89,4 +91,6 @@
       </div>
     </div>
   </div>
+</form>
+{{/instance}}
 {{!/div}}

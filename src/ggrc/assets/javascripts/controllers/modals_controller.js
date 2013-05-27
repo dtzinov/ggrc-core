@@ -13,6 +13,7 @@ can.Control("GGRC.Controllers.Modals", {
     , button_view : null
     , model : null
     , new_object_form : false
+    , find_params : {}
   }
 
   , init : function() {
@@ -28,7 +29,8 @@ can.Control("GGRC.Controllers.Modals", {
   }
 
   , fetch_templates : function(dfd) {
-    dfd = dfd || new $.Deferred();
+    var that = this
+    dfd = dfd ? dfd.then(function() { return that.options; }) : $.when(this.options);
     return $.when(
       can.view(this.options.content_view, dfd)
       , can.view(this.options.header_view, dfd)
@@ -36,12 +38,16 @@ can.Control("GGRC.Controllers.Modals", {
     ).done(this.proxy('draw'));
   }
 
-  , fetch_data : function() {
+  , fetch_data : function(params) {
     var that = this;
-    var dfd = this.options.model && !this.options.new_object_form ?
-                this.options.model.findOne(this.find_params())
-              : new $.Deferred().resolve(this.find_params());
-
+    var dfd;
+    if(this.options.model) {
+      dfd = this.options.new_object_form
+          ? new $.Deferred().resolve(new this.options.model(params || this.find_params()))
+          : this.options.model.findOne(params || this.find_params());
+    } else {
+      dfd = new $.Deferred().resolve(params || this.find_params());
+    }
     return dfd.done(function(h) {
       that.options.instance = h;
     });
@@ -52,7 +58,7 @@ can.Control("GGRC.Controllers.Modals", {
   }
 
   , find_params : function() {
-    return this.options;
+    return this.options.find_params;
   }
 
   , draw : function(content, header, footer) {
@@ -65,15 +71,18 @@ can.Control("GGRC.Controllers.Modals", {
     });
   }
   , "{$footer} a.btn[data-toggle='modal-submit'] click" : function(el, ev) {
-    var instance = this.options.instance || new this.options.model();
+    var instance = this.options.instance;
     var that = this;
-
+    if(!(instance instanceof this.options.model)) {
+      instance = this.options.instance
+               = new this.options.model(instance && instance.serialize ? instance.serialize() : instance);
+    }
     can.each(this.options.$content.find("form").serializeArray(), function(item) {
       instance.attr(item.name, item.value);
     });
 
     instance.save().done(function() {
-      that.destroy().element.modal("destroy");
+      that.element.modal_form("hide");
     }).fail(function() {
 
     });

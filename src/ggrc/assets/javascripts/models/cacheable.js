@@ -23,13 +23,21 @@ can.Model("can.Model.Cacheable", {
       });
       ret.flashOnFail = true;
       return ret;
-    }
+    };
+
+    var _create = this.create;
+    this.create = function(params) {
+      var ret = _create.call(this, this.process_args(params));
+      ret.flashOnFail = true;
+      return ret;
+    };
+
 
   }
 
   , findInCacheById : function(id) {
     return can.getObject("cache", this, true)[id];
-  }  
+  }
 
   , newInstance : function(args) {
     var cache = can.getObject("cache", this, true);

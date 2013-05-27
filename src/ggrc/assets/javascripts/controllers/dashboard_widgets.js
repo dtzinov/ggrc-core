@@ -37,6 +37,8 @@ CMS.Controllers.Filterable("CMS.Controllers.DashboardWidgets", {
         this.options.parent_id = path_tokens[1];
       }
       params[this.options.parent_type + "_id"] = this.options.parent_id;
+    } else {
+      this.on();  //set up created listener for model
     }
 
     this.element
@@ -160,6 +162,12 @@ CMS.Controllers.Filterable("CMS.Controllers.DashboardWidgets", {
     }
     ev.stopPropagation();
     ev.originalEvent && ev.originalEvent.stopPropagation();
+  }
+
+  , "{model} created" : function(Model, ev, instance) {
+    if(this.options.model === Model && !this.options.is_related) {
+      this.options.list.unshift(instance);
+    }
   }
 
 });

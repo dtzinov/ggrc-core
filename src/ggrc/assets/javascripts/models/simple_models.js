@@ -7,6 +7,7 @@ can.Model.Cacheable("CMS.Models.Program", {
   , root_collection : "programs"
   , findAll : "/api/programs?company_controls_first=true"
   , findOne : "/api/programs/{id}"
+  , create : "POST /api/programs"
 }, {});
 
 can.Model.Cacheable("CMS.Models.Directive", {
