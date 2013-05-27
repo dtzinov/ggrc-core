@@ -177,16 +177,26 @@ jQuery(function($) {
       }
 
       $.ajax({url : href, dataType : "json"}).done(function(data, status, xhr) {
-        var collections_token;
-        for(var i in data) {
-          if(data.hasOwnProperty(i)) {
-            if(/_collection$/.test(i)) {
-              collections_token = /(.*)_collection$/.exec(i)[1];
+        var model;
+        if($tab.attr("data-model")) {
+          model = can.getObject($tab.attr("data-model"));
+          data = model.models(data);
+
+          model.bind("created", function(ev, instance) {
+            data.unshift(instance);
+          });
+        } else {
+          var collections_token;
+          for(var i in data) {
+            if(data.hasOwnProperty(i)) {
+              if(/_collection$/.test(i)) {
+                collections_token = /(.*)_collection$/.exec(i)[1];
+              }
             }
           }
-        }
 
-        data = data[collections_token + "_collection"][collections_token];
+          data = data[collections_token + "_collection"][collections_token];
+        }
 
         can.view(template, {list: data, tooltip_view : "/static/mustache/dashboard/object_tooltip.mustache"}, function(frag) {
           $tab.data('tab-loaded', true);

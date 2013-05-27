@@ -30,7 +30,7 @@
     %ul.nav.nav-tabs{ style : "display:none"}
       %li.active
         -# TODO : Make a list template specially for programs
-        %a{ href : "##{prefix}_programs", 'data-tab-href' : "/api/programs?quick=true&qr=#{quick_result}", 'data-template' : "/static/mustache/dashboard/object_list.mustache", 'data-toggle' : 'tab' }
+        %a{ href : "##{prefix}_programs", 'data-tab-href' : "/api/programs?quick=true&qr=#{quick_result}", 'data-template' : "/static/mustache/dashboard/object_list.mustache", 'data-toggle' : 'tab', 'data-model' : 'CMS.Models.Program' }
           programs
     .tab-content
       .tab-pane{ id : "#{prefix}_programs" }
