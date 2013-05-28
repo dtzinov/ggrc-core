@@ -524,4 +524,11 @@ a.show-hidden-fields {
 
 .expand-link {
   padding:12px 0 24px 0;
+
+  .in, .out.active, .active .out {
+    display : none;
+  };
+  .in.active, .active .in, .out {
+    display : inline;
+  }
 }

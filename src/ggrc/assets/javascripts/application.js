@@ -89,7 +89,8 @@ jQuery.ajaxPrefilter(function( options, originalOptions, jqXHR ) {
   // Here we break the deferred pattern a bit by piping back to original AJAX deferreds when we
   // set up a failure handler on a later transformation of that deferred.  Why?  The reason is that
   //  we have a default failure handler that should only be called if no other one is registered, 
-  //  unless it's asked for.
+  //  unless it's also explicitly asked for.  If it's registered in a transformed one, though (after
+  //  then() or pipe()), then the original one won't normally be notified of failure.
   can.ajax = $.ajax = function() {
     var _ajax = _old_ajax.apply($, arguments);
     var _old_then = _ajax.then;
@@ -290,36 +291,37 @@ jQuery(document).ready(function($) {
 
     if($(this).is(".widget-showhide"))
       e.preventDefault();
-    
-    showhide.call(this);    
+
+      showhide(".widget", ".content, .filter").call(this);
   });
 
-  function showhide(command) {
-    $(this).each(function() {
-      var $this = $(this)
-          , $content = $this.closest(".widget").find(".content")
-          , $filter = $this.closest(".widget").find(".filter")
-          , cmd = command;
+  function showhide(upsel, downsel) {
+    return function(command) {
+      $(this).each(function() {
+        var $this = $(this)
+            , $content = $this.closest(upsel).find(downsel)
+            , cmd = command;
 
-      if(typeof cmd === "undefined" || cmd === "toggle") {
-        cmd = $this.hasClass("active") ? "hide" : "show";
-      }
+        if(typeof cmd !== "string" || cmd === "toggle") {
+          cmd = $this.hasClass("active") ? "hide" : "show";
+        }
 
-      if(cmd === "hide") {
-        $content.slideUp();
-        $filter.slideUp();
-        $this.removeClass("active");
-      } else if(cmd === "show") {
-        $content.slideDown();
-        $filter.slideDown();
-        $this.addClass("active");
-      }
-    });
+        if(cmd === "hide") {
+          $content.slideUp();
+          $this.removeClass("active");
+        } else if(cmd === "show") {
+          $content.slideDown();
+          $this.addClass("active");
+        }
+      });
 
-    return this;
+      return this;
+    };
   }
 
-  $.fn.showhide = showhide;
+  $.fn.showhide = showhide(".widget", ".content, .filter");
+  $.fn.modal_showhide = showhide(".modal", ".hidden-fields-area");
+  $('body').on('click', ".expand-link a", $.fn.modal_showhide);
 
   // Show/hide tree leaf content
   $('body').on('click', '.tree-structure .oneline, .tree-structure .description, .tree-structure .view-more', oneline);
