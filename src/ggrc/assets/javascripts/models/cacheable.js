@@ -21,14 +21,14 @@ can.Model("can.Model.Cacheable", {
           //handle conflict.
         }
       });
-      ret.flashOnFail = true;
+      delete ret.hasFailCallback;
       return ret;
     };
 
     var _create = this.create;
     this.create = function(params) {
       var ret = _create.call(this, this.process_args(params));
-      ret.flashOnFail = true;
+      delete ret.hasFailCallback;
       return ret;
     };
 

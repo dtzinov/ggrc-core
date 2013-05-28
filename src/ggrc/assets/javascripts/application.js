@@ -83,24 +83,47 @@ jQuery.ajaxPrefilter(function( options, originalOptions, jqXHR ) {
     401 : "The server says you are not authorized.  Are you logged in?"
     , 409 : "There was a conflict in the object you were trying to update.  The version on the server is newer."
     , 412 : "One of the form fields isn't right.  Check the form for any highlighted fields."
-  }
+  };
 
-  $.ajax = function() {
+
+  // Here we break the deferred pattern a bit by piping back to original AJAX deferreds when we
+  // set up a failure handler on a later transformation of that deferred.  Why?  The reason is that
+  //  we have a default failure handler that should only be called if no other one is registered, 
+  //  unless it's asked for.
+  can.ajax = $.ajax = function() {
     var _ajax = _old_ajax.apply($, arguments);
     var _old_then = _ajax.then;
     var _old_fail = _ajax.fail;
+    var _old_pipe = _ajax.pipe;
 
-    _ajax.then = function() {
-      if(arguments.length > 1) 
+    function setup(_new_ajax, _old_ajax) {
+      _old_ajax && (_new_ajax.hasFailCallback = _old_ajax.hasFailCallback);
+      _new_ajax.then = function() {
+        var _new_ajax = _old_then.apply(this, arguments);
+        if(arguments.length > 1) {
+          this.hasFailCallback = true;
+          if(_old_ajax)
+            _old_ajax.fail(function() {});
+        }
+        setup(_new_ajax, this);
+        return _new_ajax;
+      };
+      _new_ajax.fail = function() {
         this.hasFailCallback = true;
-      return _old_then.apply(this, arguments);
-    };
-    _ajax.fail = function() {
-      this.hasFailCallback = true;
-      return _old_fail.apply(this, arguments);
-    };
+        if(_old_ajax)
+          _old_ajax.fail(function() {});
+        return _old_fail.apply(this, arguments);
+      };
+      _new_ajax.pipe = function() {
+        var _new_ajax = _old_pipe.apply(this, arguments);
+        setup(_new_ajax, this);
+        return _new_ajax;
+      };
+    }
+
+    setup(_ajax);
     return _ajax;
-  }
+  };
 
   $(document).ajaxError(function(event, jqxhr, settings, exception) {
     if(!jqxhr.hasFailCallback || settings.flashOnFail || (settings.flashOnFail == null && jqxhr.flashOnFail)) {
@@ -115,7 +138,7 @@ jQuery.ajaxPrefilter(function( options, originalOptions, jqXHR ) {
 jQuery(document).ready(function($) {
   // TODO: Not AJAX friendly
   $('.bar[data-percentage]').each(function() {
-    $(this).css({ width: $(this).data('percentage') + '%' })
+    $(this).css({ width: $(this).data('percentage') + '%' });
   });
 });
 

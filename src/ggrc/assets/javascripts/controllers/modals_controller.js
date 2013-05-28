@@ -81,10 +81,17 @@ can.Control("GGRC.Controllers.Modals", {
       instance.attr(item.name, item.value);
     });
 
-    instance.save().done(function() {
+    var ajd = instance.save().done(function() {
       that.element.modal_form("hide");
-    }).fail(function() {
+    }).fail(function(xhr, status) {
+      var error = xhr.getResponseHeader("X-Flash-Error")
+      , tmpl = '<div class="alert alert-error"><a href="#" class="close" data-dismiss="alert">x</a><span>'
+        + error
+        + '</span></div>';
 
+      that.options.$content.find(".flash").length || that.options.$content.prepend("<div class='flash'>");
+
+      error && that.options.$content.find(".flash").append(tmpl);
     });
   }
 });
