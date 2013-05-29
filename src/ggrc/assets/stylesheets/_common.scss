@@ -383,10 +383,10 @@ input.disabled.pending-ajax{
 }
 
 .widget .wysiwyg-area {
-  border: 1px solid $widgetBorder;
-  @include border-radius($default-border-radius);
-  padding: 4px;
-  background: $lightGray;
+  //border: 1px solid $widgetBorder;
+  //@include border-radius($default-border-radius);
+  //padding: 4px;
+  //background: $lightGray;
   margin-bottom: 10px;
   .double {
     height: 70px;
