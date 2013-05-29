@@ -250,6 +250,10 @@
       }
       i {
         @include opacity(0.3);
+        cursor:pointer;
+        &:hover {
+          @include opacity(0.7);
+        }
       }
     }
     h2 {
