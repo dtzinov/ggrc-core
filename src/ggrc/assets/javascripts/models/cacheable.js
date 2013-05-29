@@ -130,6 +130,11 @@ can.Model("can.Model.Cacheable", {
 
     var cache = can.getObject("cache", this.constructor, true);
     cache[this.id] = this;
+
+    var that = this;
+    this.attr("computed_errors", can.compute(function() {
+      return that.errors();
+    }));
   }
   , addElementToChildList : function(attrName, new_element) {
     this[attrName].push(new_element);

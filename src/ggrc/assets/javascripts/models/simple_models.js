@@ -8,6 +8,10 @@ can.Model.Cacheable("CMS.Models.Program", {
   , findAll : "/api/programs?company_controls_first=true"
   , findOne : "/api/programs/{id}"
   , create : "POST /api/programs"
+  , init : function() {
+    this.validatePresenceOf("title");
+    this._super.apply(this, arguments);
+  }
 }, {});
 
 can.Model.Cacheable("CMS.Models.Directive", {
