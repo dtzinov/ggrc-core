@@ -287,13 +287,15 @@
       }
     }
     .wysiwyg-area {
-      //border: 1px solid $widgetBorder;
-      //@include border-radius($default-border-radius);
-      //padding: 4px;
-      //background: $lightGray;
-      margin-bottom: 10px;
+      position:relative;
+      margin-bottom: 32px;
+      ul.wysihtml5-toolbar {
+        position:absolute;
+        bottom:-32px;
+        left:0;
+      }
       .double {
-        height: 70px;
+        height: 88px;
         @include input-block-level();
       }
       .triple {
