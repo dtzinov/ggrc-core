@@ -1,4 +1,3 @@
-import os
 import threading
 from ggrc import db
 from ggrc.app import app
@@ -6,9 +5,6 @@ from ggrc.app import app
 from wsgiref.simple_server import make_server
 
 def before_all(context):
-  settings_module = os.environ.get('GGRC_SETTINGS_MODULE', '')
-  if not settings_module or settings_module == ' ':
-    os.environ['GGRC_SETTINGS_MODULE'] = 'testing'
   context.base_url = 'http://localhost:8000'
   db.create_all()
   app.debug = False
