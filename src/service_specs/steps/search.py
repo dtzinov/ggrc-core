@@ -27,7 +27,7 @@ def do_check_resource_is_in_result(
     context, resource_name, entry_list, expected=True):
   resource = getattr(context, resource_name)
   result_pairs = set([(o[u'id'], o[u'href']) for o in entry_list])
-  check_pair = (resource.get(u'id'), resource.get(u'href'))
+  check_pair = (resource.get(u'id'), resource.get(u'selfLink'))
   if expected:
     assert check_pair in result_pairs, \
         'Expected to find {0} in results {1}'.format(

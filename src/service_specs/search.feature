@@ -19,11 +19,11 @@ Feature: Full text search
 
   Scenario: Search can group results by type
     Given the following resources are POSTed:
-      | type    | name     | description                             |
-      | Control | control1 | A control that should match because 42. |
-      | Control | control2 | A control that shouldn't match.         |
-      | Cycle   | cycle1   | A cycle that should match because 42.   |
-    When fulltext search grouped by type for "42" as "results"
+      | type    | name     | description                                   |
+      | Control | control1 | A control that should match because fortytwo. |
+      | Control | control2 | A control that shouldn't match.               |
+      | Cycle   | cycle1   | A cycle that should match because fortytwo.   |
+    When fulltext search grouped by type for "fortytwo" as "results"
     Then "control1" is in the "Control" group of "results"
     And "control2" isn't in the "Control" group of "results"
     And "cycle1" is in the "Cycle" group of "results"

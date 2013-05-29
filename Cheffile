@@ -9,3 +9,28 @@ cookbook "build-essential",
 cookbook "python",
   :git => "https://github.com/cookbooks/python.git",
   :ref => "1.0.4"
+
+cookbook "openssl",
+  :git => "http://github.com/opscode-cookbooks/openssl.git",
+  :ref => "1.0.2"
+
+cookbook "mysql",
+  :git => "https://github.com/opscode-cookbooks/mysql.git",
+  :ref => "3.0.0"
+
+cookbook "postgresql",
+  :git => "https://github.com/opscode-cookbooks/postgresql.git",
+  :ref => "3.0.0"
+
+cookbook "xfs",
+  :git => "https://github.com/opscode-cookbooks/xfs.git",
+  :ref => "1.1.0"
+
+cookbook "aws",
+  :git => "https://github.com/opscode-cookbooks/aws.git",
+  :ref => "0.101.0"
+
+cookbook "database",
+  :git => "https://github.com/opscode-cookbooks/database.git",
+  :ref => "1.4.0"
+
