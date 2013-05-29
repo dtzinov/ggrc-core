@@ -251,7 +251,7 @@ class Resource(ModelView):
       return header_error
     db.session.delete(obj)
     db.session.commit()
-    get_indexer().delete_record(self.url_for(id))
+    get_indexer().delete_record(self.url_for(id=id))
     return self.json_success_response(
       self.object_for_json(obj), obj.updated_at)
 

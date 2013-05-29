@@ -22,6 +22,7 @@ def all_collections():
     ('documents', models.Document),
     ('facilities', models.Facility),
     ('help', models.Help),
+    ('log_events', models.LogEvent),
     ('markets', models.Market),
     ('meetings', models.Meeting),
     ('object_documents', models.ObjectDocument),

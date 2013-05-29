@@ -6,6 +6,8 @@ can.Model.Cacheable("CMS.Models.Program", {
   root_object : "program"
   , root_collection : "programs"
   , findAll : "/api/programs?company_controls_first=true"
+  , findOne : "/api/programs/{id}"
+  , create : "POST /api/programs"
 }, {});
 
 can.Model.Cacheable("CMS.Models.Directive", {
@@ -26,7 +28,7 @@ can.Model.Cacheable("CMS.Models.Directive", {
       return that.attr("descendant_sections")().length;
     }));
   }
-  , lowercase_kind : function() { return this.kind.toLowerCase() }
+  , lowercase_kind : function() { return this.kind.toLowerCase(); }
 
 });
 
@@ -94,7 +96,7 @@ can.Model.Cacheable("CMS.Models.Risk", {
       url : "/api/risks"
       , type : "get"
       , data : params
-      , dataType : "json" 
+      , dataType : "json"
     }).then(function(risks) {
       if(risks[root_collection + "_collection"]) {
         risks = risks[root_collection + "_collection"];

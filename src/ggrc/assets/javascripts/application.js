@@ -31,7 +31,12 @@ jQuery.migrateMute = true; //turn off console warnings for jQuery-migrate
 
 window.onerror = function(message, url, linenumber) {
   $(document.body).trigger("ajax:flash", {"error" : message});
-  //$.post("/errors", {error : {message : message, url : url, linenumber : linenumber }});
+  $.ajax({ 
+    type : "post"
+    , url : "/api/log_events"
+    , dataType : "json"
+    , data : {logevent : {severity : "error", description : message + " (at " + url + ":" + linenumber + ")"}}
+  });
 }
 
   window.cms_singularize = function(type) {
@@ -58,7 +63,7 @@ window.onerror = function(message, url, linenumber) {
 //  we are not overwriting more recent data than was viewed by the user.
 jQuery.ajaxPrefilter(function( options, originalOptions, jqXHR ) {
   var data;
-  if ( /^\/api\//.test(options.url) && options.type.toUpperCase() === "PUT" ) {
+  if ( /^\/api\//.test(options.url) && (options.type.toUpperCase() === "PUT" || options.type.toUpperCase() === "POST" )) {
     data = can.deparam(options.data);
     options.dataType = "json";
     options.contentType = "application/json";
@@ -78,24 +83,48 @@ jQuery.ajaxPrefilter(function( options, originalOptions, jqXHR ) {
     401 : "The server says you are not authorized.  Are you logged in?"
     , 409 : "There was a conflict in the object you were trying to update.  The version on the server is newer."
     , 412 : "One of the form fields isn't right.  Check the form for any highlighted fields."
-  }
+  };
 
-  $.ajax = function() {
+
+  // Here we break the deferred pattern a bit by piping back to original AJAX deferreds when we
+  // set up a failure handler on a later transformation of that deferred.  Why?  The reason is that
+  //  we have a default failure handler that should only be called if no other one is registered, 
+  //  unless it's also explicitly asked for.  If it's registered in a transformed one, though (after
+  //  then() or pipe()), then the original one won't normally be notified of failure.
+  can.ajax = $.ajax = function() {
     var _ajax = _old_ajax.apply($, arguments);
     var _old_then = _ajax.then;
     var _old_fail = _ajax.fail;
+    var _old_pipe = _ajax.pipe;
 
-    _ajax.then = function() {
-      if(arguments.length > 1) 
+    function setup(_new_ajax, _old_ajax) {
+      _old_ajax && (_new_ajax.hasFailCallback = _old_ajax.hasFailCallback);
+      _new_ajax.then = function() {
+        var _new_ajax = _old_then.apply(this, arguments);
+        if(arguments.length > 1) {
+          this.hasFailCallback = true;
+          if(_old_ajax)
+            _old_ajax.fail(function() {});
+        }
+        setup(_new_ajax, this);
+        return _new_ajax;
+      };
+      _new_ajax.fail = function() {
         this.hasFailCallback = true;
-      return _old_then.apply(this, arguments);
-    };
-    _ajax.fail = function() {
-      this.hasFailCallback = true;
-      return _old_fail.apply(this, arguments);
-    };
+        if(_old_ajax)
+          _old_ajax.fail(function() {});
+        return _old_fail.apply(this, arguments);
+      };
+      _new_ajax.pipe = function() {
+        var _new_ajax = _old_pipe.apply(this, arguments);
+        setup(_new_ajax, this);
+        return _new_ajax;
+      };
+    }
+
+    setup(_ajax);
     return _ajax;
-  }
+  };
 
   $(document).ajaxError(function(event, jqxhr, settings, exception) {
     if(!jqxhr.hasFailCallback || settings.flashOnFail || (settings.flashOnFail == null && jqxhr.flashOnFail)) {
@@ -110,7 +139,7 @@ jQuery.ajaxPrefilter(function( options, originalOptions, jqXHR ) {
 jQuery(document).ready(function($) {
   // TODO: Not AJAX friendly
   $('.bar[data-percentage]').each(function() {
-    $(this).css({ width: $(this).data('percentage') + '%' })
+    $(this).css({ width: $(this).data('percentage') + '%' });
   });
 });
 
@@ -262,36 +291,37 @@ jQuery(document).ready(function($) {
 
     if($(this).is(".widget-showhide"))
       e.preventDefault();
-    
-    showhide.call(this);    
+
+      showhide(".widget", ".content, .filter").call(this);
   });
 
-  function showhide(command) {
-    $(this).each(function() {
-      var $this = $(this)
-          , $content = $this.closest(".widget").find(".content")
-          , $filter = $this.closest(".widget").find(".filter")
-          , cmd = command;
+  function showhide(upsel, downsel) {
+    return function(command) {
+      $(this).each(function() {
+        var $this = $(this)
+            , $content = $this.closest(upsel).find(downsel)
+            , cmd = command;
 
-      if(typeof cmd === "undefined" || cmd === "toggle") {
-        cmd = $this.hasClass("active") ? "hide" : "show";
-      }
+        if(typeof cmd !== "string" || cmd === "toggle") {
+          cmd = $this.hasClass("active") ? "hide" : "show";
+        }
 
-      if(cmd === "hide") {
-        $content.slideUp();
-        $filter.slideUp();
-        $this.removeClass("active");
-      } else if(cmd === "show") {
-        $content.slideDown();
-        $filter.slideDown();
-        $this.addClass("active");
-      }
-    });
+        if(cmd === "hide") {
+          $content.slideUp();
+          $this.removeClass("active");
+        } else if(cmd === "show") {
+          $content.slideDown();
+          $this.addClass("active");
+        }
+      });
 
-    return this;
+      return this;
+    };
   }
 
-  $.fn.showhide = showhide;
+  $.fn.showhide = showhide(".widget", ".content, .filter");
+  $.fn.modal_showhide = showhide(".modal", ".hidden-fields-area");
+  $('body').on('click', ".expand-link a", $.fn.modal_showhide);
 
   // Show/hide tree leaf content
   $('body').on('click', '.tree-structure .oneline, .tree-structure .description, .tree-structure .view-more', oneline);

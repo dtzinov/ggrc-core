@@ -9,7 +9,7 @@
       .span8
         %input.ui-corner-all.widgetsearch.clear-value{type : 'text', placeholder :'Search'}
       .span4
-        %a.btn.btn-add.pull-right{ href : "new_flow_program_path", 'data-toggle' : 'modal-ajax-form', 'data-modal-reset' : 'reset', 'data-form-target' : 'refresh', 'data-modal-class' : 'modal-wide' } 
+        %a.btn.btn-add.pull-right{ href : "javascript://", 'data-toggle' : 'modal-ajax-form', 'data-modal-reset' : 'reset', 'data-form-target' : 'refresh', 'data-modal-class' : 'modal-wide', 'data-object-singular' : "Program", 'data-object-plural' : "programs" } 
           %i.grcicon-add
           %span.object-type Program
 
@@ -30,7 +30,7 @@
     %ul.nav.nav-tabs{ style : "display:none"}
       %li.active
         -# TODO : Make a list template specially for programs
-        %a{ href : "##{prefix}_programs", 'data-tab-href' : "/api/programs?quick=true&qr=#{quick_result}", 'data-template' : "/static/mustache/dashboard/object_list.mustache", 'data-toggle' : 'tab' }
+        %a{ href : "##{prefix}_programs", 'data-tab-href' : "/api/programs?quick=true&qr=#{quick_result}", 'data-template' : "/static/mustache/dashboard/object_list.mustache", 'data-toggle' : 'tab', 'data-model' : 'CMS.Models.Program' }
           programs
     .tab-content
       .tab-pane{ id : "#{prefix}_programs" }

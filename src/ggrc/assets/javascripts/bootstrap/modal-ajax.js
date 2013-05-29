@@ -160,7 +160,15 @@
 
     'form': function($target, $trigger, option) {
       var form_target = $trigger.data('form-target');
-      $target.modal_form(option, $trigger);
+      $target
+      .modal_form(option, $trigger)
+      .ggrc_controllers_modals({
+        new_object_form : true
+        , button_view : GGRC.Controllers.Modals.BUTTON_VIEW_SAVE_CANCEL
+        , model : CMS.Models[$trigger.attr("data-object-singular")]
+        , title : "New " + $trigger.attr("data-object-singular")
+        , content_view : GGRC.mustache_path + "/" + $trigger.attr("data-object-plural") + "/modal_content.mustache"
+      });
 
       $target.on('ajax:json', function(e, data, xhr) {
         if (data.errors) {
@@ -172,7 +180,7 @@
           var dirty;
           $target.modal_form('hide');
           if($trigger.data("dirty")) {
-            var dirty = $($trigger.data("dirty").split(",")).map(function(i, val) {
+            dirty = $($trigger.data("dirty").split(",")).map(function(i, val) {
               return '[href="' + val.trim() + '"]';
             }).get().join(",");
             $(dirty).data('tab-loaded', false);
