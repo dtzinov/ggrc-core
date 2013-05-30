@@ -1,12 +1,15 @@
 import threading
 from ggrc import db
 from ggrc.app import app
+from ggrc.models import create_db, drop_db
 
 from wsgiref.simple_server import make_server
 
+use_migrations = False
+
 def before_all(context):
   context.base_url = 'http://localhost:8000'
-  db.create_all()
+  create_db(use_migrations)
   app.debug = False
   app.testing = True
   context.server = make_server('', 8000, app)
@@ -17,4 +20,4 @@ def after_all(context):
   context.server.shutdown()
   context.thread.join()
   db.session.remove()
-  db.drop_all()
+  drop_db(use_migrations)

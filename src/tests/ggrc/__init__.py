@@ -1,14 +1,17 @@
 from flask.ext.testing import TestCase as BaseTestCase
 from ggrc import db
 from ggrc.app import app
+from ggrc.models import create_db, drop_db
+
+use_migrations = False
 
 class TestCase(BaseTestCase):
   def setUp(self):
-    db.create_all()
+    create_db(use_migrations, quiet=True)
 
   def tearDown(self):
     db.session.remove()
-    db.drop_all()
+    drop_db(use_migrations, quiet=True)
 
   def create_app(self):
     app.testing = True

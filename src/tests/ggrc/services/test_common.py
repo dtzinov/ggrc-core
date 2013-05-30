@@ -38,11 +38,19 @@ RESOURCE_ALLOWED = ['HEAD', 'GET', 'PUT', 'DELETE', 'OPTIONS']
 class TestResource(TestCase):
   def setUp(self):
     super(TestResource, self).setUp()
+    # Explicitly create test tables
+    if not ServicesTestMockModel.__table__.exists(db.engine):
+      ServicesTestMockModel.__table__.create(db.engine)
     #ggrc.services.MockModel = MockResourceService
 
   def tearDown(self):
     #delattr(ggrc.services, 'MockModel')
     super(TestResource, self).tearDown()
+    # Explicitly destroy test tables
+    # Note: This must be after the 'super()', because the session is
+    #   closed there.  (And otherwise it might stall due to locks).
+    if ServicesTestMockModel.__table__.exists(db.engine):
+      ServicesTestMockModel.__table__.drop(db.engine)
 
   def mock_url(self, resource=None):
     if resource is not None:
