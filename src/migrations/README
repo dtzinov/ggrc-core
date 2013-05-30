@@ -1,0 +1,56 @@
+
+Migration from empty (no tables) database should always match
+the result of ``db.create_all()``.
+
+
+Initialize the empty database and save the current revision:
+
+..
+  # From ``src/`` directory:
+
+  # Get the latest (head) revision
+  DB_REVISION=$(alembic -c migrations/alembic.ini history |
+    head -2 |
+    tail -1 |
+    awk '{ print $3 }')
+
+  # Create a new database
+  DB_NAME=migration_test
+  echo "CREATE DATABASE $DB_NAME;" |
+    mysql -u root
+  export GGRC_DATABASE_URI=mysql+mysqldb://root:@localhost/$DB_NAME
+
+
+If testing ``create_db()`` do this:
+
+..
+  python -c "import ggrc.models; ggrc.models.create_db()"
+
+  # Make the database think it is up-to-date
+  alembic -c migrations/alembic.ini stamp $DB_REVISION
+
+
+Else, if testing migration-from-scratch:
+
+..
+  alembic -c migrations/alembic.ini upgrade head
+
+
+Finally, to check the migration itself:
+
+..
+  MIGRATION_FILE=$(alembic -c migrations/alembic.ini revision --autogenerate -m "$DB_NAME" |
+    tail -1 |
+    awk -F'[ .]' '{ print $3"."$4; }')
+
+  # Ensure the migration output is ``pass``
+  cat "$MIGRATION_FILE"
+
+
+Finally, clean up:
+
+..
+  rm "$MIGRATION_FILE"
+  echo "DROP DATABASE $DB_NAME;" |
+    mysql -u root
+

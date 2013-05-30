@@ -6,4 +6,4 @@ requests
 PyYAML
 Flask-Jasmine
 pymysql
-
+Alembic==0.5.0
