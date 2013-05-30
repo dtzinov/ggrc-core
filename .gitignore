@@ -20,3 +20,5 @@ src/ggrc/assets/stylesheets/dashboard.css
 src/ggrc/assets/stylesheets/design.css
 src/ggrc/.sass-cache
 
+# sphinx build files
+doc/_build
