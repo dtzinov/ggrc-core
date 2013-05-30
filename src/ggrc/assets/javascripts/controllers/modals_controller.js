@@ -29,7 +29,7 @@ can.Control("GGRC.Controllers.Modals", {
   }
 
   , fetch_templates : function(dfd) {
-    var that = this
+    var that = this;
     dfd = dfd ? dfd.then(function() { return that.options; }) : $.when(this.options);
     return $.when(
       can.view(this.options.content_view, dfd)
@@ -66,11 +66,17 @@ can.Control("GGRC.Controllers.Modals", {
     content != null && this.options.$content.html(content).removeAttr("style");
     footer != null && this.options.$footer.html(footer);
 
+    this.options.$content.find("input:first").focus();
+
     this.element.find('.wysihtml5').each(function() {
       $(this).cms_wysihtml5();
     });
   }
-  , "{$footer} a.btn[data-toggle='modal-submit'] click" : function(el, ev) {
+  , "input, textarea, select change" : function(el, ev) {
+    this.options.instance.attr(el.attr("name"), el.val());
+  }
+
+  , "{$footer} a.btn[data-toggle='modal-submit']:not(.disabled) click" : function(el, ev) {
     var instance = this.options.instance;
     var that = this;
     if(!(instance instanceof this.options.model)) {

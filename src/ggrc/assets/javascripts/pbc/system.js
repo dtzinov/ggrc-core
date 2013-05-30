@@ -7,8 +7,9 @@ can.Model.Cacheable("CMS.Models.System", {
     root_object : "system"
     , root_collection : "systems"
     , xable_type : "System"
-    , findAll : "GET /api/systems?responseid={id}" 
-    , findOne : "GET /api/systems/{id}" 
+    , findAll : "GET /api/systems?responseid={id}"
+    , findOne : "GET /api/systems/{id}"
+    , create : "POST /api/systems"
     , update : function(id, params) {
       return $.ajax({
         url : "/systems/" + id + ".json"
@@ -138,12 +139,20 @@ can.Model.Cacheable("CMS.Models.System", {
 
 CMS.Models.System("CMS.Models.StrictSystem", {
   findAll : "GET /api/systems?is_biz_process=false"
+  , create : function(params) {
+    params[is_biz_process] = false;
+    return this._super(params);
+  }
   , cache : can.getObject("cache", CMS.Models.System, true)
   , init : function() { } //don't rebind the ObjectDocument/ObjectPerson events.
 }, {});
 
 CMS.Models.System("CMS.Models.Process", {
   findAll : "GET /api/systems?is_biz_process=true"
+  , create : function(params) {
+    params[is_biz_process] = true;
+    return this._super(params);
+  }
   , cache : can.getObject("cache", CMS.Models.System, true)
   , init : function() { } //don't rebind the ObjectDocument/ObjectPerson events.
 }, {});

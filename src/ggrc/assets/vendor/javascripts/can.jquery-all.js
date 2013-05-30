@@ -4758,6 +4758,7 @@ module['can/observe/setter/setter.js'] = (function (can) {
 	};
 	return can.Observe;
 })(module["can/util/jquery/jquery.js"], module["can/observe/attributes/attributes.js"]); // ## can/observe/validations/validations.js
+*/
 module['can/observe/validations/validations.js'] = (function (can) {
 	//validations object is by property.  You can have validations that
 	//span properties, but this way we know which ones to run.
@@ -4917,7 +4918,7 @@ module['can/observe/validations/validations.js'] = (function (can) {
 				// funcs - the validation functions
 				addErrors = function (attr, funcs) {
 					can.each(funcs, function (func) {
-						var res = func.call(self, isTest ? (self.__convert ? self.__convert(attr, newVal) : newVal) : self[attr]);
+						var res = func.call(self, isTest ? (self.__convert ? self.__convert(attr, newVal) : newVal) : self.attr(attr));
 						if (res) {
 							if (!errors[attr]) {
 								errors[attr] = [];
@@ -4949,7 +4950,6 @@ module['can/observe/validations/validations.js'] = (function (can) {
 	});
 	return can.Observe;
 })(module["can/util/jquery/jquery.js"], module["can/observe/attributes/attributes.js"]); // ## can/util/string/deparam/deparam.js
-*/
 module['can/util/string/deparam/deparam.js'] = (function (can) {
 
 	// ## deparam.js  

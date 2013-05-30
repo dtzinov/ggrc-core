@@ -8,6 +8,10 @@ can.Model.Cacheable("CMS.Models.Program", {
   , findAll : "/api/programs?company_controls_first=true"
   , findOne : "/api/programs/{id}"
   , create : "POST /api/programs"
+  , init : function() {
+    this.validatePresenceOf("title");
+    this._super.apply(this, arguments);
+  }
 }, {});
 
 can.Model.Cacheable("CMS.Models.Directive", {
@@ -15,6 +19,7 @@ can.Model.Cacheable("CMS.Models.Directive", {
   , root_collection : "directives"
   , findAll : "/api/directives"
   , findOne : "/api/directives/{id}"
+  , create : "POST /api/directives"
 }, {
   init : function() {
     this._super && this._super.apply(this, arguments);
@@ -34,14 +39,35 @@ can.Model.Cacheable("CMS.Models.Directive", {
 
 CMS.Models.Directive("CMS.Models.Regulation", {
   findAll : "/api/directives?meta_kind=regulation"
+  , create : {
+    type : "POST"
+    , url : "/api/directives"
+    , data : {
+      kind : "regulation"
+    }
+  }
 }, {});
 
 CMS.Models.Directive("CMS.Models.Policy", {
   findAll : "/api/directives?meta_kind=policy"
+  , create : {
+    type : "POST"
+    , url : "/api/directives"
+    , data : {
+      kind : "policy"
+    }
+  }
 }, {});
 
 CMS.Models.Directive("CMS.Models.Contract", {
   findAll : "/api/directives?meta_kind=contract"
+  , create : {
+    type : "POST"
+    , url : "/api/directives"
+    , data : {
+      kind : "contract"
+    }
+  }
 }, {});
 
 can.Model.Cacheable("CMS.Models.OrgGroup", {

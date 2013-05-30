@@ -7,12 +7,13 @@ can.Model.Cacheable("CMS.Models.Control", {
   , root_collection : "controls"
   , findAll : "GET /api/controls"
   , findOne : "GET /api/controls/{id}"
+  , create : "POST /api/controls"
   , update : function(id, params) {
     return $.ajax({
-      url : "/api/controls/" + id
+      url : params.selfLink
       , type : "put"
       , data : this.process_args(params, ["notes", "title", "description"])
-    })
+    });
   }
   // , model : function(attrs) {
   //   var id;
