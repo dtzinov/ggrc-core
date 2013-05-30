@@ -74,42 +74,49 @@ can.Model.Cacheable("CMS.Models.OrgGroup", {
   root_object : "org_group"
   , root_collection : "org_groups"
   , findAll : "/api/org_groups"
+  , create : "POST /api/org_groups"
 }, {});
 
 can.Model.Cacheable("CMS.Models.Project", {
   root_object : "project"
   , root_collection : "projects"
   , findAll : "/api/projects"
+  , create : "POST /api/projects"
 }, {});
 
 can.Model.Cacheable("CMS.Models.Facility", {
   root_object : "facility"
   , root_collection : "facilities"
   , findAll : "/api/facilities"
+  , create : "POST /api/facilities"
 }, {});
 
 can.Model.Cacheable("CMS.Models.Product", {
   root_object : "product"
   , root_collection : "products"
   , findAll : "/api/products"
+  , create : "POST /api/products"
 }, {});
 
 can.Model.Cacheable("CMS.Models.DataAsset", {
   root_object : "data_asset"
   , root_collection : "data_assets"
   , findAll : "/api/data_assets"
+  , create : "POST /api/data_assets"
 }, {});
 
 can.Model.Cacheable("CMS.Models.Market", {
   root_object : "market"
   , root_collection : "markets"
   , findAll : "/api/markets"
+  , create : "POST /api/markets"
 }, {});
 
 can.Model.Cacheable("CMS.Models.RiskyAttribute", {
   root_object : "risky_attribute"
   , root_collection : "risky_attributes"
   , findAll : "/api/risky_attributes"
+  , create : "POST /api/risky_attributes"
 }, {});
 
 can.Model.Cacheable("CMS.Models.Risk", {
@@ -141,6 +148,15 @@ can.Model.Cacheable("CMS.Models.Risk", {
         }
       });
       return risks;
+    });
+  }
+  , create : function(params) {
+    params[trigger] = params[risk_trigger];
+    return $.ajax({
+      type : "POST"
+      , url : "/api/risks"
+      , data : params
+      , dataType : "json"
     });
   }
 }, {});
