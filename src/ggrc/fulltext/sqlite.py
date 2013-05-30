@@ -33,3 +33,5 @@ class Sqlite3Indexer(SqlIndexer):
   def search(self, terms):
     return db.session.query(self.record_type).filter('content match :terms')\
         .params(terms=terms)
+
+Indexer=Sqlite3Indexer

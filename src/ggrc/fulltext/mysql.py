@@ -28,3 +28,4 @@ class MysqlIndexer(SqlIndexer):
     return db.session.query(self.record_type).filter(
       'match (content) against (:terms)').params(terms=terms).all()
 
+Indexer = MysqlIndexer
