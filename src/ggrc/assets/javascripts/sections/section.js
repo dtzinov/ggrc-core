@@ -6,6 +6,7 @@ can.Model.Cacheable("CMS.Models.Section", {
   root_object : "section"
   , root_collection : "sections"
   , findAll : "GET /api/sections?" + window.cms_singularize((/^\/([^\/]+)\//.exec(window.location.pathname) || ["",""])[1]) + "_id=" + (/^\/[^\/]+\/([^\/]+)/.exec(window.location.pathname) || ["",""])[1]
+  , create : "POST /api/sections"
   , update : function(id, section) {
     var param = {};
     can.each(section, function(val, key) {

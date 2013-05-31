@@ -18,9 +18,9 @@
       .span8
         %input.ui-corner-all.widgetsearch.clear-value{type : 'text', placeholder : 'Search'}
       .span4
-        %a.btn.btn-add.pull-right{ 'href' : "new_flow_system_path( :system : { :is_biz_process : 1 } )", "data-toggle" : 'modal-ajax-form', 'data-modal-reset' : 'reset', 'data-form-target' : 'refresh', 'data-modal-class' : 'modal-wide' }
+        %a.btn.btn-add.pull-right{ 'href': 'javascript://', 'data-toggle': 'modal-ajax-form', 'data-modal-reset': 'reset', 'data-form-target': 'refresh', 'data-modal-class': 'modal-wide', 'data-object-singular': 'System', 'data-object-plural': 'systems' } 
           %i.grcicon-add
-          %span.object-type Process
+          %span.object-type System
 
 -set quick_result_business_objects = quick_result_business_objects if quick_result_business_objects else None
 -set prefix = "qf" if quick_result_business_objects else "dash"

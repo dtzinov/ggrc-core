@@ -25,13 +25,13 @@ CMS.Models.System("CMS.Models.Response", {
         var _params = { response : {
             system_id : params.system_id
             , request_id : params.request_id
-        }}
+        }};
         return $.ajax({
                 type : "POST"
-                , url : "/responses.json"
+                , url : "/api/responses"
                 , dataType : "json"
                 , data : _params
-            })
+            });
     }
     , update : function(id, params) {
       var that = this;
