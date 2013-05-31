@@ -1,0 +1,208 @@
+{{!div class="modal-body"}}
+{{#instance}}
+<form action="javascript://">
+  <div class="row-fluid">
+    <div class="span6">
+      <label>
+        Title
+        <span class="required">*</i>
+        <i class="grcicon-help-black"></i>
+      </label>
+      <input class="input-block-level" placeholder="Enter Title" name="title" type="text" value="{{this.title}}">
+    </div>
+    <div class="span3">
+      <label>
+        Company Control?
+        <i class="grcicon-help-black"></i>
+      </label>
+      {{!FIXIT: Proposed. If it won't be implemented, remove this one}}
+      <select class="input-block-level">
+        <option selected="selected" value="0">No</option>
+        <option value="1">Yes</option>
+      </select>
+    </div>
+    <div class="span3">
+      <label>
+        Directive
+        <span class="required">*</i>
+        <i class="grcicon-help-black"></i>
+      </label>
+      {{!FIXIT: Need List of possible directives // We need titles followed by CODE, not just CODE}}
+      <select class="input-block-level" name="directive">
+        <option value="">Dummy Directive</option>
+      </select>
+    </div>
+  </div>
+  <div class="row-fluid">
+    <div class="span6">
+      <label>
+        Description
+        <i class="grcicon-help-black"></i>
+      </label>
+      <div class="wysiwyg-area">
+        <textarea id="control_description" class="span12 double wysihtml5" name="description" placeholder="Enter Description">{{{description}}}</textarea>
+      </div>
+    </div>
+    <div class="span6">
+      <label>
+        Owner/Person of Contact
+        <i class="grcicon-help-black"></i>
+      </label>
+      <input class="input-block-level" name="owner" placeholder="Enter Title" type="text" value="{{owner}}">
+      <label>
+        Direct URL
+        <i class="grcicon-help-black"></i>
+      </label>
+      <input class="input-block-level" name="url" placeholder="http://www.domain.com/" type="text" value="{{url}}">
+    </div>
+  </div>
+
+  <div class="row-fluid">
+    <div class="span12">
+      <div class="expand-link">
+        <a class="show-hidden-fields" href="#">
+          <span class="out">
+            <i class="grcicon-show"></i>
+            Show 
+          </span>
+          <span class="in">
+            <i class="grcicon-hide"></i>
+            Hide
+          </span>
+          Advanced
+          <span class="hidden-fields out">
+            Code, Reference URL, Kind, Fraud-Related, Significance, Means, Assertions, Categories
+          </span>
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="hidden-fields-area" style="display:none">
+    <div class="row-fluid">
+      <div class="span6">
+        <label>
+          Code
+          <i class="grcicon-help-black"></i>
+        </label>
+        <input class="input-block-level" name="slug" placeholder="CONTROL-XXX" type="text" value="{{slug}}">
+      </div>
+      <div class="span6">
+        <label>
+          Reference URL
+          <i class="grcicon-help-black"></i>
+        </label>
+        <input class="input-block-level" name="url" placeholder="http://www.domain.com/" type="text" value="{{url}}">
+      </div>
+    </div>
+    <div class="row-fluid">
+      <div class="span3">
+        <label>
+          Kind
+          <i class="grcicon-help-black"></i>
+        </label>
+        <select class="input-block-level" name="kind">
+          <option selected="selected" value="">None</option>
+          <option value="1">Reactive</option>
+          <option value="2">Administrative</option>
+          <option value="3">Detective</option>
+          <option value="4">Preventative</option>
+        </select>
+      </div>
+      <div class="span3">
+        <label>
+          Fraud Related
+          <i class="grcicon-help-black"></i>
+        </label>
+        <select class="input-block-level" name="fraud_related">
+          <option selected="selected" value="">Choose</option>
+          <option value="0">No</option>
+          <option value="1">Yes</option>
+        </select>
+      </div>
+      <div class="span3">
+        <label>
+          Significance
+          <i class="grcicon-help-black"></i>
+        </label>
+        <select class="input-block-level" name="key_control">
+          <option selected="selected" value="">Choose</option>
+          <option value="0">Non-key</option>
+          <option value="1">Key</option>
+        </select>
+      </div>
+      <div class="span3">
+        <label>
+          Means
+          <i class="grcicon-help-black"></i>
+        </label>
+        <select class="span12" name="means">
+          <option selected="selected" value="">None</option>
+          <option value="5">Manual</option>
+          <option value="7">Automated</option>
+          <option value="6">Manual with Segregation of Duties</option>
+        </select>
+      </div>
+    </div>
+    <div class="row-fluid">
+      <div class="span6">
+        <label>
+          Assertions
+          <i class="grcicon-help-black"></i>
+        </label>
+        {{!FIXIT: Couldn't find variable name for this one w/ POSTMAN}}
+        <select class="input-block-level" multiple="multiple" name="assertions">
+          <option value="17">Accuracy</option>
+          <option value="18">Classification</option>
+          <option value="19">Completeness</option>
+          <option value="20">Cutoff</option>
+          <option value="21">Existence</option>
+          <option value="22">Occurrence</option>
+          <option value="23">Rights and Obligations</option>
+          <option value="24">Valuation and Allocation</option>
+          <option value="25">Understandability</option>
+        </select>
+      </div>
+      <div class="span6">
+        <label>
+          Categories
+          <i class="grcicon-help-black"></i>
+        </label>
+        {{!FIXIT: Couldn't find variable name for this one w/ POSTMAN}}
+        <select class="input-block-level" multiple="multiple" name="categories">
+          <option value="1">Access Control</option>
+          <option value="2">&nbsp;&nbsp;&nbsp;Access Management</option>
+          <option value="3">&nbsp;&nbsp;&nbsp;Authorization</option>
+          <option value="4">&nbsp;&nbsp;&nbsp;Authentication</option>
+          <option value="11">&nbsp;&nbsp;&nbsp;Governance</option>
+          <option value="12">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Training</option>
+          <option value="13">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Policies &amp; Procedures</option>
+          <option value="14">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Monitoring</option>
+          <option value="5">Change Management</option>
+          <option value="6">&nbsp;&nbsp;&nbsp;Segregation of Duties</option>
+          <option value="7">&nbsp;&nbsp;&nbsp;Configuration Management</option>
+          <option value="15">&nbsp;&nbsp;&nbsp;Ken's Kategory</option>
+          <option value="8">Business Continuity</option>
+          <option value="9">&nbsp;&nbsp;&nbsp;Disaster Recovery</option>
+          <option value="10">&nbsp;&nbsp;&nbsp;Physical Security</option>
+          <option value="16">Core</option>
+          <option value="26">Availability</option>
+          <option value="27">Integrity</option>
+          <option value="28">Confidentiality</option>
+        </select>
+      </div>
+    </div>
+    <div class="row-fluid">
+      <div class="span12">
+        <label>
+          Notes
+          <i class="grcicon-help-black"></i>
+        </label>
+        <div class="wysiwyg-area">
+          <textarea id="control_notes" class="span12 double wysihtml5" name="notes" placeholder="Enter Notes">{{{notes}}}</textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+{{/instance}}
+{{!/div}}
