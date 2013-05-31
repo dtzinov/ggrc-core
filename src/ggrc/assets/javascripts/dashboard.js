@@ -26,16 +26,16 @@
 jQuery(function($) {
 
   window.calculate_spinner_z_index = function() {
-      var zindex = 0;
-      $(this).parents().each(function() {
-        var z;
-        if(z = parseInt($(this).css("z-index"))) {
-          zindex = z;
-          return false;
-        }
-      });
-      return zindex + 10;
-    } 
+    var zindex = 0;
+    $(this).parents().each(function() {
+      var z = parseInt($(this).css("z-index"), 10);
+      if(z) {
+        zindex = z;
+        return false;
+      }
+    });
+    return zindex + 10;
+  };
 
 
   window.natural_comparator = function(a, b) {
@@ -44,19 +44,19 @@ jQuery(function($) {
     if(a===b) return 0;
 
     a = a.replace(/(?=\D\d)(.)|(?=\d\D)(.)/g, "$1$2|").split("|");
-    b = b.replace(/(?=\D\d)(.)|(?=\d\D)(.)/g, "$1$2|").split("|")
+    b = b.replace(/(?=\D\d)(.)|(?=\d\D)(.)/g, "$1$2|").split("|");
 
     for(var i = 0; i < Math.max(a.length, b.length); i++) {
       if(+a[i] === +a[i] && +b[i] === +b[i]) {
         if(+a[i] < +b[i]) return -1;
         if(+b[i] < +a[i]) return 1;
-      } else { 
+      } else {
         if(a[i] < b[i]) return -1;
         if(b[i] < a[i]) return 1;
       }
     }
     return 0;
-  }
+  };
 
   // put the related widget on the related element.
   $("#related").cms_controllers_related({});
@@ -151,59 +151,7 @@ jQuery(function($) {
 
   // Tabs via AJAX on 'Quick Find'
   $('body').on('show', '.tabbable ul.nav-tabs > li > a', function(e, href) {
-    var $tab = $(e.target)
-      , loaded = $tab.data('tab-loaded')
-      , pane = ($tab.data('tab-target') || $tab.attr('href'))
-      , template = $tab.data("template") || "<div></div>";
 
-    if (href)
-      loaded = false;
-    else
-      href = $tab.data('tab-href');
-
-    if (!href) return;
-    if (href === 'reset') {
-      $tab.data('tab-loaded', false);
-      return;
-    }
-
-    if (!loaded) {
-      if (template) {
-        var spinner = new Spinner({ }).spin();
-        $(pane).html(spinner.el);
-        // Scroll up so spinner doesn't get pushed out of visibility
-        $(pane).scrollTop(0);
-        $(spinner.el).css({ width: '100px', height: '100px', left: '50px', top: '50px', zIndex : calculate_spinner_z_index });
-      }
-
-      $.ajax({url : href, dataType : "json"}).done(function(data, status, xhr) {
-        var model;
-        if($tab.attr("data-model")) {
-          model = can.getObject($tab.attr("data-model"));
-          data = model.models(data);
-
-          model.bind("created", function(ev, instance) {
-            data.unshift(instance);
-          });
-        } else {
-          var collections_token;
-          for(var i in data) {
-            if(data.hasOwnProperty(i)) {
-              if(/_collection$/.test(i)) {
-                collections_token = /(.*)_collection$/.exec(i)[1];
-              }
-            }
-          }
-
-          data = data[collections_token + "_collection"][collections_token];
-        }
-
-        can.view(template, {list: data, tooltip_view : "/static/mustache/dashboard/object_tooltip.mustache"}, function(frag) {
-          $tab.data('tab-loaded', true);
-          $(e.target).find(".item-count").html(data.length);
-          $(pane).html(frag).trigger("loaded", xhr, data);
-        });
-      });
 
       // $(pane).load(href, function(data, status, xhr) {
       //   $tab.data('tab-loaded', true);
@@ -211,7 +159,7 @@ jQuery(function($) {
       //   $(e.target).find(".item-count").html($data.find("li").length);
       //   $(this).html($data).trigger("loaded", xhr, data);
       // });
-    }
+
   });
 
   // // Clear the .widgetsearch box when tab is changed

@@ -31,13 +31,13 @@ jQuery.migrateMute = true; //turn off console warnings for jQuery-migrate
 
 window.onerror = function(message, url, linenumber) {
   $(document.body).trigger("ajax:flash", {"error" : message});
-  $.ajax({ 
+  $.ajax({
     type : "post"
     , url : "/api/log_events"
     , dataType : "json"
     , data : {logevent : {severity : "error", description : message + " (at " + url + ":" + linenumber + ")"}}
   });
-}
+};
 
   window.cms_singularize = function(type) {
     type = type.trim();
@@ -57,7 +57,21 @@ window.onerror = function(message, url, linenumber) {
     }
 
     return type;
-  }
+  };
+
+
+  window.calculate_spinner_z_index = function() {
+    var zindex = 0;
+    $(this).parents().each(function() {
+      var z = parseInt($(this).css("z-index"), 10);
+      if(z) {
+        zindex = z;
+        return false;
+      }
+    });
+    return zindex + 10;
+  };
+
 
 // Set up all PUT requests to the server to respect ETags, to ensure that
 //  we are not overwriting more recent data than was viewed by the user.

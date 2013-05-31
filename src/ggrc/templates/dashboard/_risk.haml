@@ -25,19 +25,13 @@
 -set quick_result_risk = quick_result_risk if quick_result_risk else None
 -set prefix = "qf" if quick_result_risk else "dash"
 
+-from "shared/_quick_find.haml" import tab
+
 -block main
   .tabbable.tabs-left{ id : "={None if quick_result_risk is defined else \"quick_find_risk\"}" }
     %ul.nav.nav-tabs
-      %li.active
-        %a{ href : "##{prefix}_risks", 'data-tab-href' : "/api/risks?quick=true&qr=#{quick_result_risk}", 'data-template' : "/static/mustache/dashboard/object_list.mustache", 'data-toggle' : 'tab', 'data-new-href' : "new_flow_risk_path" }
-          %i.grcicon-risk-color
-          %span.text-risk Risks
-          %span.item-count
-      %li
-        %a{ href : "##{prefix}_risky_attributes", 'data-tab-href' : "/api/risky_attributes?quick=true&qr=#{quick_result_risk}", 'data-template' : "/static/mustache/dashboard/object_list.mustache", 'data-toggle' : 'tab', 'data-new-href' : "new_flow_risk_path" }
-          %i.grcicon-risk-color
-          %span.text-risk Risky Attributes
-          %span.item-count
+      =tab("Risk", "Risks", "/search?s=&qr={0}".format(quick_result_business_objects), "active", "risk")
+      =tab("Risky Attribute", "Risky Attributes", "/search?s=&qr={0}".format(quick_result_business_objects), "", "risk")
 
     .tab-content
       .tab-pane{ id : "#{prefix}_risks" }

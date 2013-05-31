@@ -26,30 +26,16 @@
 -set prefix = "qf" if quick_result else "dash"
 -set tabbable_id = '' if quick_result is defined else 'quick_find'
 
+-from 'shared/_quick_find.haml' import tab
+
 -block main
   .tabbable.tabs-left{ 'id': '{{ tabbable_id }}' }
     -# FIXME: Fix all `data-tab-href` and `data-new-href` attribute paths
     %ul.nav.nav-tabs
-      %li
-        %a{ 'href': "##{ prefix }_regulations", 'data-tab-href': "/api/directives?quick=true&qr=#{quick_result}&meta_kind=regulation", 'data-template' : "/static/mustache/dashboard/object_list.mustache", 'data-toggle': 'tab', 'data-new-href': 'new_flow_directive_path(:meta_kind => "regulation")' }
-          %i.grcicon-regulation-color
-          %span.text-governance Regulations
-          %span.item-count
-      %li
-        %a{ 'href': "##{ prefix }_policies", 'data-tab-href': "/api/directives?quick=true&qr=#{quick_result}&meta_kind=policy", 'data-template' : "/static/mustache/dashboard/object_list.mustache",'data-toggle': 'tab', 'data-new-href': 'new_flow_directive_path(:meta_kind => "policy")' }
-          %i.grcicon-policy-color
-          %span.text-governance Policies
-          %span.item-count
-      %li
-        %a{ 'href': "##{ prefix }_contracts", 'data-tab-href': "/api/directives?quick=true&qr=#{quick_result}&meta_kind=contract", 'data-template' : "/static/mustache/dashboard/object_list.mustache", 'data-toggle': 'tab', 'data-new-href': 'new_flow_directive_path(:meta_kind => "contract")' }
-          %i.grcicon-contract-color
-          %span.text-governance Contracts
-          %span.item-count
-      %li
-        %a{ 'href': "##{ prefix }_controls", 'data-tab-href': "/api/controls?quick=true&qr=#{quick_result}", 'data-template' : "/static/mustache/dashboard/object_list.mustache", 'data-toggle': 'tab', 'data-new-href': 'FIXME:new_flow_control_path' }
-          %i.grcicon-control-color
-          %span.text-governance Controls
-          %span.item-count
+      =tab("Regulation", "Regulations", "/search?s=&qr={0}".format(quick_result_business_objects), "active", "governance")
+      =tab("Policy", "Policies", "/search?s=&qr={0}".format(quick_result_business_objects), "", "governance")
+      =tab("Contract", "Contracts", "/search?s=&qr={0}".format(quick_result_business_objects), "", "governance")
+      =tab("Control", "Controls", "/search?s=&qr={0}".format(quick_result_business_objects), "", "governance")
 
     .tab-content
       .tab-pane{ id : "#{prefix}_regulations" }

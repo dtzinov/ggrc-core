@@ -1,9 +1,12 @@
 
--macro _tab(type, type_plural, path, li_class='')
+-macro tab(type, type_plural, path, li_class='', meta_kind='')
   %li{ 'class': '{{ li_class }}' }
-    %a{ 'href': '##{ prefix }_{{ type_plural|underscore }}', 'data-tab-href': '{{ path }}', 'data-toggle': 'tab', 'data-template' : '/static/mustache/dashboard/object_list.mustache' }
+    %a{ 'href': '##{ prefix }_{{ type_plural|underscore }}', 'data-tab-href': '{{ path }}', 'data-toggle': 'tab', 'data-template' : '/static/mustache/dashboard/object_list.mustache', 'data-object-singular' : "={type|nospace}", 'data-object-plural' : "={type_plural|lower|replace(\" \", \"_\")}" }
       %i{ 'class': 'grcicon-{{ type|lower|nospace }}-color' }
-      {{ type_plural|title }}
+      %span{'class' : '={meta_kind}' } 
+        {{ type_plural|title }}
+      %span.item-count
+      
 -endmacro
 
 -set quick_result = quick_result if quick_result is defined else None
@@ -12,23 +15,23 @@
 
 .tabbable.tabs-left{ 'id': "{{ tabbable_id }}" }
   %ul.nav.nav-tabs
-    =_tab("Control", "Controls", "/api/controls?quick=true&qr=#{quick_result}", "active")
-    =_tab("Regulation", "Regulations", "/api/directives?quick=true&qr=#{quick_result}&meta_kind=regulation")
-    =_tab("Policy", "Policies", "/api/directives?quick=true&qr=#{quick_result}&meta_kind=policy")
-    =_tab("Contract", "Contracts", "/api/directives?quick=true&qr=#{quick_result}&meta_kind=contract")
-    -#FIXME: Restrict to risk managers
-    -#if current_user.can_manage_risk?
-    =_tab("Risk", "Risks", "/api/risks?quick=true&qr=#{quick_result}")
-    =_tab("Attribute", "Attributes", "/api/risky_attributes?quick=true&qr=#{quick_result}")
-    =_tab("Process", "Processes", "/api/systems?quick=true&qr=#{quick_result}&is_biz_process=true")
-    =_tab("System", "Systems", "/api/systems?quick=true&qr=#{quick_result}&is_biz_process=false")
-    =_tab("Org Group", "Org Groups", "/api/org_groups?quick=true&qr=#{quick_result}")
-    =_tab("Project", "Projects", "/api/projects?quick=true&qr=#{quick_result}")
-    =_tab("Facility", "Facilities", "/api/facilities?quick=true&qr=#{quick_result}")
-    =_tab("Product", "Products", "/api/products?quick=true&qr=#{quick_result}")
-    =_tab("Data Asset", "Data Assets", "/api/data_assets?quick=true&qr=#{quick_result}")
-    =_tab("Market", "Markets", "/api/markets?quick=true&qr=#{quick_result}")
-    =_tab("Program", "Programs", "/api/programs?quick=true&qr=#{quick_result}")
+    =tab("Control", "Controls", "/search?s=&qr={0}".format(quick_result), "active")
+    =tab("Regulation", "Regulations", "/search?quick=true&qr={0}&meta_kind=regulation".format(quick_result))
+    =tab("Policy", "Policies", "/search?quick=true&qr={0}&meta_kind=regulation".format(quick_result))
+    =tab("Contract", "Contracts", "/search?quick=true&qr={0}&meta_kind=regulation".format(quick_result))
+      -#FIXME: Restrict to risk managers
+      -#if current_user.can_manage_risk?
+    =tab("Risk", "Risks", "/search?quick=true&qr={0}".format(quick_result))
+    =tab("Risky Attribute", "Risky Attributes", "/search?quick=true&qr={0}".format(quick_result))
+    =tab("Process", "Processes", "/search?quick=true&qr={0}&is_biz_process=true".format(quick_result))
+    =tab("System", "Systems", "/search?quick=true&qr={0}&is_biz_process=false".format(quick_result))
+    =tab("Org Group", "Org Groups", "/search?quick=true&qr={0}".format(quick_result))
+    =tab("Project", "Projects", "/search?quick=true&qr={0}".format(quick_result))
+    =tab("Facility", "Facilities", "/search?quick=true&qr={0}".format(quick_result))
+    =tab("Product", "Products", "/search?quick=true&qr={0}".format(quick_result))
+    =tab("Data Asset", "Data Assets", "/search?quick=true&qr={0}".format(quick_result))
+    =tab("Market", "Markets", "/search?quick=true&qr={0}".format(quick_result))
+    =tab("Program", "Programs", "/search?quick=true&qr={0}".format(quick_result))
 
   .tab-content
     .tab-pane.active{ 'id': "{{ prefix }}_controls" }

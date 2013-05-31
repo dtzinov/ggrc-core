@@ -37,6 +37,7 @@ dashboard-js-files:
   - models/local_storage.js
   - models/display_prefs.js
   - models/simple_models.js
+  - models/search.js
   - controllers/add_widgets.js
   - controllers/filterable_controller.js
   - controllers/dashboard_widgets.js
