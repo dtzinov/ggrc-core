@@ -1,0 +1,215 @@
+{{!div class="modal-body"}}
+{{#instance}}
+<form action="javascript://">
+  <div class="row-fluid">
+    <div class="span6">
+      <label>
+        Title
+        <i class="grcicon-help-black"></i>
+      </label>
+      <input class="input-block-level" placeholder="Enter Title" name="title" type="text" value="{{this.title}}">
+    </div>
+  </div>
+  <div class="row-fluid">
+    <div class="span6">
+      <label>
+        Description
+        <i class="grcicon-help-black"></i>
+      </label>
+      <div class="wysiwyg-area">
+        <textarea id="risk_description" class="span12 double wysihtml5" name="description" placeholder="Enter Description">{{{description}}}</textarea>
+      </div>
+    </div>
+    <div class="span6">
+      <label>
+        Owner/Person of Contact
+        <i class="grcicon-help-black"></i>
+      </label>
+      <input class="input-block-level" name="owner" placeholder="Enter Title" type="text" value="{{owner}}">
+      <label>
+        Direct URL
+        <i class="grcicon-help-black"></i>
+      </label>
+      <input class="input-block-level" name="url" placeholder="http://www.domain.com/" type="text" value="{{url}}">
+    </div>
+  </div>
+  
+  <div class="row-fluid">
+    <div class="span12">
+      <div class="expand-link">
+        <a class="show-hidden-fields" href="#">
+          <span class="out">
+            <i class="grcicon-show"></i>
+            Show 
+          </span>
+          <span class="in">
+            <i class="grcicon-hide"></i>
+            Hide
+          </span>
+          Advanced
+          <span class="hidden-fields out">
+            Code, Reference URL, Threats, Causes
+          </span>
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="hidden-fields-area" style="display:none">
+    <div class="row-fluid">
+      <div class="span6">
+        <label>
+          Code
+          <i class="grcicon-help-black"></i>
+        </label>
+        <input class="input-block-level" name="slug" placeholder="RISK-XXX" type="text" value="{{slug}}">
+      </div>
+      <div class="span6">
+        <label>
+          Reference URL
+          <i class="grcicon-help-black"></i>
+        </label>
+        <input class="input-block-level" name="url" placeholder="http://www.domain.com/" type="text" value="{{url}}">
+      </div>
+    </div>
+    <div class="row-fluid">
+      <div class="span4">
+        <label>
+          Inherent Risk
+          <i class="grcicon-help-black"></i>
+        </label>
+        <div class="wysiwyg-area">
+          <textarea id="inherent_risk" class="span12 double wysihtml5" name="inherent_risk" placeholder="Enter Inherent Risk">{{{inherent_risk}}}</textarea>
+        </div>
+      </div>
+      <div class="span4">
+        <label>
+          Risk Mitigation
+          <i class="grcicon-help-black"></i>
+        </label>
+        {{!FIXIT: Couldn't find variable name for this one w/ POSTMAN}}
+        <div class="wysiwyg-area">
+          <textarea id="risk_mitigation" class="span12 double wysihtml5" name="risk_mitigation" placeholder="Enter Risk Mitigation">{{{risk_mitigation}}}</textarea>
+        </div>
+      </div>
+      <div class="span4">
+        <label>
+          Residual Risk
+          <i class="grcicon-help-black"></i>
+        </label>
+        <div class="wysiwyg-area">
+          <textarea id="residual_risk" class="span12 double wysihtml5" name="residual_risk" placeholder="Enter Residual Risk">{{{residual_risk}}}</textarea>
+        </div>
+      </div>
+    </div>
+    <div class="row-fluid">
+      <div class="span6">
+        <h2>Causes/Threats</h2>
+      </div>
+      <div class="span6">
+        <h2>Impacts</h2>
+      </div>    
+    </div>
+    <div class="row-fluid">
+      <div class="span6">
+        <label>
+          Likelihood
+          <i class="grcicon-help-black"></i>
+        </label>
+        <div class="wysiwyg-area">
+          <select name="likelihood_rating">
+            <option value="0.0">0.0</option>
+            <option value="0.2" selected="selected">0.2</option>
+            <option value="0.4">0.4</option>
+            <option value="0.6">0.6</option>
+            <option value="0.8">0.8</option>
+          </select>
+          <textarea id="likelihood" class="span12 double wysihtml5" name="likelihood" placeholder="Enter Likelihood">{{{likelihood}}}</textarea>
+        </div>
+      </div>
+      <div class="span6">
+        <label>
+          Impact Description
+          <i class="grcicon-help-black"></i>
+        </label>
+        <div class="wysiwyg-area">
+          <textarea id="impact_description" class="span12 double wysihtml5" name="impact" placeholder="Enter Impact Description">{{{impact}}}</textarea>
+        </div>
+      </div>
+    </div>
+    <div class="row-fluid">
+      <div class="span6">
+        <label>
+          Threat Vector
+          <i class="grcicon-help-black"></i>
+        </label>
+        <div class="wysiwyg-area">
+          <textarea id="threat_vector" class="span12 double wysihtml5" name="threat_vector" placeholder="Enter Threat Vector">{{{threat_vector}}}</textarea>
+        </div>
+      </div>
+      <div class="span6">
+        <label>
+          Company-wide Reputation Impact
+          <i class="grcicon-help-black"></i>
+        </label>
+        <select name="reputational_impact_rating">
+          <option value="1">1 - Minimal</option>
+          <option value="2">2 - Moderate</option>
+          <option value="3">3 - Significant</option>
+          <option value="4">4 - Major</option>
+          <option value="5">5 - Extreme</option>
+        </select>
+      </div>
+    </div>
+    <div class="row-fluid">
+      <div class="span6">
+        <label>
+          Trigger/Immediate/Proximate Cause
+          <i class="grcicon-help-black"></i>
+        </label>
+        <div class="wysiwyg-area">
+          <textarea id="trigger" class="span12 double wysihtml5" name="trigger" placeholder="Enter Trigger/Immediate/Proximate Cause">{{{trigger}}}</textarea>
+        </div>
+      </div>
+      <div class="span6">
+        <label>
+          Company-wide Financial Impact
+          <i class="grcicon-help-black"></i>
+        </label>
+        <select name="financial_impact_rating">
+          <option value="1">1 - Minimal</option>
+          <option value="2">2 - Moderate</option>
+          <option value="3">3 - Significant</option>
+          <option value="4">4 - Major</option>
+          <option value="5">5 - Extreme</option>
+        </select>
+      </div>    
+    </div>
+    <div class="row-fluid">
+      <div class="span6">
+        <label>
+          Pre-conditions/Contributory Causes
+          <i class="grcicon-help-black"></i>
+        </label>
+        <div class="wysiwyg-area">
+          <textarea id="preconditions" class="span12 double wysihtml5" name="preconditions" placeholder="Pre-conditions/Contributory Causes">{{{preconditions}}}</textarea>
+        </div>
+      </div>
+      <div class="span6">
+        <label>
+          Company-wide Operational Impact
+          <i class="grcicon-help-black"></i>
+        </label>
+        <select name="operational_impact_rating">
+          <option value="1">1 - Minimal</option>
+          <option value="2">2 - Moderate</option>
+          <option value="3">3 - Significant</option>
+          <option value="4">4 - Major</option>
+          <option value="5">5 - Extreme</option>
+        </select>
+      </div>
+      
+    </div>
+  </div>
+</form>
+{{/instance}}
+{{!/div}}

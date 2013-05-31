@@ -259,7 +259,7 @@
     h2 {
       margin-top:10px;
       color:#333;
-      font-weight:normal;
+      font-weight:24px;
       border-bottom:1px solid darken($lightGray,10%);
       margin-bottom:10px;
     }
@@ -292,7 +292,7 @@
     }
     .wysiwyg-area {
       position:relative;
-      margin-bottom: 32px;
+      margin-bottom: 46px;
       ul.wysihtml5-toolbar {
         position:absolute;
         bottom:-32px;
@@ -310,7 +310,9 @@
         width: 100% !important;
       }
       select {
-        float: right;
+        position:absolute;
+        bottom:-28px;
+        right:0;
         width: auto;
         margin: 4px 0 0 0;
         height: 22px;
