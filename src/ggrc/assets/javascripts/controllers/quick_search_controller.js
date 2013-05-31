@@ -66,6 +66,7 @@ CMS.Controllers.Filterable("CMS.Controllers.QuickSearch", {
 
   , "{observer} value" : function(el, ev, newval) {
     this.filter(newval);
+    this.element.trigger('kill-all-popovers');
   }
 
   // @override

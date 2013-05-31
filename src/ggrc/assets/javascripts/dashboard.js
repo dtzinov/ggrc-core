@@ -25,19 +25,6 @@
 // Initialize delegated event handlers
 jQuery(function($) {
 
-  window.calculate_spinner_z_index = function() {
-    var zindex = 0;
-    $(this).parents().each(function() {
-      var z = parseInt($(this).css("z-index"), 10);
-      if(z) {
-        zindex = z;
-        return false;
-      }
-    });
-    return zindex + 10;
-  };
-
-
   window.natural_comparator = function(a, b) {
     a = a.slug.toString();
     b = b.slug.toString();
@@ -232,15 +219,6 @@ jQuery(function($) {
       $.get(href, function(data) {
         $list.tmpl_setitems(data);
       });
-    }
-  });
-  $('body').on('keypress', '.widget .widgetsearch', function (e) {
-    if (e.which == 13) {
-      var $this = $(this)
-        , $tab = $this.closest('.widget').find('ul.nav-tabs > li.active > a')
-        , href = with_params($tab.data('tab-href'), $.param({ s: $this.val() }));
-      $tab.trigger('show', href);
-      $tab.trigger('kill-all-popovers');
     }
   });
   $('body').on('keypress', 'nav > .widgetsearch-tocontent', function (e) {

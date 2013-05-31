@@ -156,9 +156,10 @@ CMS.Controllers.Filterable("CMS.Controllers.DashboardWidgets", {
     parent.trigger("sortremove");
   }
 
-  , ".widgetsearch-tocontent keydown" : function(el, ev) {
+  , ".widgetsearch keydown" : function(el, ev) {
     if(ev.which === 13) {
       this.filter(el.val());
+      this.element.trigger('kill-all-popovers');
     }
     ev.stopPropagation();
     ev.originalEvent && ev.originalEvent.stopPropagation();
