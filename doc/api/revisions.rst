@@ -82,7 +82,8 @@ RevisionsCollection
        revision collection.
    * - ``entries``
      - array
-     - The list of all revisions for the resource as ``RevisionEntry`` objects.
+     - The list of all revisions for the resource as :ref:`RevisionEntry`
+       objects.
 
 Revision Entry Resource
 =======================
@@ -166,9 +167,9 @@ RevisionEntry
        that created this revision.
    * - ``summary``
      - string
-     - *OPTIONAL* text summary of changes to the resource intended for display
-       to users. If a summary isn't provided or isn't available the value
-       **MUST** be ``null``.
+     - **OPTIONAL** text summary of changes to the resource intended for
+       display to users. If a summary isn't provided or isn't available the
+       value **MUST** be ``null``.
 
 Revision Resource
 =================
