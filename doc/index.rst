@@ -3,19 +3,16 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to Google Governance, Risk, and Compliance's documentation!
-===================================================================
+gGRC - Google Governance, Risk, and Compliance
+==============================================
 
 Contents:
 
 .. toctree::
    :maxdepth: 2
 
-   api/resources
-   api/discovery
-   api/revisions
-   api/activity_log
-   templates
+   api
+   dev
 
 
 Indices and tables
