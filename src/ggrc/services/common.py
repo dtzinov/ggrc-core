@@ -2,12 +2,16 @@ import datetime
 import ggrc.builder.json
 import hashlib
 import json
+import sqlalchemy.types
 import time
 from flask import url_for, request, current_app
 from flask.views import View
 from ggrc import db
 from ggrc.fulltext import get_indexer
 from ggrc.fulltext.recordbuilder import fts_record_for
+from sqlalchemy import and_, cast
+from sqlalchemy.types import AbstractType, Boolean
+from werkzeug.exceptions import BadRequest
 from wsgiref.handlers import format_date_time
 
 """gGRC Collection REST services implementation. Common to all gGRC collection
@@ -84,7 +88,45 @@ class ModelView(View):
       query = self.model.eager_query()
     else:
       query = db.session.query(self.model)
+    if request.args:
+      query = query.filter(self.collection_filters())
     return query.order_by(self.model.updated_at.desc())
+
+  def get_attr_for_query_param(self, attrname):
+    badrequest = lambda: BadRequest(
+        'Unknown or unsupported query parameter {0}'.format(attrname))
+    if not hasattr(self.model, attrname):
+      raise badrequest()
+    attr = getattr(self.model, attrname)
+    if not hasattr(attr, 'type') or \
+        not isinstance(attr.type, AbstractType):
+      raise badrequest()
+    return attr
+
+  def coerce_value_for_query_param(self, attr, arg, value):
+    if type(attr.type) is Boolean:
+      value = value.lower()
+      if value == 'true':
+        value = True
+      elif value == 'false':
+        value = False
+      else:
+        raise BadRequest('{0} must be "true" or "false", not {1}.'.format(
+          arg, value))
+    return value
+
+  def collection_filters(self):
+    """Create filter expressions using ``request.args``"""
+    filter_expressions = None
+    for arg, value in request.args.items():
+      attr = self.get_attr_for_query_param(arg)
+      value = self.coerce_value_for_query_param(attr, arg, value)
+      if filter_expressions:
+        filter_expressions = and_(
+            filter_expressions, attr == cast(value, attr.type))
+      else:
+        filter_expressions = attr == cast(value, attr.type)
+    return filter_expressions
 
   def get_object(self, id):
     # This could also use `self.pk`

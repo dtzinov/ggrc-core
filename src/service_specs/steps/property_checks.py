@@ -85,6 +85,11 @@ def set_property_value_by_name(context, resource_name, property_name, value):
   resource = getattr(context, resource_name)
   resource.set(property_name, value)
 
+@given('"{resource_name}" property "{property_name}" is literal "{value}"')
+def set_property_value_by_name(context, resource_name, property_name, value):
+  resource = getattr(context, resource_name)
+  resource.set(property_name, eval(value))
+
 @then('the "{property_name}" property of "{resource_name}" is "{expected}"')
 def check_property_value(context, property_name, resource_name, expected):
   resource = getattr(context, resource_name)

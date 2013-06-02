@@ -23,6 +23,7 @@ Feature: Basic RESTful CRUD Support
       | Directive          |
       | Document           |
       | Facility           |
+      | Help               |
       | Market             |
       | Meeting            |
       #| ObjectDocument     |
