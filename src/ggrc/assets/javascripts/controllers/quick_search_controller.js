@@ -46,8 +46,12 @@ CMS.Controllers.Filterable("CMS.Controllers.QuickSearch", {
       if(model) {
         $tab.data("model", model);
         model.findAll().done(function(data) {
-          view_data.list.replace(data);
+          .replace(data);
           $tab.find(".item-count").html(data ? data.length : 0);
+        });
+
+        model.bind("created", function(ev, instance) {
+          view_data.list.unshift(instance);
         });
       }
 

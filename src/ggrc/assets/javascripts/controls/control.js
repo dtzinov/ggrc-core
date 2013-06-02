@@ -39,7 +39,7 @@ can.Model.Cacheable("CMS.Models.Control", {
     // }
     this.attr({
       "content_id" : Math.floor(Math.random() * 10000000)
-      , "type" : "company"
+      , "type" : {id : 1}
       , "selected" : false
     });
     this._super();

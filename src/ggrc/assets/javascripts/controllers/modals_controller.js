@@ -62,6 +62,10 @@ can.Control("GGRC.Controllers.Modals", {
   }
 
   , draw : function(content, header, footer) {
+    can.isArray(content) && (content = content[0]);
+    can.isArray(header) && (header = header[0]);
+    can.isArray(footer) && (footer = footer[0]);
+
     header != null && this.options.$header.find("h2").html(header);
     content != null && this.options.$content.html(content).removeAttr("style");
     footer != null && this.options.$footer.html(footer);
@@ -73,19 +77,36 @@ can.Control("GGRC.Controllers.Modals", {
     });
   }
   , "input, textarea, select change" : function(el, ev) {
-    this.options.instance.attr(el.attr("name"), el.val());
+    this.set_value({name : el.attr("name"), value : el.val() });
   }
 
-  , "{$footer} a.btn[data-toggle='modal-submit']:not(.disabled) click" : function(el, ev) {
+  , set_value : function(item) {
     var instance = this.options.instance;
-    var that = this;
     if(!(instance instanceof this.options.model)) {
       instance = this.options.instance
                = new this.options.model(instance && instance.serialize ? instance.serialize() : instance);
     }
-    can.each(this.options.$content.find("form").serializeArray(), function(item) {
-      instance.attr(item.name, item.value);
-    });
+    var name = item.name.split(".");
+    var $elem = this.options.$content.find("[name='" + item.name + "']");
+    var value = $elem.val();
+    if($elem.attr("numeric") && isNaN(parseInt(value, 10))) {
+      value = null;
+    }
+    if(name.length > 1) {
+      if(can.isArray(value)) {
+        value = new can.Observe.List(can.map(value, function(v) { return new can.Observe({}).attr(name.slice(1).join("."), v); }));
+      } else {
+        value = new can.Observe({}).attr(name.slice(1).join("."), value);
+      }
+    }
+    instance.attr(name[0], value);
+  }
+
+  , "{$footer} a.btn[data-toggle='modal-submit']:not(.disabled) click" : function(el, ev) {
+    var instance = this.options.instance
+    , that = this;
+
+    can.each(this.options.$content.find("form").serializeArray(), this.proxy("set_value"));
 
     var ajd = instance.save().done(function() {
       that.element.modal_form("hide");

@@ -16,7 +16,7 @@
         <i class="grcicon-help-black"></i>
       </label>
       {{!FIXIT: Proposed. If it won't be implemented, remove this one}}
-      <select class="input-block-level">
+      <select name="company_control" class="input-block-level">
         <option selected="selected" value="0">No</option>
         <option value="1">Yes</option>
       </select>
@@ -28,8 +28,10 @@
         <i class="grcicon-help-black"></i>
       </label>
       {{!FIXIT: Need List of possible directives // We need titles followed by CODE, not just CODE}}
-      <select class="input-block-level" name="directive">
-        <option value="">Dummy Directive</option>
+      <select class="input-block-level" name="directive.id">
+        {{#all 'Directive'}}
+        <option value="{{id}}">{{title}} ({{slug}})</option>
+        {{/all}}
       </select>
     </div>
   </div>
@@ -48,7 +50,7 @@
         Owner/Person of Contact
         <i class="grcicon-help-black"></i>
       </label>
-      <input class="input-block-level" name="owner" placeholder="Enter Title" type="text" value="{{owner}}">
+      <input class="input-block-level" name="owner" placeholder="Enter Name" type="text" value="{{owner}}">
       <label>
         Direct URL
         <i class="grcicon-help-black"></i>
@@ -100,12 +102,12 @@
           Kind
           <i class="grcicon-help-black"></i>
         </label>
-        <select class="input-block-level" name="kind">
-          <option selected="selected" value="">None</option>
-          <option value="1">Reactive</option>
-          <option value="2">Administrative</option>
-          <option value="3">Detective</option>
-          <option value="4">Preventative</option>
+        <select class="input-block-level" name="kind.id" numeric="numeric">
+          <option {{^kind.id}}selected="selected"{{/kind.id}} value="">None</option>
+          <option value="1" {{^if_equals kind.id '1'}}selected="selected"{{/if_equals}}>Reactive</option>
+          <option value="2" {{^if_equals kind.id '2'}}selected="selected"{{/if_equals}}>Administrative</option>
+          <option value="3" {{^if_equals kind.id '3'}}selected="selected"{{/if_equals}}>Detective</option>
+          <option value="4" {{^if_equals kind.id '4'}}selected="selected"{{/if_equals}}>Preventative</option>
         </select>
       </div>
       <div class="span3">
@@ -115,8 +117,8 @@
         </label>
         <select class="input-block-level" name="fraud_related">
           <option selected="selected" value="">Choose</option>
-          <option value="0">No</option>
-          <option value="1">Yes</option>
+          <option value="0" {{^fraud_related}}selected="selected"{{/fraud_related}}>No</option>
+          <option value="1" {{#if_equals fraud_related '1'}}selected="selected"{{/if_equals}}>Yes</option>
         </select>
       </div>
       <div class="span3">
@@ -126,8 +128,8 @@
         </label>
         <select class="input-block-level" name="key_control">
           <option selected="selected" value="">Choose</option>
-          <option value="0">Non-key</option>
-          <option value="1">Key</option>
+          <option value="0" {{^key_control}}selected="selected"{{/key_control}}>Non-key</option>
+          <option value="1" {{#if_equals key_control '1'}}selected="selected"{{/if_equals}}>Key</option>
         </select>
       </div>
       <div class="span3">
@@ -135,11 +137,11 @@
           Means
           <i class="grcicon-help-black"></i>
         </label>
-        <select class="span12" name="means">
-          <option selected="selected" value="">None</option>
-          <option value="5">Manual</option>
-          <option value="7">Automated</option>
-          <option value="6">Manual with Segregation of Duties</option>
+        <select class="span12" name="means.id" numeric="numeric">
+          <option value="" {{^means.id}}selected="selected"{{/means.id}}>None</option>
+          <option value="5" {{^if_equals means.id '5'}}selected="selected"{{/if_equals}}>Manual</option>
+          <option value="7" {{^if_equals means.id '7'}}selected="selected"{{/if_equals}}>Automated</option>
+          <option value="6" {{^if_equals means.id '6'}}selected="selected"{{/if_equals}}>Manual with Segregation of Duties</option>
         </select>
       </div>
     </div>
@@ -168,26 +170,10 @@
           <i class="grcicon-help-black"></i>
         </label>
         {{!FIXIT: Couldn't find variable name for this one w/ POSTMAN}}
-        <select class="input-block-level" multiple="multiple" name="categories">
-          <option value="1">Access Control</option>
-          <option value="2">&nbsp;&nbsp;&nbsp;Access Management</option>
-          <option value="3">&nbsp;&nbsp;&nbsp;Authorization</option>
-          <option value="4">&nbsp;&nbsp;&nbsp;Authentication</option>
-          <option value="11">&nbsp;&nbsp;&nbsp;Governance</option>
-          <option value="12">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Training</option>
-          <option value="13">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Policies &amp; Procedures</option>
-          <option value="14">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Monitoring</option>
-          <option value="5">Change Management</option>
-          <option value="6">&nbsp;&nbsp;&nbsp;Segregation of Duties</option>
-          <option value="7">&nbsp;&nbsp;&nbsp;Configuration Management</option>
-          <option value="15">&nbsp;&nbsp;&nbsp;Ken's Kategory</option>
-          <option value="8">Business Continuity</option>
-          <option value="9">&nbsp;&nbsp;&nbsp;Disaster Recovery</option>
-          <option value="10">&nbsp;&nbsp;&nbsp;Physical Security</option>
-          <option value="16">Core</option>
-          <option value="26">Availability</option>
-          <option value="27">Integrity</option>
-          <option value="28">Confidentiality</option>
+        <select class="input-block-level" multiple="multiple" name="categories.id">
+          {{#all 'Category'}}
+          <option value="{{id}}">{{name}}</option>
+          {{/all}}
         </select>
       </div>
     </div>

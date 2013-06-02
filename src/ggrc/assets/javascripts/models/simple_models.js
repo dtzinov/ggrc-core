@@ -151,7 +151,7 @@ can.Model.Cacheable("CMS.Models.Risk", {
     });
   }
   , create : function(params) {
-    params[trigger] = params[risk_trigger];
+    params.trigger = params.risk_trigger;
     return $.ajax({
       type : "POST"
       , url : "/api/risks"

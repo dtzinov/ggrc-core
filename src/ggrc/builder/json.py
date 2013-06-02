@@ -144,8 +144,11 @@ class UpdateAttrHandler(object):
     else:
       rel_obj = json_obj.get(attr_name)
       if rel_obj:
-        return db.session.query(rel_class).filter(
+        try:
+          return db.session.query(rel_class).filter(
             rel_class.id == rel_obj[u'id']).one()
+        except(TypeError):
+          raise TypeError(''.join(['Failed to convert attribute ', attr_name]))
       return None
 
   @classmethod

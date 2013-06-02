@@ -19,7 +19,7 @@ can.Model.Cacheable("CMS.Models.Category", {
     }
 
     function treeify(list, pid) {
-      var ret = filter_out(list, function(s) { return s.parent_id == pid });
+      var ret = filter_out(list, function(s) { return s.parent && (s.parent.id == pid); });
       can.$(ret).each(function() {
         this.children = treeify(list, this.id);
       });
@@ -30,10 +30,13 @@ can.Model.Cacheable("CMS.Models.Category", {
       can.extend({ url : "/api/categories", dataType : "json"}, params)
     ).then(
       function(list, xhr) {
-        list = list[root_collection + "_collection"] 
-        ? list[root_collection + "_collection"][root_collection] 
+        list = list[root_collection + "_collection"]
+        ? list[root_collection + "_collection"]
         : list;
-        
+       list = list[root_collection]
+        ? list[root_collection]
+        : list;
+
         can.$(list).each(function(i, s) {
           can.extend(s, s[root_object]);
           delete s[root_object];
@@ -66,6 +69,8 @@ can.Model.Cacheable("CMS.Models.Category", {
   , init : function() { 
     this._super && this._super.apply(this, arguments);
     this.tree_view_options.child_options[0].model = this;
+
+    this.validatePresenceOf("title");
   }
 }, {
   init : function() {

@@ -204,8 +204,8 @@ $.ajaxPrefilter(function( options, originalOptions, jqXHR ) {
         el = newel;
       } else {
         //we are inside the element we want to add attrs to.
-        var p = el.parentNode
-        p.removeChild(el)
+        var p = el.parentNode;
+        p.removeChild(el);
         el = p;
       }
 
@@ -213,7 +213,7 @@ $.ajaxPrefilter(function( options, originalOptions, jqXHR ) {
         var $el = $(el);
         can.each(attribs, function(attrib) {
           $el.attr(attrib.name, $("<div>").html(can.view.render(attrib.value, data.serialize ? data.serialize() : data)).html());
-        })
+        });
       }
 
       for(var i = 0; i < args.length - 1; i += 2) {
@@ -478,12 +478,44 @@ Mustache.registerHelper("show_expander", function() {
       typeof d === "function" && (d = d());
       return c && (d && (d.length == null || d.length > 0));
     }, true);
-  }, false) ? options.fn(this) : options.inverse(this); 
+  }, false) ? options.fn(this) : options.inverse(this);
 });
 
 Mustache.registerHelper("allow_help_edit", function() {
   var options = arguments[arguments.length - 1];
   return options.fn(this); //always true for now
+});
+
+Mustache.registerHelper("all", function(type, options) {
+  var model = CMS.Models[type] || GGRC.Models[type]
+  , $dummy_content = $(options.fn({})).first()
+  , tag_name = $dummy_content.prop("tagName")
+  , items_dfd, hook;
+
+  function hookup(element, parent, view_id) {
+    items_dfd.done(function(items){
+      var $el = $(element);
+      can.each(items, function(item) {
+        $(can.view.frag(options.fn(item), parent)).appendTo(element.parentNode);
+      });
+      $el.remove();
+    });
+    return element.parentNode;
+  }
+
+  if($dummy_content.attr("data-view-id")) {
+    can.view.hookups[$dummy_content.attr("data-view-id")] = hookup;
+  } else {
+    hook = can.view.hook(hookup);
+    $dummy_content.attr.apply($dummy_content, can.map(hook.split('='), function(s) { return s.replace(/'|"| /, "");}));
+  }
+
+  if(model.cache) {
+    items_dfd = $.when(can.map(Object.keys(model.cache), function(idx) { return model.cache[idx]; }));
+  } else {
+    items_dfd = model.findAll();
+  }
+  return "<" + tag_name + " data-view-id='" + $dummy_content.attr("data-view-id") + "'></" + tag_name + ">";
 });
 
 })(this, jQuery, can);
