@@ -1,0 +1,40 @@
+@when('Querying "{resource_type}" with "{querystring}"')
+def query_resource_collection(context, resource_type, querystring):
+  url = '{0}?{1}'.format(
+      get_service_endpoint_url(context, resource_type),
+      querystring)
+  get_resource_and_name_it(context, url, 'queryresultcollection')
+
+@when('Querying "{resource_type}" with bad argument "{querystring}"')
+def query_with_bad_argument(context, resource_type, querystring):
+  url = '{0}?{1}'.format(
+      get_service_endpoint_url(context, resource_type),
+      querystring)
+  context.response = get_resource(context, url)
+
+def check_for_resource_in_queryresult(context, resource_name, expected):
+  resource = getattr(context, resource_name)
+  queryresult = context.queryresultcollection
+  root = queryresult.keys()[0]
+  from ggrc import models
+  model_class = getattr(models, resource.resource_type)
+  entry_list = queryresult[root][model_class.__tablename__]
+  result_pairs = set([(o[u'id'], o[u'selfLink']) for o in entry_list])
+  check_pair = (resource.get(u'id'), resource.get(u'selfLink'))
+  if expected:
+    assert check_pair in result_pairs, \
+        'Expected to find {0} in results {1}'.format(
+            check_pair, result_pairs)
+  else:
+    assert check_pair not in result_pairs, \
+        'Expected not to find {0} in results {1}'.format(
+            check_pair, result_pairs)
+
+
+@then('"{resource_name}" is in query result')
+def check_resource_in_queryresult(context, resource_name):
+  check_for_resource_in_queryresult(context, resource_name, True)
+
+@then('"{resource_name}" is not in query result')
+def check_resource_not_in_queryresult(context, resource_name):
+  check_for_resource_in_queryresult(context, resource_name, False)
