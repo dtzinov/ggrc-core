@@ -35,7 +35,8 @@ class ChangeTracked(object):
   """A model with fields to tracked the last user to modify the model, the
   creation time of the model, and the last time the model was updated.
   """
-  # FIXME: change modified_by_id to nullable=False when there is an Account model
+  # FIXME: change modified_by_id to nullable=False when there is an Account
+  # model
   modified_by_id = db.Column(db.Integer)
   created_at = db.Column(
       db.DateTime,

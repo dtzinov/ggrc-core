@@ -1,14 +1,15 @@
 import ggrc.builder
 import ggrc.services
+import iso8601
 from datetime import datetime
 from flask import _request_ctx_stack, request
 from ggrc import db
 from ggrc.models.reflection import AttributeInfo
 from ggrc.services.util import url_for
-from iso8601 import parse_date
 from sqlalchemy.ext.associationproxy import AssociationProxy
 from sqlalchemy.orm.attributes import InstrumentedAttribute
 from sqlalchemy.orm.properties import RelationshipProperty
+from werkzeug.exceptions import BadRequest
 
 """JSON resource state representation handler for gGRC models."""
 
@@ -121,13 +122,25 @@ class UpdateAttrHandler(object):
   def DateTime(cls, obj, json_obj, attr_name, class_attr):
     """Translate the JSON value for a ``Datetime`` column."""
     value = json_obj.get(attr_name)
-    return parse_date(value) if value else None
+    try:
+      return iso8601.parse_date(value) if value else None
+    except iso8601.ParseError as e:
+      raise BadRequest(
+          'Malformed DateTime {0} for parameter {1}. '
+          'Error message was: {2}'.format(value, attr_name, e.message)
+          )
 
   @classmethod
   def Date(cls, obj, json_obj, attr_name, class_attr):
     """Translate the JSON value for a ``Date`` column."""
     value = json_obj.get(attr_name)
-    return datetime.strptime(value, "%Y-%m-%d") if value else None
+    try:
+      return datetime.strptime(value, "%Y-%m-%d") if value else None
+    except ValueError as e:
+      raise BadRequest(
+          'Malformed Date {0} for parameter {1}. '
+          'Error message was: {2}'.format(value, attr_name, e.message)
+          )
 
   @classmethod
   def query_for(cls, rel_class, json_obj, attr_name, uselist):

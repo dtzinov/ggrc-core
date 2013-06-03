@@ -30,10 +30,12 @@ Feature: Collection filtering via query parameters
     Then "resource3" is not in query result
 
   Examples: Resources
-      | resource_type      | property_name | match_value1 | match_value2 | match_value3 | nomatch_value |
-      | Category           | name          | category1    | category2    | category3    | none_match    |
-      | Category           | scope_id      | 3            | 2            | 1            | 5             |
-      | Help               | slug          | foo          | bar          | baz          | never         |
+      | resource_type | property_name | match_value1        | match_value2        | match_value3        | nomatch_value       |
+      | Category      | name          | category1           | category2           | category3           | none_match          |
+      | Category      | scope_id      | 3                   | 2                   | 1                   | 5                   |
+      | Help          | slug          | foo                 | bar                 | baz                 | never               |
+      | Program       | start_date    | 2013-06-03T00:00:00 | 2013-06-02T00:00:00 | 2013-06-01T00:00:00 | 2013-05-31T00:00:00 |
+      | Cycle         | start_at      | 2013-06-03          | 2013-06-02          | 2013-06-01          | 2013-05-31          |
 
   Scenario: A single boolean query parameter supplied to a collection finds matching resources
     Given a new "Category" named "resource1"
@@ -55,6 +57,7 @@ Feature: Collection filtering via query parameters
     When Querying "Category" with bad argument "required=random"
     Then a "400" status code is received
 
+  @skip
   Scenario Outline: An invalid query parameter is supplied to a collection receives 400
     When Querying "<resource_type>" with bad argument "<querystring>"
     Then a "400" status code is received

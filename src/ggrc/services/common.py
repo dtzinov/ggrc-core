@@ -1,8 +1,8 @@
 import datetime
 import ggrc.builder.json
 import hashlib
+import iso8601
 import json
-import sqlalchemy.types
 import time
 from flask import url_for, request, current_app
 from flask.views import View
@@ -10,7 +10,7 @@ from ggrc import db
 from ggrc.fulltext import get_indexer
 from ggrc.fulltext.recordbuilder import fts_record_for
 from sqlalchemy import and_, cast
-from sqlalchemy.types import AbstractType, Boolean
+from sqlalchemy.types import AbstractType, Boolean, Date, DateTime
 from werkzeug.exceptions import BadRequest
 from wsgiref.handlers import format_date_time
 
@@ -48,6 +48,14 @@ class UnicodeSafeJsonWrapper(dict):
 
   def get(self, key, default=None):
     return super(UnicodeSafeJsonWrapper, self).get(unicode(key), default)
+
+class BadQueryParameter(BadRequest):
+  """Temporary distinction to allow unkown query parameters through without
+  breaking request format checking for other things like Date, Datetime, and
+  Boolean
+  """
+  def __init__(self, message):
+    super(BadQueryParameter, self).__init__(message)
 
 class ModelView(View):
   pk = 'id'
@@ -91,12 +99,16 @@ class ModelView(View):
     if request.args:
       try:
         query = query.filter(self.collection_filters())
+      #FIXME neither of the except handlers should be needed.
+      #except BadQueryParameter:
       except BadRequest:
         pass
     return query.order_by(self.model.updated_at.desc())
 
   def get_attr_for_query_param(self, attrname):
-    badrequest = lambda: BadRequest(
+    #FIXME Differentiating bad parameter to allow it through, for now
+    #badrequest = lambda: BadRequest(
+    badrequest = lambda: BadQueryParameter(
         'Unknown or unsupported query parameter {0}'.format(attrname))
     if not hasattr(self.model, attrname):
       raise badrequest()
@@ -107,7 +119,8 @@ class ModelView(View):
     return attr
 
   def coerce_value_for_query_param(self, attr, arg, value):
-    if type(attr.type) is Boolean:
+    attr_type = type(attr.type)
+    if attr_type is Boolean:
       value = value.lower()
       if value == 'true':
         value = True
@@ -116,6 +129,22 @@ class ModelView(View):
       else:
         raise BadRequest('{0} must be "true" or "false", not {1}.'.format(
           arg, value))
+    elif attr_type is DateTime:
+      try:
+       value = iso8601.parse_date(value)
+      except iso8601.ParseError as e:
+        raise BadRequest(
+            'Malformed DateTime {0} for parameter {0}. '
+            'Error message was: {1}'.format(value, arg, e.message)
+            )
+    elif attr_type is Date:
+      try:
+        value = datetime.datetime.strptime(value, '%Y-%m-%d')
+      except ValueError as e:
+        raise BadRequest(
+            'Malformed Date {0} for parameter {1}. '
+            'Error message was: {2}'.format(value, arg, e.message)
+            )
     return value
 
   def collection_filters(self):
