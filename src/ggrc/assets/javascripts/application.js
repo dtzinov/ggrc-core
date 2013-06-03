@@ -49,6 +49,8 @@ window.onerror = function(message, url, linenumber) {
       type = type[0] + "erson"; break;
       case "processes":
       type = type[0] + "rocess"; break;
+      case "policies":
+      type = type[0] + "olicy"; break;
       case "systems_processes":
       type = type[0] + "ystem_" + type[8] + "rocess";
       break;

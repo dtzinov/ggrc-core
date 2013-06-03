@@ -102,6 +102,15 @@ CMS.Controllers.Filterable("CMS.Controllers.QuickSearch", {
   , ".tabbable loaded" : function(el, ev) {
     $(el).scrollTop(0);
   }
+
+  , ".nav-tabs li click" : function(el, ev) {
+    var plural = el.find(".business, .governance, .risk, .programs").text();
+    var singular = can.map(window.cms_singularize(plural).split("_"), can.capitalize).join(" ");
+    el.closest(".widget").find(".object-type").text(singular)
+      .closest("a").attr("data-object-plural", plural.split(" ").join("_").toLowerCase())
+      .attr("data-object-singular", singular);
+  }
+
 });
 
 })(this.can, this.can.$);

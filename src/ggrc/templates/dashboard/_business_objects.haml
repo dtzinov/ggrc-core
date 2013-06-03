@@ -31,8 +31,8 @@
 -block main
   .tabbable.tabs-left{ 'id' : "#{tabbable_id}" }
     %ul.nav.nav-tabs
-      =tab("Process", "Processes", "/search?s=&qr={0}".format(quick_result_business_objects), "active", "business")
-      =tab("System", "Systems", "/search?s=&qr={0}".format(quick_result_business_objects), "", "business")
+      =tab("Process", "Processes", "/search?s=&qr={0}".format(quick_result_business_objects), "", "business")
+      =tab("System", "Systems", "/search?s=&qr={0}".format(quick_result_business_objects), "active", "business")
       =tab("Org Group", "Org Groups", "/search?s=&qr={0}".format(quick_result_business_objects), "", "business")
       =tab("Project", "Projects", "/search?s=&qr={0}".format(quick_result_business_objects), "", "business")
       =tab("Facility", "Facilities", "/search?s=&qr={0}".format(quick_result_business_objects), "", "business")

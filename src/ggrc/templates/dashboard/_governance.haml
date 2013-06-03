@@ -32,10 +32,10 @@
   .tabbable.tabs-left{ 'id': '{{ tabbable_id }}' }
     -# FIXME: Fix all `data-tab-href` and `data-new-href` attribute paths
     %ul.nav.nav-tabs
-      =tab("Regulation", "Regulations", "/search?s=&qr={0}".format(quick_result_business_objects), "active", "governance")
+      =tab("Regulation", "Regulations", "/search?s=&qr={0}".format(quick_result_business_objects), "", "governance")
       =tab("Policy", "Policies", "/search?s=&qr={0}".format(quick_result_business_objects), "", "governance")
       =tab("Contract", "Contracts", "/search?s=&qr={0}".format(quick_result_business_objects), "", "governance")
-      =tab("Control", "Controls", "/search?s=&qr={0}".format(quick_result_business_objects), "", "governance")
+      =tab("Control", "Controls", "/search?s=&qr={0}".format(quick_result_business_objects), "active", "governance")
 
     .tab-content
       .tab-pane{ id : "#{prefix}_regulations" }
