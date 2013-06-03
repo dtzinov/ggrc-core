@@ -37,7 +37,7 @@ can.Control("CMS.Controllers.Filterable", {
     return $.when.apply($, search_dfds).then(function(data) {
       var _filter = null, ids = null;
       if(data) {
-        v_filter = that.options.model ? data.getResultsFor(that.options.model) : data.entries;
+        _filter = that.options.model ? data.getResultsFor(that.options.model) : data;
         ids = data ? can.map(data.entries, function(v) { return v.id; }) : null;
       }
       that.last_filter_ids = ids;
