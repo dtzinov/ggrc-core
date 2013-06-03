@@ -112,7 +112,7 @@ can.Control("GGRC.Controllers.Modals", {
       that.element.modal_form("hide");
     }).fail(function(xhr, status) {
       var error = xhr.getResponseHeader("X-Flash-Error")
-      , tmpl = '<div class="alert alert-error"><a href="#" class="close" data-dismiss="alert">x</a><span>'
+      , tmpl = '<div class="alert alert-error"><a href="#" class="close" data-dismiss="alert">&times;</a><span>'
         + error
         + '</span></div>';
 
