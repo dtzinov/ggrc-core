@@ -532,3 +532,16 @@ strong {
   }
 
 }
+
+.popoverfooter {
+  p.smallcode {
+    padding-top:4px;
+    font-style:italic;
+    color:lighten($gray,10%);
+    margin-bottom:0px;
+  }
+}
+
+strong.capitalize {
+  text-transform:capitalize;
+}

@@ -2300,7 +2300,297 @@
                     1
             -endmacro
             .row-fluid
-              .span6
+              .span12
+
+                // NEW POPOVER MACROS
+
+                -macro new_popover_title(object_title,icon,slug)
+                  .row-fluid
+                    .span10
+                      %h3
+                        %i{ 'class': 'grcicon-={ icon }-color'}
+                        %span.title {{ object_title }}
+                    .span2
+                      %a.btn.btn-mini.btn-primary.pull-right{ 'href': '#', 'rel': 'tooltip', 'title': 'View ={ icon }' }
+                        %i.grcicon-goto-white
+                -endmacro
+
+                -macro controls_progressbar()
+                  %h4
+                    Controls (200)
+                    .progress
+                      .bar.bar-success{ 'style': 'width:50%', 'rel': 'tooltip', 'title': '100 Done' }
+                        100
+                      .bar.bar-danger{ 'style': 'width:35%', 'rel': 'tooltip', 'title': '70 N/A' }
+                        70
+                      .bar.bar-warning{ 'style': 'width:15%', 'rel': 'tooltip', 'title': '30 Pending' }
+                        30
+                -endmacro
+
+
+                -macro new_popover_content(object)
+                  .popover-inner-content
+                    .row-fluid
+                      .span12
+                        %h4 Description
+                        .rtf
+                          %p
+                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+                    -if object == 'program'
+                      .row-fluid
+                        .span6
+                          %h4
+                            Audit Status
+                          %p.audit-status
+                            %i.grcicon-eye-completed
+                            %span.status.completed Completed
+                            %br
+                            started on:
+                            02/14/2013
+                            %br
+                            ended on:
+                            02/31/2013
+                            %br
+                            %strong
+                              report date:
+                              04/01/2013
+                            %br
+                            %br
+                        .span6
+                          {{ controls_progressbar() }}
+                          %h4
+                            Directives (14)
+                          %i.grcicon-regulation-color
+                          8
+                          &nbsp;
+                          %i.grcicon-contract-color
+                          2
+                          &nbsp;
+                          %i.grcicon-policy-color
+                          4
+                    -elif object == 'contract'
+                      .row-fluid
+                        .span6
+                          {{ controls_progressbar() }}
+                        .span3
+                          %h4
+                            Clauses
+                          %i.grcicon-clause-color
+                          8
+                        .span3
+                          %h4
+                            Programs
+                          %i.grcicon-program-color
+                          2
+                    -elif object == 'policy'
+                      .row-fluid
+                        .span6
+                          {{ controls_progressbar() }}
+                        .span3
+                          %h4
+                            Sections
+                          %i.grcicon-section-color
+                          8
+                        .span3
+                          %h4
+                            Programs
+                          %i.grcicon-program-color
+                          2
+                    -elif object == 'regulation'
+                      .row-fluid
+                        .span6
+                          {{ controls_progressbar() }}
+                        .span3
+                          %h4
+                            Sections
+                          %i.grcicon-section-color
+                          8
+                        .span3
+                          %h4
+                            Programs
+                          %i.grcicon-program-color
+                          2
+                    -elif object == 'company_controls'
+                      .row-fluid
+                        .span12
+                          {{ controls_progressbar() }}
+                    -elif object == 'control'
+                      .row-fluid
+                        .span6
+                          %h4
+                            Directive Programs
+                          %i.grcicon-program-color
+                          8 
+                        .span6
+                          %h4
+                            Company Control Programs
+                          %i.grcicon-company_controls-color
+                          1
+                    -elif object == 'dataasset'
+                      .row-fluid
+                        .span6
+                          %h4
+                            Controls
+                          %i.grcicon-control-color
+                          8 
+                        .span6
+                          %h4
+                            Programs
+                          %i.grcicon-program-color
+                          2
+                    -elif object == 'market'
+                      .row-fluid
+                        .span6
+                          %h4
+                            Controls
+                          %i.grcicon-control-color
+                          8 
+                        .span6
+                          %h4
+                            Programs
+                          %i.grcicon-program-color
+                          2
+                    -elif object == 'facility'
+                      .row-fluid
+                        .span6
+                          %h4
+                            Controls
+                          %i.grcicon-control-color
+                          8 
+                        .span6
+                          %h4
+                            Programs
+                          %i.grcicon-program-color
+                          2
+                    -elif object == 'product'
+                      .row-fluid
+                        .span6
+                          %h4
+                            Controls
+                          %i.grcicon-control-color
+                          8 
+                        .span6
+                          %h4
+                            Programs
+                          %i.grcicon-program-color
+                          2
+                    -elif object == 'project'
+                      .row-fluid
+                        .span6
+                          %h4
+                            Controls
+                          %i.grcicon-control-color
+                          8 
+                        .span6
+                          %h4
+                            Programs
+                          %i.grcicon-program-color
+                          2
+                    -elif object == 'orggroup'
+                      .row-fluid
+                        .span6
+                          %h4
+                            Controls
+                          %i.grcicon-control-color
+                          8 
+                        .span6
+                          %h4
+                            Programs
+                          %i.grcicon-program-color
+                          2
+                    -elif object == 'process'
+                      .row-fluid
+                        .span6
+                          {{ controls_progressbar() }}
+                        .span6
+                          %h4
+                            Dependant Process/Systems
+                          %i.grcicon-process-color
+                          2
+                          &nbsp;
+                          %i.grcicon-system-color
+                          2
+                    -elif object == 'system'
+                      .row-fluid
+                        .span6
+                          {{ controls_progressbar() }}
+                        .span6
+                          %h4
+                            Dependant Process/Systems
+                          %i.grcicon-process-color
+                          2
+                          &nbsp;
+                          %i.grcicon-system-color
+                          2
+
+
+
+                    .row-fluid
+                      .span6
+                        %h4 Owner/Person of Contact
+                        %a{ 'href': 'mailto:marshal.matters@gmail.com' }
+                          %p.oneline
+                            Marshal Matters
+                      .span6
+                        %h4
+                          %strong.capitalize
+                            {{ object }}
+                          URL
+                        %a{ 'href': '#' }
+                          %p.oneline
+                            http://gdrive.google.com/specs/documents/2013/something/something
+                  .popoverfooter
+                    .row-fluid
+                      .span8
+                        %p.smallcode
+                          Code: CODE-XXX
+
+                -endmacro
+
+                // NEW POPOVER MACROS END
+
+
+                %a{ 'href': 'javascript://', 'class': 'btn', 'data-popover-trigger': 'sticky-hover', 'data-placement': 'right', 'data-original-title': '={ new_popover_title("Program Title", "program")|escape }', 'data-content': '={ new_popover_content("program")|escape }' }
+                  Program
+                %a{ 'href': 'javascript://', 'class': 'btn', 'data-popover-trigger': 'sticky-hover', 'data-placement': 'right', 'data-original-title': '={ new_popover_title("Company Controls Title", "company_controls")|escape }', 'data-content': '={ new_popover_content("company_controls")|escape }' }
+                  Company Controls Program
+                %br
+                %br
+                %a{ 'href': 'javascript://', 'class': 'btn', 'data-popover-trigger': 'sticky-hover', 'data-placement': 'right', 'data-original-title': '={new_popover_title("Policy Title", "policy")|escape}', 'data-content': '={ new_popover_content("policy")|escape }' }
+                  Policy
+
+                %a{ 'href': 'javascript://', 'class': 'btn', 'data-popover-trigger': 'sticky-hover', 'data-placement': 'right', 'data-original-title': '={new_popover_title("Contract Title", "contract")|escape}', 'data-content': '={ new_popover_content("contract")|escape }' }
+                  Contract
+
+                %a{ 'href': 'javascript://', 'class': 'btn', 'data-popover-trigger': 'sticky-hover', 'data-placement': 'right', 'data-original-title': '={new_popover_title("Regulation Title", "regulation")|escape}', 'data-content': '={ new_popover_content("regulation")|escape }' }
+                  Regulation
+
+                %a{ 'href': 'javascript://', 'class': 'btn', 'data-popover-trigger': 'sticky-hover', 'data-placement': 'right', 'data-original-title': '={new_popover_title("Control Title", "control")|escape}', 'data-content': '={ new_popover_content("control")|escape }' }
+                  Control
+                %br
+                %br
+                %a{ 'href': 'javascript://', 'class': 'btn', 'data-popover-trigger': 'sticky-hover', 'data-placement': 'right', 'data-original-title': '={new_popover_title("Data Asset Title", "dataasset")|escape}', 'data-content': '={ new_popover_content("dataasset")|escape }' }
+                  Data Asset
+                %a{ 'href': 'javascript://', 'class': 'btn', 'data-popover-trigger': 'sticky-hover', 'data-placement': 'right', 'data-original-title': '={new_popover_title("Market Title", "market")|escape}', 'data-content': '={ new_popover_content("market")|escape }' }
+                  Market
+                %a{ 'href': 'javascript://', 'class': 'btn', 'data-popover-trigger': 'sticky-hover', 'data-placement': 'right', 'data-original-title': '={new_popover_title("Facility Title", "facility")|escape}', 'data-content': '={ new_popover_content("facility")|escape }' }
+                  Facility
+                %a{ 'href': 'javascript://', 'class': 'btn', 'data-popover-trigger': 'sticky-hover', 'data-placement': 'right', 'data-original-title': '={new_popover_title("Product Title", "product")|escape}', 'data-content': '={ new_popover_content("product")|escape }' }
+                  Product
+                %a{ 'href': 'javascript://', 'class': 'btn', 'data-popover-trigger': 'sticky-hover', 'data-placement': 'right', 'data-original-title': '={new_popover_title("Project Title", "project")|escape}', 'data-content': '={ new_popover_content("project")|escape }' }
+                  Project
+                %a{ 'href': 'javascript://', 'class': 'btn', 'data-popover-trigger': 'sticky-hover', 'data-placement': 'right', 'data-original-title': '={new_popover_title("Org Group Title", "orggroup")|escape}', 'data-content': '={ new_popover_content("orggroup")|escape }' }
+                  Org Group
+                %a{ 'href': 'javascript://', 'class': 'btn', 'data-popover-trigger': 'sticky-hover', 'data-placement': 'right', 'data-original-title': '={new_popover_title("Process Title", "process")|escape}', 'data-content': '={ new_popover_content("process")|escape }' }
+                  Process
+                %a{ 'href': 'javascript://', 'class': 'btn', 'data-popover-trigger': 'sticky-hover', 'data-placement': 'right', 'data-original-title': '={new_popover_title("System Title", "system")|escape}', 'data-content': '={ new_popover_content("system")|escape }' }
+                  System
+                %br
+                %br
+                %br
+                %br
+
                 %ul.tree-structure.simple.single-row-tabs
                   %li.program
                     %a{ 'href': '#', 'data-popover-trigger': 'sticky-hover', 'data-placement': 'right', 'data-original-title': '={program_popover_title()|escape}', 'data-content': '={program_popover_content_none()|escape}' }
@@ -2354,6 +2644,17 @@
                         .span1
                           .objects-count.pull-right
                             %i.grcicon-eye-completed
+
+
+
+
+
+
+
+
+
+
+
 
         %section#helper.widget
           %section.header
