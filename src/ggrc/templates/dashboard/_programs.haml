@@ -25,12 +25,11 @@
 -set quick_result_programs = quick_result_programs if quick_result_programs else None
 -set prefix = "qf" if quick_result_programs else "dash"
 
+-from 'shared/_quick_find.haml' import tab
+
 -block main
   .tabbable.tabs-left{ id : "{{ None if quick_result_programs is defined else \"quick_find_programs\" }}" }
     %ul.nav.nav-tabs{ style : "display:none"}
-      %li.active
-        -# TODO : Make a list template specially for programs
-        %a{ href : "##{prefix}_programs", 'data-tab-href' : "/api/programs?quick=true&qr=#{quick_result}", 'data-template' : "/static/mustache/dashboard/object_list.mustache", 'data-toggle' : 'tab', 'data-model' : 'CMS.Models.Program' }
-          programs
+      =tab("Program", "Programs", "/search?s=&qr={0}".format(quick_result_business_objects), "", "programs")
     .tab-content
       .tab-pane{ id : "#{prefix}_programs" }

@@ -112,3 +112,19 @@ begin
 rescue Chef::Exceptions::RecipeNotFound
   # Fail silently, since the file is optional
 end
+
+include_recipe "mysql"
+include_recipe "mysql::server"
+include_recipe "database::mysql"
+mysql_database 'ggrcdev' do
+  connection ({
+    :host => "localhost", :username => 'root', :password => 'root' })
+  action :create
+end
+
+mysql_database 'ggrcdevtest' do
+  connection ({
+    :host => "localhost", :username => 'root', :password => 'root' })
+  action :create
+end
+

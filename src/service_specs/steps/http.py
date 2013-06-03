@@ -155,9 +155,11 @@ def validate_resource_in_response(context, resource_type):
   #FIXME more more more
 
 def dates_within_tolerance(original, response):
-  return original - datetime.datetime.resolution \
-      <= response \
-      <= original + datetime.datetime.resolution
+  floor = datetime.datetime(
+      original.year, original.month, original.day, original.hour,
+      original.minute, original.second, tzinfo=original.tzinfo)
+  ceiling = floor + datetime.timedelta(seconds=1)
+  return floor <= response <= ceiling
 
 @then('the received "{resource_type}" matches the one we posted')
 def check_resource_equality_for_response(context, resource_type):

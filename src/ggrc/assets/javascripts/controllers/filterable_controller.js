@@ -4,8 +4,7 @@
 
 can.Control("CMS.Controllers.Filterable", {
   defaults : {
-    model : null
-    , filterable_items_selector : "[data-model]"
+    filterable_items_selector : "[data-model]"
     , spinner_while_filtering : false
     , spinner_style : {
       top : 100
@@ -20,7 +19,7 @@ can.Control("CMS.Controllers.Filterable", {
   filter : function(str, extra_params, dfd) {
     var that = this
     , spinner
-    , search_dfds = [this.options.model.findAll($.extend({ id : this.options.id, s : str}, extra_params))];
+    , search_dfds = str ? [GGRC.Models.Search.search(str, extra_params)] : [$.when(null)];
     dfd && search_dfds.push(dfd);
 
     if(this.options.spinner_while_filtering) {
@@ -29,8 +28,13 @@ can.Control("CMS.Controllers.Filterable", {
       this.element.append(spinner.el);
     }
     return $.when.apply($, search_dfds).then(function(data) {
-      var ids = can.map(data, function(v) { return v.id });
+      var _filter = null, ids = null;
+      if(data) {
+        v_filter = that.options.model ? data.getResultsFor(that.options.model) : data.entries;
+        ids = data ? can.map(data.entries, function(v) { return v.id; }) : null;
+      }
       that.last_filter_ids = ids;
+      that.last_filter = _filter;
       that.redo_last_filter();
       spinner && spinner.stop();
       return ids;
@@ -42,7 +46,7 @@ can.Control("CMS.Controllers.Filterable", {
     var that = this;
     that.element.find(that.options.filterable_items_selector).each(function() {
       var $this = $(this);
-      if(can.inArray($this.data("model").id, that.last_filter_ids) > - 1)
+      if(that.last_filter_ids == null || can.inArray($this.data("model").id, that.last_filter_ids) > -1)
         $this.show();
       else
         $this.hide();

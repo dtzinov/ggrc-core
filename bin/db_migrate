@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+SCRIPTPATH=$( cd "$(dirname "$0")" ; pwd -P )
+
+cd "${SCRIPTPATH}/../src"
+alembic -c migrations/alembic.ini upgrade head
+

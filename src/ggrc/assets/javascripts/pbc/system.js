@@ -80,6 +80,9 @@ can.Model.Cacheable("CMS.Models.System", {
             }
         });
         this.tree_view_options.child_options[1].model = CMS.Models.System;
+
+        this.validatePresenceOf("title");
+        this.validateFormatOf("network_zone", /[0-9]*/);
     }
     , tree_view_options : {
       list_view : "/static/mustache/systems/tree.mustache"

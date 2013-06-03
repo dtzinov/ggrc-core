@@ -22,8 +22,12 @@ def get_indexer(indexer=[]):
   if not indexer:
     import sys
     from ggrc import settings
-    indexer_name = \
-        settings.FULLTEXT_INDEXER or 'ggrc.fulltext.sqlite.Sqlite3Indexer'
+    if settings.FULLTEXT_INDEXER:
+      indexer_name = settings.FULLTEXT_INDEXER
+    else:
+      db_scheme = settings.SQLALCHEMY_DATABASE_URI.split(':')[0].split('+')[0]
+      indexer_name = 'ggrc.fulltext.{db_scheme}.Indexer'.format(
+          db_scheme=db_scheme)
     idx = indexer_name.rfind('.')
     module_name = indexer_name[0:idx]
     class_name = indexer_name[idx+1:]

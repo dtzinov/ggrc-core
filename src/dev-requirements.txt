@@ -1,8 +1,10 @@
 behave
+Jinja2==2.6
 Flask-Testing
 git+https://github.com/rbarrois/factory_boy.git#egg=factory-boy
 mock
 requests
 PyYAML
 Flask-Jasmine
-
+pymysql
+Alembic==0.5.0

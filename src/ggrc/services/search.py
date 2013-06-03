@@ -28,7 +28,7 @@ def do_search(terms, list_for_type):
     entries_list.append({
       'id': id,
       'type': model_type,
-      'href': url_for(model_type, id),
+      'href': url_for(model_type, id=id),
       })
 
 def make_search_result(entries):

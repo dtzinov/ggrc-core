@@ -31,10 +31,7 @@ class Sqlite3Indexer(SqlIndexer):
   record_type = Sqlite3RecordProperty
 
   def search(self, terms):
-    return db.session.query(self.record_type).from_statement(
-        'select key, type, tags from {tablename} where content match "{terms}"'\
-            .format(
-                tablename=self.record_type.__tablename__,
-                terms=terms,
-                ))
+    return db.session.query(self.record_type).filter('content match :terms')\
+        .params(terms=terms)
 
+Indexer=Sqlite3Indexer
