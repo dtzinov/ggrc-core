@@ -89,7 +89,10 @@ class ModelView(View):
     else:
       query = db.session.query(self.model)
     if request.args:
-      query = query.filter(self.collection_filters())
+      try:
+        query = query.filter(self.collection_filters())
+      except BadRequest:
+        pass
     return query.order_by(self.model.updated_at.desc())
 
   def get_attr_for_query_param(self, attrname):
