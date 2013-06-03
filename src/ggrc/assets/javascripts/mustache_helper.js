@@ -374,7 +374,7 @@ can.each(["firstexist", "firstnonempty"], function(fname) {
 Mustache.registerHelper("pack", function() {
   var options = arguments[arguments.length - 1];
   var objects = can.makeArray(arguments).slice(0, arguments.length - 1);
-  var pack = new can.Observe();
+  var pack = {};
   can.each(objects, function(obj, i) {
       if(typeof obj === "function") {
           objects[i] = obj = obj();
@@ -396,18 +396,25 @@ Mustache.registerHelper("pack", function() {
         pack.attr(attr, newVal);
         }
       });
-    } 
-    pack.attr(typeof obj === "object" && obj.serialize ? obj.serialize() : obj);
+    }
+    if(obj._data) {
+      obj = obj._data;
+    }
+    for(var k in obj) {
+      if(obj.hasOwnProperty(k)) {
+        pack[k] = obj[k];
+      }
+    }
   });
   if(options.hash) {
-    can.each(Object.keys(options.hash), function(key) {
-      if(typeof options.hash[key] === "function") {
-        options.hash[key] = options.hash[key]();
+    for(var k in options.hash) {
+      if(options.hash.hasOwnProperty(k)) {
+        pack[k] = options.hash[k];
       }
-    });
-    pack.attr(options.hash);
+    }
   }
-  pack.attr("packed", pack.serialize()); //account for Can 1.1.3 not constructing context stack properly
+  //pack.attr("packed", pack.serialize()); //account for Can 1.1.3 not constructing context stack properly
+  pack = new can.Observe(pack);
   var retval = options.fn(pack);
   return retval;
 });
