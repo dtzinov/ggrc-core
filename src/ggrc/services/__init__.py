@@ -1,3 +1,9 @@
+
+# Copyright (C) 2013 Google Inc., authors, and contributors <see AUTHORS file>
+# Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
+# Created By:
+# Maintained By:
+
 from .common import *
 
 """All gGRC REST services."""
@@ -63,4 +69,3 @@ def init_all_services(app):
   from .description import ServiceDescription
   app.add_url_rule(
     '/api', view_func=ServiceDescription.as_view('ServiceDescription'))
-

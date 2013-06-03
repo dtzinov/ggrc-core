@@ -1,3 +1,9 @@
+
+# Copyright (C) 2013 Google Inc., authors, and contributors <see AUTHORS file>
+# Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
+# Created By:
+# Maintained By:
+
 """Utilties to deal with introspecting gGRC models for publishing, creation,
 and update from resource format representations, such as JSON."""
 

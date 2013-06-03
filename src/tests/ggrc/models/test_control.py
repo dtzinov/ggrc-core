@@ -1,3 +1,9 @@
+
+# Copyright (C) 2013 Google Inc., authors, and contributors <see AUTHORS file>
+# Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
+# Created By:
+# Maintained By:
+
 from ggrc import db
 from ggrc.models import Control
 from tests.ggrc import TestCase

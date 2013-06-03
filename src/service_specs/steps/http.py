@@ -1,3 +1,8 @@
+# Copyright (C) 2013 Google Inc., authors, and contributors <see AUTHORS file>
+# Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
+# Created By:
+# Maintained By:
+
 import datetime
 import json
 from behave import given, when, then
@@ -179,4 +184,3 @@ def check_resource_equality_for_response(context, resource_type):
       response = datetime.datetime.strptime(response, '%Y-%m-%d').date()
     assert original == response, 'for {0}: expected {1}, received {2}'.format(
         k, original, response)
-

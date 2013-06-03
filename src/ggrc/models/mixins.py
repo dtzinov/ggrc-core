@@ -1,3 +1,8 @@
+# Copyright (C) 2013 Google Inc., authors, and contributors <see AUTHORS file>
+# Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
+# Created By:
+# Maintained By:
+
 from ggrc import settings, db
 from sqlalchemy.ext.declarative import declared_attr
 from sqlalchemy.orm import relationship

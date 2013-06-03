@@ -1,3 +1,9 @@
+
+# Copyright (C) 2013 Google Inc., authors, and contributors <see AUTHORS file>
+# Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
+# Created By:
+# Maintained By:
+
 """Settings for Flask and Flask-SQLAlchemy
 
 Flask: http://flask.pocoo.org/docs/config/
@@ -37,4 +43,3 @@ for module_name in settings_modules.split(" "):
     raise
 
 #logging.info("SQLALCHEMY_DATABASE_URI: %s" % locals().get("SQLALCHEMY_DATABASE_URI", None))
-

@@ -1,3 +1,9 @@
+#
+# Copyright (C) 2013 Google Inc., authors, and contributors <see AUTHORS file>
+# Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
+# Created By:
+# Maintained By:
+#
 
 # NOTE: The following commands *must* be run from the `src/ggrc` directory.
 #   Paths are relative to that directory.

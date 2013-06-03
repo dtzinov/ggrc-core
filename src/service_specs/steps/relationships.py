@@ -1,3 +1,9 @@
+
+# Copyright (C) 2013 Google Inc., authors, and contributors <see AUTHORS file>
+# Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
+# Created By:
+# Maintained By:
+
 @given('a RelationshipType "{name}" forward phrase "{fwd}"')
 def create_relationship_type(context, name, fwd):
   from ggrc import db
@@ -23,4 +29,3 @@ def create_relationship_type(context, name, fwd, back):
       )
   db.session.add(t)
   db.session.commit()
-

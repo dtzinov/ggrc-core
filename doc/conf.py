@@ -1,4 +1,10 @@
 # -*- coding: utf-8 -*-
+
+# Copyright (C) 2013 Google Inc., authors, and contributors <see AUTHORS file>
+# Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
+# Created By:
+# Maintained By:
+
 #
 # Google Governance, Risk, and Compliance documentation build configuration file, created by
 # sphinx-quickstart on Thu May 30 15:27:41 2013.

@@ -3,6 +3,12 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
+   Copyright (C) 2013 Google Inc., authors, and contributors <see AUTHORS file>
+   Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
+   Created By: david@reciprocitylabs.com
+   Maintained By: david@reciprocitylabs.com
+
+
 gGRC - Google Governance, Risk, and Compliance
 ==============================================
 

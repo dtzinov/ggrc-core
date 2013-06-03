@@ -1,3 +1,9 @@
+#
+# Copyright (C) 2013 Google Inc., authors, and contributors <see AUTHORS file>
+# Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
+# Created By:
+# Maintained By:
+#
 # install all prerequisites for GGRC-Core development within a Vagrant VM.
 
 base_dir = '/vagrant/'
@@ -127,4 +133,3 @@ mysql_database 'ggrcdevtest' do
     :host => "localhost", :username => 'root', :password => 'root' })
   action :create
 end
-

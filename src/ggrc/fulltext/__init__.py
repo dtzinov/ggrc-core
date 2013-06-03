@@ -1,3 +1,9 @@
+
+# Copyright (C) 2013 Google Inc., authors, and contributors <see AUTHORS file>
+# Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
+# Created By:
+# Maintained By:
+
 class Indexer(object):
   def create_record(self, record):
     raise NotImplementedError()
@@ -35,4 +41,3 @@ def get_indexer(indexer=[]):
     module = sys.modules[module_name]
     indexer.append(getattr(module, class_name)())
   return indexer[0]
-

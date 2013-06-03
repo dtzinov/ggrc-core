@@ -1,3 +1,10 @@
+..
+  Copyright (C) 2013 Google Inc., authors, and contributors <see AUTHORS file>
+  Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
+  Created By: david@reciprocitylabs.com
+  Maintained By: david@reciprocitylabs.com
+
+
 ****************
 Review Documents
 ****************
@@ -20,7 +27,7 @@ outcome of the review.
 Example
 -------
 
-.. sourcecode::
+.. sourcecode:: rest
 
    ***********
    gGRC Review
@@ -39,10 +46,10 @@ Example
    YYYY-MM-DD
    ----------
      
-     :Status:
-       Open | Approved | Rejected
+   :Status:
+     Open | Approved | Rejected
 
-     :Files:
-        an-example.file
-        some_files/another_example.file
+   :Files:
+      an-example.file
+      some_files/another_example.file
 

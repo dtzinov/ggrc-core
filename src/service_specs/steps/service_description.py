@@ -1,3 +1,9 @@
+
+# Copyright (C) 2013 Google Inc., authors, and contributors <see AUTHORS file>
+# Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
+# Created By:
+# Maintained By:
+
 @then('all expected endpoints are listed and GETtable in "{resource_name}"')
 def validate_service_description(context, resource_name):
   service_description = getattr(context, resource_name)

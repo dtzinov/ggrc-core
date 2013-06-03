@@ -1,3 +1,10 @@
+/*
+ * Copyright (C) 2013 Google Inc., authors, and contributors <see AUTHORS file>
+ * Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
+ * Created By:
+ * Maintained By:
+ */
+
 /**
  * Full HTML5 compatibility rule set
  * These rules define which tags and CSS classes are supported and which tags should be specially treated.
