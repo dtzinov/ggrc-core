@@ -90,7 +90,7 @@ jQuery.ajaxPrefilter(function( options, originalOptions, jqXHR ) {
     data = can.deparam(options.data);
     options.dataType = "json";
     options.contentType = "application/json";
-    jqXHR.setRequestHeader("If-Match", '"' + data.etag + '"');
+    jqXHR.setRequestHeader("If-Match", data.etag);
     jqXHR.setRequestHeader("If-Unmodified-Since", data["last-modified"]);
     delete data.etag;
     delete data["last-modified"];

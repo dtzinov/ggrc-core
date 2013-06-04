@@ -22,8 +22,8 @@ can.Model("can.Model.Cacheable", {
     //can.getObject("cache", this, true);
 
     var _update = this.update;
-    this.update = function() {
-      var ret = _update.apply(this, arguments).fail(function(status) {
+    this.update = function(id, params) {
+      var ret = _update.call(this, id, this.process_args(params)).fail(function(status) {
         if(status === 409) {
           //handle conflict.
         }
@@ -161,7 +161,12 @@ can.Model("can.Model.Cacheable", {
       url : this.selfLink
       , type : "get"
       , dataType : "json"
-    }).done(can.proxy(this.constructor, "model"));
+    })
+    .then(function(data, status, xhr) {
+      data.etag = xhr.getResponseHeader("ETag");
+      data['last-modified'] = xhr.getResponseHeader("Last-Modified");
+    })
+    .then(can.proxy(this.constructor, "model"));
   }
 });
 

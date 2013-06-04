@@ -15,13 +15,11 @@ GGRC.Controllers.Modals("GGRC.Controllers.Help", {
   }
 }, {
   "{$content} input.btn[name='commit'] click" : function(el, ev) {
-    this.options.instance.attr("title", this.element.find("#help_title").val())
-    .attr("content", this.element.find("#help_content").val())
-    .save();
+    this.options.instance.save();
   }
 
   , find_params : function() {
-    return {id : 1};
+    return {slug : this.options.slug};
   }
 });
 
