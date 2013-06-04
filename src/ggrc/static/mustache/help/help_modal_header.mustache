@@ -1,23 +1,24 @@
 {{!div class="modal-header"}}
-  {{#if content}}
+  {{#instance.content}}
     {{#allow_help_edit}}
       <a class="btn btn-mini pull-right help-edit" data-toggle='collapse' href='#helpedit' title="Edit Help" rel="tooltip" data-placement="left">
         <i class="grcicon-edit"></i>
       </a>
     {{/allow_help_edit}}
-    <span>{{title}}</span>
-    {{^title}}
+    <span>{{instance.title}}</span>
+    {{^instance.title}}
       <span>
       {{slug}}
       Help
       </span>
-    {{/title}}
-  {{else}}
+    {{/instance.title}}
+  {{/instance.content}}
+  {{^instance.content}}
     {{#allow_help_edit}}
       <a class="btn btn-mini pull-right help-edit" data-toggle='collapse' href='#helpedit' title="Edit Help" rel="tooltip" data-placement="left">
         <i class="grcicon-edit"></i>
       </a>
     {{/allow_help_edit}}
     GRC Help
-  {{/if}}
+  {{/instance.content}}
 {{!/div}}

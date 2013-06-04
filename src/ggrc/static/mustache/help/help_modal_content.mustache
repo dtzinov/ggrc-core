@@ -1,4 +1,5 @@
 {{!<div class="modal-body">}}
+  {{#instance}}
   <div class="help">
   {{#if content}}
     <div class="help-content rtf">
@@ -15,10 +16,10 @@
       <div class="row-fluid">
         <div class="well">     
           <label for="help_help_title">Help title</label>
-          <input class="span12" id="help_title" name="help[title]" size="30" type="text" value="{{title}}">
+          <input class="span12" id="help_title" name="title" size="30" type="text" value="{{title}}">
           <label for="help_help_content">Help content</label>
           <div class="wysiwyg-area">
-            <textarea class="span12 double wysihtml5 rtftextarea" id="help_content" name="help[content]" rows="8">
+            <textarea class="span12 double wysihtml5 rtftextarea" id="help_content" name="content" rows="8">
               {{{content}}}
             </textarea>
           </div>
@@ -27,11 +28,12 @@
               <input class="btn btn-warning pull-right" name="commit" type="submit" value="Save">
             </div>
           </div>
-          <input id="help_slug" name="help[slug]" type="hidden" value="{{slug}}">
+          <input id="help_slug" name="slug" type="hidden" value="{{slug}}">
 
         </div>
       </div>
     </div>
   {{/allow_help_edit}}
   </div>
+  {{/instance}}
 {{!</div>}}

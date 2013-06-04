@@ -51,7 +51,14 @@ can.Control("GGRC.Controllers.Modals", {
     if(this.options.model) {
       dfd = this.options.new_object_form
           ? new $.Deferred().resolve(new this.options.model(params || this.find_params()))
-          : this.options.model.findOne(params || this.find_params());
+          : this.options.model.findAll(params || this.find_params()).then(function(data) {
+            if(data.length) {
+              return data[0].refresh(); //have to refresh (get ETag) to be editable.
+            } else {
+              that.options.new_object_form = true;
+              return new that.options.model(params || that.find_params());
+            }
+          });
     } else {
       dfd = new $.Deferred().resolve(params || this.find_params());
     }
