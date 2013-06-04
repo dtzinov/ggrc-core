@@ -1,10 +1,10 @@
-
 # Copyright (C) 2013 Google Inc., authors, and contributors <see AUTHORS file>
 # Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
-# Created By:
-# Maintained By:
+# Created By: dan@reciprocitylabs.com
+# Maintained By: dan@reciprocitylabs.com
 
 from ggrc.app import db, app
+from .tooltip import TooltipView
 
 """ggrc.views
 Handle non-RESTful views, e.g. routes which return HTML rather than JSON
@@ -58,36 +58,45 @@ def styleguide():
   '''
   return render_template("styleguide.haml")
 
-
-def all_object_views():
-  object_views = [
-    'programs',
-    'directives',
-    'cycles',
-    'controls',
-    'systems',
-    'products',
-    'org_groups',
-    'facilities',
-    'markets',
-    'projects',
-    'data_assets',
-    'risky_attributes',
-    'risks',
-    'people',
-    'pbc_lists',
-    ]
-
+def _all_views(view_list):
   import ggrc.services
   collections = dict(ggrc.services.all_collections())
 
   def with_model(object_plural):
     return (object_plural, collections.get(object_plural))
 
-  return map(with_model, object_views)
+  return map(with_model, view_list)
+
+def all_object_views():
+  return _all_views([
+      'programs',
+      'directives',
+      'cycles',
+      'controls',
+      'systems',
+      'products',
+      'org_groups',
+      'facilities',
+      'markets',
+      'projects',
+      'data_assets',
+      'risky_attributes',
+      'risks',
+      'people',
+      'pbc_lists',
+      ])
+
+def all_tooltip_views():
+  return _all_views([
+      'programs',
+      ])
 
 def init_all_object_views(app):
   from .common import BaseObjectView
 
   for k,v in all_object_views():
     BaseObjectView.add_to(app, '/{0}'.format(k), v)
+
+  for k,v in all_tooltip_views():
+    TooltipView.add_to(app, '/{0}'.format(k), v)
+
