@@ -27,10 +27,48 @@
       </label>
       <input class="input-block-level" name="owner" placeholder="Enter email address" type="text" value="{{owner}}">
       <label>
-        Direct URL
+        Risky Attribute URL
         <i class="grcicon-help-black"></i>
       </label>
       <input class="input-block-level" name="url" placeholder="http://www.domain.com/" type="text" value="{{url}}">
+    </div>
+  </div>
+  <div class="row-fluid">
+    <div class="span12">
+      <div class="expand-link">
+        <a class="show-hidden-fields" href="#">
+          <span class="out">
+            <i class="grcicon-show"></i>
+            Show 
+          </span>
+          <span class="in">
+            <i class="grcicon-hide"></i>
+            Hide
+          </span>
+          Advanced
+          <span class="hidden-fields out">
+            Code, Reference URL
+          </span>
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="hidden-fields-area" style="display:none">
+    <div class="row-fluid">
+      <div class="span6">
+        <label>
+          Code
+          <i class="grcicon-help-black"></i>
+        </label>
+        <input class="input-block-level" name="slug" placeholder="RISKYATTRIBUTE-XXX" type="text" value="{{slug}}">
+      </div>
+      <div class="span6">
+        <label>
+          Reference URL
+          <i class="grcicon-help-black"></i>
+        </label>
+        <input class="input-block-level" name="url" placeholder="http://www.domain.com/" type="text" value="{{url}}">
+      </div>
     </div>
   </div>
 </form>
