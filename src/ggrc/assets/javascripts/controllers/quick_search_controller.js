@@ -45,7 +45,7 @@ CMS.Controllers.Filterable("CMS.Controllers.QuickSearch", {
         list: new model.List()
         //, list_view : template
         , observer: that.options.observer
-        , tooltip_view : "/static/mustache/dashboard/object_tooltip.mustache"
+        //, tooltip_view : not currently used -- href to tooltip instead
       });
 
       $tab.data("view_data", view_data);
@@ -119,7 +119,7 @@ CMS.Controllers.Filterable("CMS.Controllers.QuickSearch", {
   }
 
   , ".nav-tabs li click" : function(el, ev) {
-    var plural = el.find(".business, .governance, .risk, .programs").text();
+    var plural = el.children("a").attr("data-object-plural");
     var singular = can.map(window.cms_singularize(plural).split("_"), can.capitalize).join(" ");
     el.closest(".widget").find(".object-type").text(singular)
       .closest("a").attr("data-object-plural", plural.split(" ").join("_").toLowerCase())
