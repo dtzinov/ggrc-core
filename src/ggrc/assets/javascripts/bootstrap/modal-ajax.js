@@ -204,7 +204,7 @@
     },
 
     'helpform' : function($target, $trigger, option) {
-      $target.modal_form(option, $trigger).ggrc_controllers_help({ slug : $trigger.attr('href') });
+      $target.modal_form(option, $trigger).ggrc_controllers_help({ slug : $trigger.attr('data-help-slug') });
     }
   };
 
@@ -425,6 +425,7 @@
       option = $target.data('modal-help') ? 'toggle' : $.extend({}, $target.data(), $this.data());
 
       e.preventDefault();
+      e.originalEvent && e.originalEvent.preventDefault();
 
       modal_type = $this.data('modal-type');
       if (!modal_type) {

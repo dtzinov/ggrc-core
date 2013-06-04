@@ -77,7 +77,7 @@
                           =dropup_create_new("Market", 'markets', "new_flow_market_path")
                           =dropup_create_new("Data Asset", 'data_assets', "new_flow_data_asset_path")
                 %li.black-link
-                  %a{ 'href': "/help/{{ self.page_help()|trim }}", 'data-toggle': 'modal-ajax' }
+                  %a{ 'href': "javascript://", 'data-toggle': 'modal-ajax', 'data-modal-type': 'helpform', 'data-help-slug' : '{{ self.page_help()|trim }}'}
                     %i.grcicon-help
                     %span
                       Help
