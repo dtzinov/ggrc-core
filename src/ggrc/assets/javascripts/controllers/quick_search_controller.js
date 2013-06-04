@@ -45,7 +45,7 @@ CMS.Controllers.Filterable("CMS.Controllers.QuickSearch", {
         list: new model.List()
         //, list_view : template
         , observer: that.options.observer
-        //, tooltip_view : not currently used -- href to tooltip instead
+        , tooltip_view : "/static/mustache/dashboard/object_tooltip.mustache"
       });
 
       $tab.data("view_data", view_data);
