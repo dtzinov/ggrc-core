@@ -47,7 +47,7 @@
           </span>
           Advanced
           <span class="hidden-fields out">
-            Code, Kind/Type, Reference URL
+            Code, Network Zone, Reference URL, Notes
           </span>
         </a>
       </div>
@@ -60,17 +60,14 @@
           Code
           <i class="grcicon-help-black"></i>
         </label>
-        <input class="input-block-level" name="slug" placeholder="PROJECT-XXX" type="text" value="{{slug}}">
+        <input class="input-block-level" name="slug" placeholder="PROCESS-XXX" type="text" value="{{slug}}">
       </div>
       <div class="span3">
         <label>
-          Kind/Type
+          Network Zone
           <i class="grcicon-help-black"></i>
         </label>
-        {{!FIXIT: Need real values for kind/type}}
-        <select class="input-block-level" name="kind">
-          <option value="">Choose</option>
-        </select>
+        <input class="input-block-level" name="network_zone.id" placeholder="Enter Network Zone" type="text" value="{{network_zone_id}}">
       </div>
       <div class="span6">
         <label>
@@ -80,6 +77,18 @@
         <input class="input-block-level" name="url" placeholder="http://www.domain.com/" type="text" value="{{url}}">
       </div>
     </div>
+    <div class="row-fluid">
+      <div class="span12">
+        <label>
+          Notes
+          <i class="grcicon-help-black"></i>
+        </label>
+        <div class="wysiwyg-area">
+          <textarea id="system_notes" class="span12 double wysihtml5" name="notes" placeholder="Enter Notes">{{{notes}}}</textarea>
+        </div>
+      </div>
+    </div>
+    
   </div>
 </form>
 {{/instance}}
