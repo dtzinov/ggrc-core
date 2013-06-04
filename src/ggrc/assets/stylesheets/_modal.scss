@@ -530,12 +530,12 @@
   }
 }
 
-.hidden-fields-area {
-  border-top:1px solid lighten($gray, 20%);
-  padding-top:20px;
-}
-
 a.show-hidden-fields {
+  &.active {
+    border-top:1px solid #ddd;
+  }
+  display:block;
+  padding-top:10px;
   font-size:16px;
   color:#4c9deb;
   span.hidden-fields {
@@ -553,7 +553,7 @@ a.show-hidden-fields {
 }
 
 .expand-link {
-  padding:12px 0 24px 0;
+  padding: 0 0 12px 0;
 
   .in, .out.active, .active .out {
     display : none;
