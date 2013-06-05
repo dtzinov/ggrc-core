@@ -227,13 +227,14 @@
               %p.oneline
                 =instance.url
           -else
-            [No URL]
+            %span.no-data
+              No URL
         -else
           &nbsp;
   .popoverfooter
     .row-fluid
-      .span8
-        %p.smallcode
+      .span12
+        %p.oneline.smallcode
           Code: {{instance.slug}}
 
 -endmacro
