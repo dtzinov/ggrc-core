@@ -9,7 +9,8 @@ from flask import request, render_template, current_app
 
 
 class BaseObjectView(ModelView):
-  template = 'base_objects/show.haml'
+  model_template = '{model_plural}/show.haml'
+  base_template = 'base_objects/show.haml'
 
   def dispatch_request(self, *args, **kwargs):
     method = request.method.lower()
@@ -37,8 +38,8 @@ class BaseObjectView(ModelView):
   def render_template_for_object(self, obj):
     context = self.get_context_for_object(obj)
     template_paths = [
-      '{model_plural}/show.haml'.format(model_plural=self.model_plural),
-      self.template
+      self.model_template.format(model_plural=self.model_plural),
+      self.base_template
       ]
     return render_template(template_paths, **context)
 

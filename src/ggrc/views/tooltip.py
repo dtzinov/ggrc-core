@@ -6,7 +6,8 @@
 from .common import BaseObjectView
 
 class TooltipView(BaseObjectView):
-  template = 'base_objects/tooltip.haml'
+  model_template = '{model_plural}/tooltip.haml'
+  base_template = 'base_objects/tooltip.haml'
 
   @classmethod
   def add_to(cls, app, url, model_class=None):
