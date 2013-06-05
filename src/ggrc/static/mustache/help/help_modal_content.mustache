@@ -1,27 +1,20 @@
 {{!<div class="modal-body">}}
-  {{#instance}}
   <div class="help">
-  {{#if content}}
-    <div class="help-content rtf">
-        {{{content}}}
-    </div>
-  {{else}}
-    <div class="help-content rtf">
-      <p>This content is coming soon.  We are working on it.</p>
-    </div>
-  {{/if}}
+  <div class="help-content rtf">
+      {{{firstnonempty instance.content '<p>This content is coming soon.  We are working on it.</p>'}}}
+  </div>
+
 
   {{#allow_help_edit}}
-    <div id="helpedit" class="collapse">
+    <div id="helpedit" class="collapse {{#edit_btn_active}}in{{/edit_btn_active}}">
+      {{#instance}}
       <div class="row-fluid">
         <div class="well">     
           <label for="help_help_title">Help title</label>
           <input class="span12" id="help_title" name="title" size="30" type="text" value="{{title}}">
           <label for="help_help_content">Help content</label>
           <div class="wysiwyg-area">
-            <textarea class="span12 double wysihtml5 rtftextarea" id="help_content" name="content" rows="8">
-              {{{content}}}
-            </textarea>
+            <textarea class="span12 double wysihtml5 rtftextarea" id="help_content" name="content" rows="8">{{{content}}}</textarea>
           </div>
           <div class="row-fluid">
             <div class="span12">
@@ -32,8 +25,8 @@
 
         </div>
       </div>
+      {{/instance}}
     </div>
   {{/allow_help_edit}}
-  </div>
-  {{/instance}}
+  </div> 
 {{!</div>}}

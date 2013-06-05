@@ -66,7 +66,9 @@ CMS.Controllers.Filterable("CMS.Controllers.QuickSearch", {
         });
 
         model.bind("created", function(ev, instance) {
-          view_data.list.unshift(instance.serialize());
+          if(instance.constructor === model) {
+            view_data.list.unshift(instance.serialize());
+          }
         });
       }
 
@@ -123,7 +125,7 @@ CMS.Controllers.Filterable("CMS.Controllers.QuickSearch", {
     var singular = can.map(window.cms_singularize(plural).split("_"), can.capitalize).join(" ");
     el.closest(".widget").find(".object-type").text(singular)
       .closest("a").attr("data-object-plural", plural.split(" ").join("_").toLowerCase())
-      .attr("data-object-singular", singular);
+      .attr("data-object-singular", singular.replace(" ", ""));
   }
 
 });

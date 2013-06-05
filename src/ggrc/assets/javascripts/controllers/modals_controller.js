@@ -50,21 +50,23 @@ can.Control("GGRC.Controllers.Modals", {
     var dfd;
     if(this.options.model) {
       dfd = this.options.new_object_form
-          ? new $.Deferred().resolve(new this.options.model(params || this.find_params()))
+          ? $.when(this.options.instance = new this.options.model(params || this.find_params()))
           : this.options.model.findAll(params || this.find_params()).then(function(data) {
+            var h;
             if(data.length) {
+              that.options.instance = data[0];
               return data[0].refresh(); //have to refresh (get ETag) to be editable.
             } else {
               that.options.new_object_form = true;
-              return new that.options.model(params || that.find_params());
+              that.options.instance = new that.options.model(params || that.find_params());
+              return that.options.instance;
             }
           });
     } else {
-      dfd = new $.Deferred().resolve(params || this.find_params());
+      this.options.instance = new can.Observe(params || this.find_params());
+      dfd = new $.Deferred().resolve(this.options.instance);
     }
-    return dfd.done(function(h) {
-      that.options.instance = h;
-    });
+    return dfd;
   }
 
   , fetch_all : function() {
@@ -134,6 +136,13 @@ can.Control("GGRC.Controllers.Modals", {
 
       error && that.options.$content.find(".flash").append(tmpl);
     });
+  }
+
+  , destroy : function() {
+    if(this.options.model && this.options.model.cache) {
+      delete this.options.model.cache[undefined];
+    }
+    this._super && this._super.apply(this, arguments);
   }
 });
 
