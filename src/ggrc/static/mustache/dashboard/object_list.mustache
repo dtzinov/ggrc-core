@@ -1,10 +1,9 @@
 {{! dashboard object listing}}
 <ul class="tree-structure simple single-row-tabs">
 {{#list}}
-  <li data-model="true" {{data 'model'}} class="{{object_type}}">
-    {{#pack this tooltip_view=tooltip_view object_type=object_type object_display=object_display object_route=object_route}}
-    <a data-popover-trigger="sticky-hover" data-sticky-popover="true" data-content="{{render tooltip_view}}">
-      {{{withattr "href" "{viewLink}" "data-original-title" "<div class='row-fluid'><div class='span12'><h3><i class='grcicon-{object_type}-color'></i> <span class='title'>{title}</span> <span class='code'>{slug}</span></h3></div></div>" }}}
+  <li data-model="true" {{data 'model'}} class="{{object_type}}"> 
+    <a data-popover-trigger="sticky-hover" data-sticky-popover="true" data-popover-href="{{viewLink}}/tooltip">
+      {{{withattr "href" "{viewLink}"}}}
       <div class="row-fluid">
         <div class="span12">
           <div class="item-identifier">
@@ -18,7 +17,6 @@
         </div>
       </div>
     </a>
-    {{/pack}}
   </li>
 {{/list}}
 </ul>

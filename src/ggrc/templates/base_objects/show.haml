@@ -16,6 +16,9 @@
 -block page_help
   =model_name
 
+-block extra_javascript
+  GGRC.page_object = ={ instance_json()|safe };
+
 -block header
   %ul.breadcrumbs
     %li=link_to 'dashboard', dashboard_path

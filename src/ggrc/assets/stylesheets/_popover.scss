@@ -1,5 +1,11 @@
 .popover {
   .popover-inner-content {
+    .row-fluid {
+      margin-bottom:10px;
+      [class^="span"] {
+
+      }
+    }
     padding:6px 14px;
     p.audit-status {
       font-size:$f-regular;

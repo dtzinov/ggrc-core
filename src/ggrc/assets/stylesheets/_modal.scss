@@ -249,7 +249,7 @@
         font-weight: bold;
       }
       i {
-        @include opacity(0.3);
+        @include opacity(0.2);
         cursor:pointer;
         &:hover {
           @include opacity(0.7);
@@ -297,6 +297,13 @@
         position:absolute;
         bottom:-32px;
         left:0;
+        @include opacity(0);
+        @include transition(opacity 0.3s ease);
+      }
+      &:hover {
+        ul.wysihtml5-toolbar {
+          @include opacity(1);
+        }
       }
       .double {
         height: 88px;

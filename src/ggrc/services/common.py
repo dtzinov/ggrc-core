@@ -54,6 +54,9 @@ class UnicodeSafeJsonWrapper(dict):
   def get(self, key, default=None):
     return super(UnicodeSafeJsonWrapper, self).get(unicode(key), default)
 
+def as_json(obj, **kwargs):
+  return json.dumps(obj, cls=DateTimeEncoder, **kwargs)
+
 class BadQueryParameter(BadRequest):
   """Temporary distinction to allow unkown query parameters through without
   breaking request format checking for other things like Date, Datetime, and
@@ -393,7 +396,7 @@ class Resource(ModelView):
   # Response helpers
   @classmethod
   def as_json(cls, obj, **kwargs):
-    return json.dumps(obj, cls=DateTimeEncoder, **kwargs)
+    return as_json(obj, **kwargs)
 
   def object_for_json(self, obj, model_name=None):
     model_name = model_name or self.model_name

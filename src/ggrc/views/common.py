@@ -1,15 +1,16 @@
-
 # Copyright (C) 2013 Google Inc., authors, and contributors <see AUTHORS file>
 # Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
-# Created By:
-# Maintained By:
+# Created By: dan@reciprocitylabs.com
+# Maintained By: dan@reciprocitylabs.com
 
-from ggrc.services.common import ModelView
+from ggrc.services.common import ModelView, as_json
+import ggrc.builder
 from flask import request, render_template, current_app
 
 
 class BaseObjectView(ModelView):
-  template = 'base_objects/show.haml'
+  model_template = '{model_plural}/show.haml'
+  base_template = 'base_objects/show.haml'
 
   def dispatch_request(self, *args, **kwargs):
     method = request.method.lower()
@@ -29,12 +30,18 @@ class BaseObjectView(ModelView):
   def get_context_for_object(self, obj):
     return {
       'instance': obj,
-      'controller': self
+      'controller': self,
+      'instance_json':
+        lambda: as_json({ self.model_name: ggrc.builder.json.publish(obj) })
       }
 
   def render_template_for_object(self, obj):
     context = self.get_context_for_object(obj)
-    return render_template(self.template, **context)
+    template_paths = [
+      self.model_template.format(model_plural=self.model_plural),
+      self.base_template
+      ]
+    return render_template(template_paths, **context)
 
   def get(self, id):
     obj = self.get_object(id)

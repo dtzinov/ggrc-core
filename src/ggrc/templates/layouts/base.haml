@@ -25,6 +25,9 @@
       %script{ type:'text/javascript', src:"#{ASSET_URL}" }
     -endassets
 
+    %script{ 'type': 'text/javascript' }
+      -block extra_javascript
+
     -#FIXME: (?) HTML5 shim?
 
     -#csrf_meta_tag
