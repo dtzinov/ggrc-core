@@ -629,7 +629,7 @@ jQuery(function($){
   });
 
 can.reduce ||
-  (can.reduce = function(a, f, i) { return [].reduce.apply(a, arguments.length < 3 ? [f] : [f, i]) });
+  (can.reduce = function(a, f, i) { if(a==null) return null; return [].reduce.apply(a, arguments.length < 3 ? [f] : [f, i]) });
 
 
   $(document.body).on("change", "[id$=_start_date]", function(ev) { 

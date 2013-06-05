@@ -31,6 +31,7 @@ can.Model.Cacheable("CMS.Models.Directive", {
   init : function() {
     this._super && this._super.apply(this, arguments);
     var that = this;
+    this.attr("sections") || this.attr("sections", new CMS.Models.Section.List());
     this.attr("descendant_sections", can.compute(function() {
       return that.attr("sections").concat(can.reduce(that.sections, function(a, b) {
         return a.concat(can.makeArray(b.descendant_sections()));
@@ -78,7 +79,7 @@ CMS.Models.Directive("CMS.Models.Contract", {
 }, {});
 
 can.Model.Cacheable("CMS.Models.OrgGroup", {
-  root_object : "org_group"
+  root_object : "orggroup"
   , root_collection : "org_groups"
   , findAll : "/api/org_groups"
   , create : "POST /api/org_groups"
