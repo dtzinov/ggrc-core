@@ -549,4 +549,9 @@ strong.capitalize {
 span.no-data {
   color:lighten($disabled,10%);
   font-weight:normal;
+  &.warning {
+    color:$error;
+  }
 }
+
+
