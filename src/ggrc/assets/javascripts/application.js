@@ -96,6 +96,9 @@ jQuery.ajaxPrefilter(function( options, originalOptions, jqXHR ) {
     delete data["last-modified"];
     options.data = JSON.stringify(data);
   }
+  if( /^\/api\/\w+\/\d+/.test(options.url) && (options.type.toUpperCase() === "GET") ) {
+    options.cache = false;
+  }
 });
 
 //Set up default failure callbacks if nonesuch exist.

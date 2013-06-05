@@ -166,9 +166,9 @@ $.ajaxPrefilter(function( options, originalOptions, jqXHR ) {
       }
       for(var i = 0; i < exprs.length; i ++) {
         var expr = exprs[i];
-        if(typeof expr === "object" && expr.attr) {
+        if(typeof expr === "object" && expr.attr && that.bind) {
           that.bind(expr.attr + "." + hash, $.proxy(classbinding, that, el));
-        } else if(can.isArray(expr) && expr.value) {
+        } else if(can.isArray(expr) && expr.value && that.bind) {
           can.each(expr, function(attr_expr) {
             var attr_token = attr_expr.attr;
             that.bind(attr_token + "." + hash, $.proxy(classbinding, that, el));
