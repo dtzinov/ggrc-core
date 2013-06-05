@@ -31,11 +31,17 @@
   -set pending_pct = ((pending_controls|length) * 100) // (controls|length) if controls|length > 0 else 0
   %h4
     Controls ({{controls|length}})
+  -if controls|length > 0
     .progress
       .bar.bar-success{ 'style': 'width:={done_pct}%', 'rel': 'tooltip', 'title': '={done_controls|length} Done' }
         =done_controls|length
       .bar.bar-warning{ 'style': 'width:={pending_pct}%', 'rel': 'tooltip', 'title': '={pending_controls|length} Pending' }
         =pending_controls|length
+  -else
+    %p
+      %span.no-data
+        No controls mapped
+    %br
 -endmacro
 
 -macro new_popover_content(instance={})
@@ -206,16 +212,18 @@
 
     .row-fluid
       .span6
+        %h4 Owner/Person of Contact
         -if instance.owner is defined
-          %h4 Owner/Person of Contact
           -if instance.owner is not none and instance.owner != ''
             %a{ 'href': 'mailto:={instance.owner.email}' }
               %p.oneline
                 =instance.owner.name
           -else
-            [No owner]
+            
         -else
-          &nbsp;
+          %p
+            %span.no-data
+              No owner assigned
       .span6
         -if instance.url is defined
           %h4
