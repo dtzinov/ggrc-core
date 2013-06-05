@@ -33,7 +33,11 @@ class BaseObjectView(ModelView):
 
   def render_template_for_object(self, obj):
     context = self.get_context_for_object(obj)
-    return render_template(self.template, **context)
+    template_paths = [
+      '{model_plural}/show.haml'.format(model_plural=self.model_plural),
+      self.template
+      ]
+    return render_template(template_paths, **context)
 
   def get(self, id):
     obj = self.get_object(id)
