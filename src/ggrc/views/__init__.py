@@ -89,6 +89,18 @@ def all_object_views():
 def all_tooltip_views():
   return _all_views([
       'programs',
+      'directives',
+      'cycles',
+      'controls',
+      'systems',
+      'products',
+      'org_groups',
+      'facilities',
+      'markets',
+      'projects',
+      'data_assets',
+      'risky_attributes',
+      'risks',
       ])
 
 def init_all_object_views(app):

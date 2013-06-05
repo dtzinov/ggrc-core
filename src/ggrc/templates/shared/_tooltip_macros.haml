@@ -1,0 +1,239 @@
+-#tooltip macros
+
+-macro program_popover_title(instance={'title' : "Example object", 'slug' : "EXAMPLE-XXXX" })
+  -set class = instance.__class__ if instance.__class__ != dict else Program
+  -set name = class.__name__
+  -if class.__name__ == "System" and instance.is_biz_process
+    -set name = "Process"
+  .row-fluid
+    .span10
+      %h3
+        %i{ 'class' : 'grcicon-={name|lower}-color' }
+        %span.title 
+          =instance.title
+        %span.code.governance 
+          =instance.slug
+    .span2
+      %a.btn.btn-mini.btn-primary.pull-right{ 'href': '#', 'rel': 'tooltip', 'title': 'View ={name}' }
+        %i.grcicon-goto-white
+-endmacro
+
+
+-macro controls_progressbar(controls)
+  -set done_controls = []
+  -set pending_controls = []
+  -for control in controls
+    -if control.sections|length > 0
+      -set noop = done_controls.append(control)
+    -else
+      -set noop = pending_controls.append(control)
+  -set done_pct = ((done_controls|length) * 100) // (controls|length) if controls|length > 0 else 0
+  -set pending_pct = ((pending_controls|length) * 100) // (controls|length) if controls|length > 0 else 0
+  %h4
+    Controls ({{controls|length}})
+    .progress
+      .bar.bar-success{ 'style': 'width:={done_pct}%', 'rel': 'tooltip', 'title': '={done_controls|length} Done' }
+        =done_controls|length
+      .bar.bar-warning{ 'style': 'width:={pending_pct}%', 'rel': 'tooltip', 'title': '={pending_controls|length} Pending' }
+        =pending_controls|length
+-endmacro
+
+-macro new_popover_content(instance={})
+  -set class = instance.__class__ if instance.__class__ != dict else ggrc.models.program.Program
+  -set object = class.__name__|lower
+  -if instance.kind == "Company Controls" or object == "directive"
+    -set object = instance["kind"]|lower
+
+  .popover-inner-content
+    .row-fluid
+      .span12
+        %h4 Description for {{object}}
+        .rtf
+          %p
+            -if instance.description != '' and instance.description is not none
+              =instance.description|safe
+            -else
+              .no-description
+                No description
+
+    -if object == 'program'
+      .row-fluid
+        .span6
+          %h4
+            Audit Status
+          %p.audit-status
+            %i.grcicon-eye-completed
+            %span.status.completed Completed
+            %br
+            started on:
+            =instance.start_date
+            %br
+            ends on:
+            =instance.end_date
+            %br
+            %strong
+              report date:
+              -if instance.cycles|length > 0 
+                =(instance.cycles|first).report_due_at
+              -else
+                None
+            %br
+        .span6
+          -set controls=[]
+          -set reg_directives = []
+          -set ct_directives = []
+          -set pol_directives = []
+          -for directive in instance.directives
+            -for control in directive.controls
+              -set noop = controls.append(control)
+            -if directive.kind == "Regulation"
+              -set noop = reg_directives.append(directive)
+            -elif directive.kind == "Policy"
+              -set noop = pol_directives.append(directive)
+            -elif directive.kind == "Contract"
+              -set noop = ct_directives.append(directive)
+          {{ controls_progressbar(controls) }}
+          %h4
+            Directives ({{instance.directives|length}})
+          %i.grcicon-regulation-color
+          =reg_directives|length
+          &nbsp;
+          %i.grcicon-contract-color
+          =ct_directives|length
+          &nbsp;
+          %i.grcicon-policy-color
+          =pol_directives|length
+    -elif object == 'contract'
+      .row-fluid
+        .span6
+          {{ controls_progressbar(instance.controls) }}
+        .span3
+          %h4
+            Clauses
+          %i.grcicon-clause-color
+          =instance.sections|length
+        .span3
+          %h4
+            Programs
+          %i.grcicon-program-color
+          =instance.programs|length
+    -elif object == 'policy'
+      .row-fluid
+        .span6
+          {{ controls_progressbar(instance.controls) }}
+        .span3
+          %h4
+            Sections
+          %i.grcicon-section-color
+          =instance.sections|length
+        .span3
+          %h4
+            Programs
+          %i.grcicon-program-color
+          =instance.programs|length
+    -elif object == 'regulation'
+      .row-fluid
+        .span6
+          {{ controls_progressbar(instance.controls) }}
+        .span3
+          %h4
+            Sections
+          %i.grcicon-section-color
+          =instance.sections|length
+        .span3
+          %h4
+            Programs
+          %i.grcicon-program-color
+          =instance.programs|length
+    -elif object == 'company controls'
+      .row-fluid
+        .span12
+          {{ controls_progressbar(instance.controls) }}
+    -elif object == 'control'
+      -set directive_programs = []
+      -set cc_programs = []
+      -for section in instance.sections
+        -for directive in section.directives
+          -for program in directive.programs
+            -if program.kind == "Directive" and program not in directive_programs
+              -set noop = directive_programs.append(program)
+            -if program.kind == "Company Controls" and program not in cc_programs
+              -set noop = cc_programs.append(program)
+      .row-fluid
+        .span6
+          %h4
+            Directive Programs
+          %i.grcicon-program-color
+          =directive_programs|length
+          -# TODO : Find out what the control->program mapping is. 
+        .span6
+          %h4
+            Company Control Programs
+          %i.grcicon-company_controls-color
+          =cc_programs|length
+          -#TODO Same as above
+    -elif object == 'dataasset' or object == 'market' or object == 'facility' or object == 'product' or object == 'project' or object == 'orggroup'
+      .row-fluid
+        .span6
+          %h4
+            People
+          %i.grcicon-user-black
+          =instance.people|length 
+        .span6
+          %h4
+            References
+          %i.grcicon-document
+          =instance.documents|length
+    -elif object == 'process' or object == 'system'
+      -set sub_systems = []
+      -set sub_processes = []
+      -for sub_pos in instance.sub_systems
+        -if sub_pos.is_biz_process
+          -set noop = sub_processes.append(sub_pos)
+        -else
+          -set noop = sub_systems.append(sub_pos)
+      .row-fluid
+        .span6
+          {{ controls_progressbar(instance.controls) }}
+        .span6
+          %h4
+            Dependent Process/Systems
+          %i.grcicon-process-color
+          =sub_processes|length
+          &nbsp;
+          %i.grcicon-system-color
+          =sub_systems|length
+
+    .row-fluid
+      .span6
+        -if instance.owner is defined
+          %h4 Owner/Person of Contact
+          -if instance.owner is not none and instance.owner != ''
+            %a{ 'href': 'mailto:={instance.owner.email}' }
+              %p.oneline
+                =instance.owner.name
+          -else
+            [No owner]
+        -else
+          &nbsp;
+      .span6
+        -if instance.url is defined
+          %h4
+            %strong.capitalize
+              {{ class.name }}
+            URL
+          -if instance.url is not none and instance.url != ''
+            %a{ 'href': '={instance.url}', 'target' : "_blank" }
+              %p.oneline
+                =instance.url
+          -else
+            [No URL]
+        -else
+          &nbsp;
+  .popoverfooter
+    .row-fluid
+      .span8
+        %p.smallcode
+          Code: {{instance.slug}}
+
+-endmacro

@@ -85,13 +85,18 @@
       if (!href) return;
 
       if (!loaded) {
-        $.get(href, function(data) {
-          var $data = $(data);
-          self.$element.attr('data-original-title', $data.filter('.popover-title').html());
-          self.$element.attr('data-content', $data.filter('.popover-content').html());
-          self.$element.data('popover-loaded', true);
-          if (self.displayState === 'show')
-            self.show(true);
+        $.ajax({
+          url : href
+          , type : "get"
+          , dataType : "html"
+          , success : function(data) {
+            var $data = $(data);
+            self.$element.attr('data-original-title', $data.filter('.popover-title').html());
+            self.$element.attr('data-content', $data.filter('.popover-content').html());
+            self.$element.data('popover-loaded', true);
+            if (self.displayState === 'show')
+              self.show(true);
+          }
         });
       }
     }
