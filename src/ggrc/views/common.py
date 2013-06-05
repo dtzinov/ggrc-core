@@ -3,7 +3,8 @@
 # Created By: dan@reciprocitylabs.com
 # Maintained By: dan@reciprocitylabs.com
 
-from ggrc.services.common import ModelView
+from ggrc.services.common import ModelView, as_json
+import ggrc.builder
 from flask import request, render_template, current_app
 
 
@@ -28,7 +29,9 @@ class BaseObjectView(ModelView):
   def get_context_for_object(self, obj):
     return {
       'instance': obj,
-      'controller': self
+      'controller': self,
+      'instance_json':
+        lambda: as_json({ self.model_name: ggrc.builder.json.publish(obj) })
       }
 
   def render_template_for_object(self, obj):
