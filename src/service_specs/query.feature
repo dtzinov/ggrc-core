@@ -1,3 +1,8 @@
+# Copyright (C) 2013 Google Inc., authors, and contributors <see AUTHORS file>
+# Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
+# Created By: david@reciprocitylabs.com
+# Maintained By: david@reciprocitylabs.com
+
 Feature: Collection filtering via query parameters
 
   Background:
@@ -18,16 +23,16 @@ Feature: Collection filtering via query parameters
     And GET of the resource "resource2"
     And GET of the resource "resource3"
     Then "resource1" is in query result
-    Then "resource2" is not in query result
-    Then "resource3" is not in query result
+    And "resource2" is not in query result
+    And "resource3" is not in query result
     When Querying "<resource_type>" with "<property_name>=<match_value2>"
     Then "resource1" is not in query result
-    Then "resource2" is in query result
-    Then "resource3" is not in query result
+    And "resource2" is in query result
+    And "resource3" is not in query result
     When Querying "<resource_type>" with "<property_name>=<nomatch_value>"
     Then "resource1" is not in query result
-    Then "resource2" is not in query result
-    Then "resource3" is not in query result
+    And "resource2" is not in query result
+    And "resource3" is not in query result
 
   Examples: Resources
       | resource_type | property_name | match_value1        | match_value2        | match_value3        | nomatch_value       |
@@ -57,7 +62,6 @@ Feature: Collection filtering via query parameters
     When Querying "Category" with bad argument "required=random"
     Then a "400" status code is received
 
-  @skip
   Scenario Outline: An invalid query parameter is supplied to a collection receives 400
     When Querying "<resource_type>" with bad argument "<querystring>"
     Then a "400" status code is received
@@ -66,3 +70,42 @@ Feature: Collection filtering via query parameters
       | resource_type | querystring          |
       | Category      | _update_attrs=foobar |
       | Category      | foobar=baz           |
+
+  Scenario Outline: Query parameters can be property paths
+    Given a new "<resource_type2>" named "resource2_1"
+    And a new "<resource_type2>" named "resource2_2"
+    And "resource2_1" property "<target_property_name>" is literal "<match_value1>"
+    And "resource2_2" property "<target_property_name>" is literal "<match_value2>"
+    And "resource2_1" is POSTed to its collection
+    And "resource2_2" is POSTed to its collection
+    And a new "<resource_type1>" named "resource1_1"
+    And a new "<resource_type1>" named "resource1_2"
+    And "resource1_1" link property "<link_property_name>" is "resource2_1"
+    And "resource1_2" link property "<link_property_name>" is "resource2_2"
+    And "resource1_1" is POSTed to its collection
+    And "resource1_2" is POSTed to its collection
+    When Querying "<resource_type1>" with expression "<link_property_name>.<target_property_name>" equals literal "<match_value1>"
+    Then "resource1_1" is in query result
+    And "resource1_2" is not in query result
+    When Querying "<resource_type1>" with expression "<link_property_name>.<target_property_name>" equals literal "<match_value2>"
+    Then "resource1_1" is not in query result
+    And "resource1_2" is in query result
+
+  Examples:
+      | resource_type1 | link_property_name | resource_type2 | target_property_name | match_value1 | match_value2 |
+      | Section        | directive          | Directive      | title                | 'foo'        | 'bar'        |
+      | Control        | directive          | Directive      | company              | bool(True)   | bool(False)  |
+
+  Scenario: Query for controls related to a program
+    Given a new "Program" named "program"
+    And "program" is POSTed to its collection
+    And a new "Directive" named "directive"
+    And "program" is added to links property "programs" of "directive"
+    And "directive" is POSTed to its collection
+    And a new "Control" named "control"
+    And "control" link property "directive" is "directive"
+    and "control" is POSTed to its collection
+    #When Querying "Control" with expression "directive.programs.id" equals literal "context.program.get('id')"
+    When Querying "Control" with expression "directive.program_directives.program_id" equals literal "context.program.get('id')"
+    Then "control" is in query result
+

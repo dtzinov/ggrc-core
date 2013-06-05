@@ -1,12 +1,11 @@
 # Copyright (C) 2013 Google Inc., authors, and contributors <see AUTHORS file>
 # Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
-# Created By:
-# Maintained By:
+# Created By: david@reciprocitylabs.com
+# Maintained By: david@reciprocitylabs.com
 
 import datetime
 import ggrc.builder.json
 import hashlib
-import iso8601
 import json
 import time
 from flask import url_for, request, current_app
@@ -14,10 +13,8 @@ from flask.views import View
 from ggrc import db
 from ggrc.fulltext import get_indexer
 from ggrc.fulltext.recordbuilder import fts_record_for
-from sqlalchemy import and_, cast
-from sqlalchemy.types import AbstractType, Boolean, Date, DateTime
-from werkzeug.exceptions import BadRequest
 from wsgiref.handlers import format_date_time
+from .attribute_query import AttributeQueryBuilder
 
 """gGRC Collection REST services implementation. Common to all gGRC collection
 resources.
@@ -56,14 +53,6 @@ class UnicodeSafeJsonWrapper(dict):
 
 def as_json(obj, **kwargs):
   return json.dumps(obj, cls=DateTimeEncoder, **kwargs)
-
-class BadQueryParameter(BadRequest):
-  """Temporary distinction to allow unkown query parameters through without
-  breaking request format checking for other things like Date, Datetime, and
-  Boolean
-  """
-  def __init__(self, message):
-    super(BadQueryParameter, self).__init__(message)
 
 class ModelView(View):
   pk = 'id'
@@ -105,68 +94,12 @@ class ModelView(View):
     else:
       query = db.session.query(self.model)
     if request.args:
-      try:
-        query = query.filter(self.collection_filters())
-      #FIXME neither of the except handlers should be needed.
-      #except BadQueryParameter:
-      except BadRequest:
-        pass
+      querybuilder = AttributeQueryBuilder(self.model)
+      filter, joinlist = querybuilder.collection_filters(request.args)
+      for j in joinlist:
+        query = query.join(j)
+      query = query.filter(filter)
     return query.order_by(self.model.updated_at.desc())
-
-  def get_attr_for_query_param(self, attrname):
-    #FIXME Differentiating bad parameter to allow it through, for now
-    #badrequest = lambda: BadRequest(
-    badrequest = lambda: BadQueryParameter(
-        'Unknown or unsupported query parameter {0}'.format(attrname))
-    if not hasattr(self.model, attrname):
-      raise badrequest()
-    attr = getattr(self.model, attrname)
-    if not hasattr(attr, 'type') or \
-        not isinstance(attr.type, AbstractType):
-      raise badrequest()
-    return attr
-
-  def coerce_value_for_query_param(self, attr, arg, value):
-    attr_type = type(attr.type)
-    if attr_type is Boolean:
-      value = value.lower()
-      if value == 'true':
-        value = True
-      elif value == 'false':
-        value = False
-      else:
-        raise BadRequest('{0} must be "true" or "false", not {1}.'.format(
-          arg, value))
-    elif attr_type is DateTime:
-      try:
-       value = iso8601.parse_date(value)
-      except iso8601.ParseError as e:
-        raise BadRequest(
-            'Malformed DateTime {0} for parameter {0}. '
-            'Error message was: {1}'.format(value, arg, e.message)
-            )
-    elif attr_type is Date:
-      try:
-        value = datetime.datetime.strptime(value, '%Y-%m-%d')
-      except ValueError as e:
-        raise BadRequest(
-            'Malformed Date {0} for parameter {1}. '
-            'Error message was: {2}'.format(value, arg, e.message)
-            )
-    return value
-
-  def collection_filters(self):
-    """Create filter expressions using ``request.args``"""
-    filter_expressions = None
-    for arg, value in request.args.items():
-      attr = self.get_attr_for_query_param(arg)
-      value = self.coerce_value_for_query_param(attr, arg, value)
-      if filter_expressions:
-        filter_expressions = and_(
-            filter_expressions, attr == cast(value, attr.type))
-      else:
-        filter_expressions = attr == cast(value, attr.type)
-    return filter_expressions
 
   def get_object(self, id):
     # This could also use `self.pk`
