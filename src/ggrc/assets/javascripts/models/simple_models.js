@@ -45,7 +45,7 @@ can.Model.Cacheable("CMS.Models.Directive", {
 });
 
 CMS.Models.Directive("CMS.Models.Regulation", {
-  findAll : "/api/directives?meta_kind=regulation"
+  findAll : "/api/directives?kind=Regulation"
   , create : {
     type : "POST"
     , url : "/api/directives"
@@ -56,7 +56,7 @@ CMS.Models.Directive("CMS.Models.Regulation", {
 }, {});
 
 CMS.Models.Directive("CMS.Models.Policy", {
-  findAll : "/api/directives?meta_kind=policy"
+  findAll : "/api/directives?kind=Company+Policy"
   , create : {
     type : "POST"
     , url : "/api/directives"
@@ -67,7 +67,7 @@ CMS.Models.Directive("CMS.Models.Policy", {
 }, {});
 
 CMS.Models.Directive("CMS.Models.Contract", {
-  findAll : "/api/directives?meta_kind=contract"
+  findAll : "/api/directives?kind=Contract"
   , create : {
     type : "POST"
     , url : "/api/directives"
