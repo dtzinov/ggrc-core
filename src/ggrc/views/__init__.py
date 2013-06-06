@@ -27,7 +27,7 @@ def nospace_filter(s):
 
 @app.context_processor
 def inject_config():
-    return dict(config=app.config)
+  return dict(config=app.config)
 
 from flask import render_template
 
@@ -54,8 +54,8 @@ def dashboard():
 
 @app.route("/design")
 def styleguide():
-  '''The style guide page
-  '''
+  """The style guide page
+  """
   return render_template("styleguide.haml")
 
 def _all_views(view_list):

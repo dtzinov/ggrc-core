@@ -33,7 +33,7 @@ class ServicesTestMockModel(Base, ggrc.db.Model):
     #obj.foo = src.get('foo', '')
 
 URL_MOCK_COLLECTION = '/api/mock_resources'
-URL_MOCK_RESOURCE = '/api/mock_resources/{}'
+URL_MOCK_RESOURCE = '/api/mock_resources/{0}'
 #MockResourceService.add_to(ggrc.app, URL_MOCK_COLLECTION)
 Resource.add_to(
     ggrc.app.app, URL_MOCK_COLLECTION, model_class=ServicesTestMockModel)

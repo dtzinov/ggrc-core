@@ -6,10 +6,10 @@
 
 @given('the following resources are POSTed')
 def post_collection_of_resources(context):
-  '''Iterate over a table where the first two columns are `type` and `name`.
+  """Iterate over a table where the first two columns are `type` and `name`.
   Successive columns are for properties to be set on the resource before
   posting it to the relevant collection.
-  '''
+  """
   for row in context.table:
     resource_type = row[0]
     name = row[1]

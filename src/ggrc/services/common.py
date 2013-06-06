@@ -106,7 +106,7 @@ class ModelView(View):
     return self.get_collection().filter(self.model.id == id).first()
 
   def not_found_message(self):
-    return '%s not found.' % (self.model_name.title(),)
+    return '{0} not found.'.format(self.model_name.title())
 
   def not_found_response(self):
     return current_app.make_response((self.not_found_message(), 404, []))
@@ -245,7 +245,7 @@ class Resource(ModelView):
       src = src[self.model_name]
     except KeyError, e:
       return current_app.make_response((
-        'Required attribute "%s" not found' % self.model_name, 400, []))
+        'Required attribute "{0}" not found'.format(self.model_name), 400, []))
     ggrc.builder.json.update(obj, src)
     #FIXME Fake the modified_by_id until we have that information in session.
     obj.modified_by_id = 1
@@ -295,7 +295,7 @@ class Resource(ModelView):
       src = src[self.model_name]
     except KeyError, e:
       return current_app.make_response((
-        'Required attribute "%s" not found' % self.model_name, 400, []))
+        'Required attribute "{0}" not found'.format(self.model_name), 400, []))
     ggrc.builder.json.create(obj, src)
     #FIXME Fake the modified_by_id until we have that information in session.
     obj.modified_by_id = 1
@@ -322,7 +322,7 @@ class Resource(ModelView):
         view_func=view_func,
         methods=['GET','POST'])
     app.add_url_rule(
-        '%s/<%s:%s>' % (url, cls.pk_type, cls.pk),
+        '{url}/<{type}:{pk}>'.format(url=url, type=cls.pk_type, pk=cls.pk),
         view_func=view_func,
         methods=['GET', 'PUT', 'DELETE'])
 
@@ -339,7 +339,7 @@ class Resource(ModelView):
   def collection_for_json(
       self, objects, model_plural=None, collection_name=None):
     model_plural = model_plural or self.model_plural
-    collection_name = collection_name or '%s_collection' % (model_plural,)
+    collection_name = collection_name or '{0}_collection'.format(model_plural)
 
     objects_json = []
     for object in objects:

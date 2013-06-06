@@ -65,8 +65,11 @@ class BaseObjectView(ModelView):
   @classmethod
   def add_to(cls, app, url, model_class=None):
     if model_class:
-      view_class = type('%sObjectView' % (model_class.__name__), (BaseObjectView,), {
-        '_model': model_class
+      view_class = type(
+        '{0}ObjectView'.format(model_class.__name__),
+        (BaseObjectView,),
+        {
+          '_model': model_class
         })
       import ggrc.views
       setattr(ggrc.views, model_class.__name__, view_class)
@@ -74,7 +77,8 @@ class BaseObjectView(ModelView):
       view_class = cls
 
     view_func = view_class.as_view(view_class.endpoint_name())
-    view_route = '%s/<%s:%s>' % (url, cls.pk_type, cls.pk)
+    view_route = '{url}/<{type}:{pk}>'.format(
+        url=url, type=cls.pk_type, pk=cls.pk)
     app.add_url_rule(view_route,
       view_func=view_func,
       methods=['GET'])
