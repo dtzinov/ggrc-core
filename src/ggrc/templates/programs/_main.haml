@@ -48,24 +48,27 @@
                     %i.grcicon-policy-color
                     Policy
 
-.tabbable
-  %ul.nav.nav-tabs
-    -if not instance.company_controls
-      %li.text-governance.active
-        =#link_to '<i class="grcicon-directive-color"></i>Directives'.html_safe, '#directives', :data => { :toggle => 'tab' }
-    %li.text-governance
-      =#link_to '<i class="grcicon-control-color"></i>Controls'.html_safe, '#controls', :data => { :toggle => 'tab' }
-    -#%li=link_to '<i class="grcicon-reg-map"></i>Combo'.html_safe, '#combo', :data => { :toggle => 'tab', :'tab-href' => flow_sections_path(:program_id => instance.id, :combo => true) }
+-block main
+  .tabbable
+    %ul.nav.nav-tabs
+      -if not instance.company_controls
+        %li.text-governance.active
+          %a{ 'href': '#directives', 'data-toggle': 'tab' }
+            %i.grcicon-directive-color
+            Directives
+      %li.text-governance
+        %a{ 'href': '#controls', 'data-toggle': 'tab' }
+          %i.grcicon-control-color
+          Controls
 
-  .action-items
-    %a.expandAll.btn.btn-mini{ 'href': "#", 'rel': "tooltip", 'title': "Expand all" }
-      %i.grcicon-wide-black
-    %a.shrinkAll.btn.btn-mini{ 'href': "#", 'rel': "tooltip", 'title': "Collapse all" }
-      %i.grcicon-normal-black
+    .action-items
+      %a.expandAll.btn.btn-mini{ 'href': "#", 'rel': "tooltip", 'title': "Expand all" }
+        %i.grcicon-wide-black
+      %a.shrinkAll.btn.btn-mini{ 'href': "#", 'rel': "tooltip", 'title': "Collapse all" }
+        %i.grcicon-normal-black
 
-  .tab-content
-    #directives.tab-pane
-      %ul.tree-structure
-    #controls.tab-pane
-      %ul.tree-structure
-    #combo.tab-pane
+    .tab-content
+      #directives.tab-pane
+        %ul.tree-structure
+      #controls.tab-pane
+        %ul.tree-structure

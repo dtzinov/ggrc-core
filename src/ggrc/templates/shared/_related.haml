@@ -1,0 +1,49 @@
+-extends 'layouts/_widget_box.haml'
+
+-set model_name = controller.model_name
+-set model_plural = controller.model_plural
+
+-set widget_title = (widget_title|default("Related to " + model_name))
+-#if local_assigns[:widget_title].nil?
+
+-set near_model = model.__class__.__name__
+-if near_model == "System" and instance.is_biz_process
+  -set near_model = "Process"
+
+-set models = ["Program"]
+-#set models = related_objects(instance)
+-#left_models, right_models = arranged_related_objects(instance)
+
+-block widget_title
+  =widget_title
+
+-block widget_id
+  related_widget
+
+-block widget_help
+  related
+
+-block main
+  #related.open
+    .row-fluid
+      .span12
+        .tabbable
+          %ul.nav.nav-tabs
+            -for model in models
+              -set table_name = model|underscore
+              -set icon = "grcicon-={ model|lower }-color"
+              %li.tab-btn{ 'class': "tab-btn text-={ model.downcase }"}
+                %a{ 'href': '#related-={ table_name }-pane',
+                    'data-toggle': 'tab',
+                    'data-source': 'related_objects_flow_relationships_path(:oid => instance.id, :otype: near_model, :related_model: model)',
+                    'data-template': '/assets/related.mustache',
+                    'data-refresh-time': '60' }
+                  %i{ 'class': "={ icon }" }
+                  %span.collapse_tab_text
+                    =model|title
+                  -# FIXME: Include related object counts
+                  =#{ ' ' + instance.count_other_objects(model).to_s }
+    .tab-content
+      -for model in models
+        .tab-pane{ 'id': "related-={ model_plural|underscore }-pane" }
+          Data for #{ model_name|title }

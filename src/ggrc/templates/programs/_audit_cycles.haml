@@ -1,0 +1,51 @@
+-extends 'layouts/_widget_box.haml'
+
+-set cycles = instance.cycles
+
+-block widget_title
+  %i.grcicon-audit-white
+  Audit Cycles
+  %span
+    =cycles|length
+
+-block widget_help
+  program_cycles
+
+-block widget_id
+  audit_cycles_widget
+
+-block main
+  %ul.tree-structure.simple
+    -for cycle in cycles
+      %li
+        .item-main
+          .item-title
+            .row-fluid
+              .span9
+                %a.custom-popover-trigger{ 'href': 'flow_cycle_path(cycle)', 'data-popover-href': 'tooltip_flow_cycle_path(cycle)', 'data-popover-trigger': 'sticky-hover' }
+                  .oneline
+                    %span.title
+                      -if cycle.complete
+                        %span.completed
+                          =cycle.title
+                      -else
+                        =cycle.title
+                    %span.additional-info
+                      -if cycle.complete
+                        %span.completed
+                          completed
+                      -else
+                        -# FIXME: Implement 'days_ago_in_words' filter
+                        -#if cycle.start_at == Time.zone.now.to_date
+                          today
+                        -#elif cycle.start_at < Time.zone.now.to_date
+                          ={ cycle.start_at|days_ago_in_words } ago
+                        -#else
+                          starting in: ={ cycle.start_at|days_ago_in_words  }
+                        -# FIXME: Implement 'strftime' filter
+                        -#if cycle.end_at
+                          &nbsp;&nbsp;&nbsp;
+                          ends on: ={ cycle.end_at|strftime("%m/%d/%y") }
+              .span2
+                .objects-count
+

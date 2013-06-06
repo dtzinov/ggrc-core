@@ -53,10 +53,10 @@
           -include 'programs/_main.haml'
         -if not instance.company_controls
           -with widget_class = 'widget-tabs widget-tabs-horizontal related business'
-            -#include 'shared/_related.haml'
+            -include 'shared/_related.haml'
         -if instance.company_controls
           -with widget_class = 'widget-tabs widget-tabs-horizontal programs'
-            -#include 'programs/_linked_programs.haml'
+            -include 'programs/_linked_programs.haml'
         -else
           -include 'shared/_add_widget_section.haml'
 
@@ -65,7 +65,7 @@
           -include 'programs/_info.haml'
         -if not instance.company_controls
           -with widget_class = 'programs'
-            -#include 'programs/_audit_cycles.haml'
+            -include 'programs/_audit_cycles.haml'
         -with widget_class = 'related business'
           -include 'programs/_more_info.haml'
         -if not instance.company_controls

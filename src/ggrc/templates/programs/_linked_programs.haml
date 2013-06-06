@@ -1,0 +1,24 @@
+-set programs = instance.linked_programs_query_via_control_mapping.all()
+
+-block widget_title
+  %i.grcicon-program
+  Programs using these controls
+  %span
+    =programs|length
+
+-block widget_help
+  program_linked_programs
+
+-block widget_id
+  program_linked_programs_widget
+
+-block main
+  %ul.tree-structure.simple
+    -for program in programs
+      %li.item-main
+        %a.block-element{ 'href': 'flow_program_path(program)', 'class': 'block-element', 'data-popover-href': 'tooltip_flow_program_path(program)', 'data-popover-trigger': 'sticky-hover' }
+          .item-title
+            .row-fluid
+              .span12
+                %span.title
+                  =program.title
