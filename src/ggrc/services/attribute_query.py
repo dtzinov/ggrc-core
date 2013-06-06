@@ -18,7 +18,6 @@ class AttributeQueryBuilder(object):
         'Unknown or unsupported query parameter {0}'.format(attrname))
 
   def get_attr_for_model(self, attrname, model):
-    #FIXME Differentiating bad parameter to allow it through, for now
     if not hasattr(model, attrname):
       raise self.bad_query_parameter(attrname)
     attr = getattr(model, attrname)
@@ -59,7 +58,8 @@ class AttributeQueryBuilder(object):
       raise self.bad_query_parameter(attrname)
 
   def process_property_path(self, arg, value, joinlist, filters):
-    segments = arg.split('.')
+    clean_arg = arg if not arg.endswith('__in') else arg[0:-4]
+    segments = clean_arg.split('.')
     if len(segments) > 1:
       current_model = self.model
       attr = None
@@ -70,10 +70,15 @@ class AttributeQueryBuilder(object):
         attr = self.get_attr_for_model(segment, current_model)
       self.check_valid_property(attr, segment)
     else:
-      attr = self.get_attr_for_model(arg, self.model)
-      self.check_valid_property(attr, arg)
-    value = self.coerce_value_for_query_param(attr, arg, value)
-    filters.append(attr == cast(value, attr.type))
+      attr = self.get_attr_for_model(clean_arg, self.model)
+      self.check_valid_property(attr, clean_arg)
+    if arg.endswith('__in'):
+      value = value.split(',')
+      value = [self.coerce_value_for_query_param(attr, arg, v) for v in value]
+      filters.append(attr.in_(value))
+    else:
+      value = self.coerce_value_for_query_param(attr, arg, value)
+      filters.append(attr == cast(value, attr.type))
 
   def collection_filters(self, args):
     """Create filter expressions using ``request.args``"""

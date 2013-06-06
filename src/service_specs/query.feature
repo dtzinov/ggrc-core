@@ -94,7 +94,7 @@ Feature: Collection filtering via query parameters
   Examples:
       | resource_type1 | link_property_name | resource_type2 | target_property_name | match_value1 | match_value2 |
       | Section        | directive          | Directive      | title                | 'foo'        | 'bar'        |
-      | Control        | directive          | Directive      | company              | bool(True)   | bool(False)  |
+      | Control        | directive          | Directive      | company              | True         | False        |
 
   Scenario: Query for controls related to a program
     Given a new "Program" named "program"
@@ -104,8 +104,20 @@ Feature: Collection filtering via query parameters
     And "directive" is POSTed to its collection
     And a new "Control" named "control"
     And "control" link property "directive" is "directive"
-    and "control" is POSTed to its collection
-    #When Querying "Control" with expression "directive.programs.id" equals literal "context.program.get('id')"
+    And "control" is POSTed to its collection
     When Querying "Control" with expression "directive.program_directives.program_id" equals literal "context.program.get('id')"
     Then "control" is in query result
+    When Querying "Control" with expression "directive.program_directives.program_id" equals literal "context.program.get('id') + 1"
+    Then "control" is not in query result
 
+  Scenario: Query can use both a property path and an __in suffix to supply a comma separated list of values
+    Given a new "Directive" named "directive"
+    And "directive" property "kind" is "foo"
+    And "directive" is POSTed to its collection
+    And a new "Control" named "control"
+    And "control" link property "directive" is "directive"
+    And "control" is POSTed to its collection
+    When Querying "Control" with "directive.kind__in=bar,foo"
+    Then "control" is in query result
+    When Querying "Control" with "directive.kind__in=bar,baz"
+    Then "control" is not in query result
