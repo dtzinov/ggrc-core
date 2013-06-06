@@ -45,10 +45,7 @@ end
 
 execute "Prepare dev virtualenv" do
   command "/bin/bash -c '"\
-          "source /vagrant-dev/opt/dev_virtualenv/bin/activate;"\
-          "pip install -U pip;"\
-          "pip install -r /vagrant/src/dev-requirements.txt;"\
-          "pip install --no-deps -r /vagrant/src/requirements.txt'"
+          "cd /vagrant; make setup_dev DEV_PREFIX=/vagrant-dev'"
   user "vagrant"
   group "vagrant"
   action :run

@@ -90,13 +90,19 @@ dev_virtualenv : $(DEV_PREFIX)/opt/dev_virtualenv
 
 dev_virtualenv_packages : dev_virtualenv src/dev-requirements.txt src/requirements.txt
 	source bin/init_env; \
+		pip install -U pip; \
 		pip install -r src/dev-requirements.txt; \
 		pip install --no-deps -r src/requirements.txt
 
 git_submodules :
 	git submodule update --init
 
-setup_dev : dev_virtualenv_packages git_submodules
+linked_packages : dev_virtualenv_packages
+	mkdir -p $(DEV_PREFIX)/opt/linked_packages
+	source bin/init_env; \
+		setup_linked_packages.py $(DEV_PREFIX)/opt/linked_packages
+
+setup_dev : dev_virtualenv_packages linked_packages
 
 
 ## Deployment!
