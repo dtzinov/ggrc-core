@@ -1,14 +1,12 @@
-
 # Copyright (C) 2013 Google Inc., authors, and contributors <see AUTHORS file>
 # Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
-# Created By:
-# Maintained By:
+# Created By: david@reciprocitylabs.com
+# Maintained By: david@reciprocitylabs.com
 
 import threading
 from ggrc import db
 from ggrc.app import app
 from ggrc.models import create_db, drop_db
-
 from wsgiref.simple_server import make_server
 
 use_migrations = False
