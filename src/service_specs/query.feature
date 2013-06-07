@@ -58,10 +58,12 @@ Feature: Collection filtering via query parameters
     Then "resource1" is not in query result
     Then "resource2" is in query result
 
+  @wip
   Scenario: An invalid boolean query parameter supplied to a collection receives 400
     When Querying "Category" with bad argument "required=random"
     Then a "400" status code is received
 
+  @wip
   Scenario Outline: An invalid query parameter is supplied to a collection receives 400
     When Querying "<resource_type>" with bad argument "<querystring>"
     Then a "400" status code is received
