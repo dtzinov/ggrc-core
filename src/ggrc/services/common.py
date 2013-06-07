@@ -96,9 +96,10 @@ class ModelView(View):
     if request.args:
       querybuilder = AttributeQueryBuilder(self.model)
       filter, joinlist = querybuilder.collection_filters(request.args)
-      for j in joinlist:
-        query = query.join(j)
-      query = query.filter(filter)
+      if filter is not None:
+        for j in joinlist:
+          query = query.join(j)
+        query = query.filter(filter)
     return query.order_by(self.model.updated_at.desc())
 
   def get_object(self, id):

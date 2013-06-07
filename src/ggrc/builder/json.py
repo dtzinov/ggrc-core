@@ -211,7 +211,10 @@ class Builder(AttributeInfo):
     translate the collection of object references into a collection of link
     objects for the JSON dictionary representation.
     """
-    return [self.generate_link_object_for(o) for o in getattr(obj, attr_name)]
+    # FIXME: Remove the "if o is not None" when we can guarantee referential
+    #   integrity
+    return [self.generate_link_object_for(o)
+      for o in getattr(obj, attr_name) if o is not None]
 
   def publish_link(self, obj, json_obj, attr_name):
     """The ``attr_name`` attribute is an object reference; translate the object

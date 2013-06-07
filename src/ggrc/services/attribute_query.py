@@ -57,7 +57,9 @@ class AttributeQueryBuilder(object):
         not isinstance(attr.type, AbstractType):
       raise self.bad_query_parameter(attrname)
 
-  def process_property_path(self, arg, value, joinlist, filters):
+  def process_property_path(self, arg, value):
+    joinlist = []
+    filters = []
     clean_arg = arg if not arg.endswith('__in') else arg[0:-4]
     segments = clean_arg.split('.')
     if len(segments) > 1:
@@ -79,15 +81,25 @@ class AttributeQueryBuilder(object):
     else:
       value = self.coerce_value_for_query_param(attr, arg, value)
       filters.append(attr == cast(value, attr.type))
+    return joinlist, filters
 
   def collection_filters(self, args):
     """Create filter expressions using ``request.args``"""
     joinlist = []
     filter_expressions = []
     for arg, value in args.items():
-      self.process_property_path(arg, value, joinlist, filter_expressions)
-    filter = filter_expressions[0]
-    for f in filter_expressions[1:]:
-      filter = and_(f)
-    return (filter, joinlist)
-
+      try:
+        joins, filters = self.process_property_path(arg, value)
+        joinlist.extend(joins)
+        filter_expressions.extend(filters)
+      except BadRequest:
+        # FIXME: raise BadRequest when client-side is ready for it
+        # * when fixed, remove appropriate @wip's in service_specs/query.feature
+        pass
+    if filter_expressions:
+      filter = filter_expressions[0]
+      for f in filter_expressions[1:]:
+        filter = and_(f)
+      return (filter, joinlist)
+    else:
+      return (None, None)
