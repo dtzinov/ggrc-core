@@ -3,6 +3,14 @@
 # Created By: dan@reciprocitylabs.com
 # Maintained By: dan@reciprocitylabs.com
 
-APP_ENGINE = True
-ENABLE_JASMINE = False
+DEBUG = True
+TESTING = True
+HOST = '0.0.0.0'
+SQLALCHEMY_DATABASE_URI = 'mysql+mysqldb://root:root@localhost/ggrcdev'
+FULLTEXT_INDEXER = 'ggrc.fulltext.mysql.MysqlIndexer'
 LOGIN_MANAGER = 'ggrc.login.appengine'
+#SQLALCHEMY_ECHO = True
+AUTOBUILD_ASSETS = False
+ENABLE_JASMINE = False
+
+APP_ENGINE = True
