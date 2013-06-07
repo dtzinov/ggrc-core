@@ -13,7 +13,7 @@ from flask.views import View
 from ggrc import db
 from ggrc.fulltext import get_indexer
 from ggrc.fulltext.recordbuilder import fts_record_for
-from ggrc.login import get_current_user
+from ggrc.login import get_current_user_id
 from wsgiref.handlers import format_date_time
 from .attribute_query import AttributeQueryBuilder
 
@@ -258,7 +258,7 @@ class Resource(ModelView):
         'Required attribute "{0}" not found'.format(self.model_name), 400, []))
     ggrc.builder.json.update(obj, src)
     #FIXME Fake the modified_by_id until we have that information in session.
-    obj.modified_by_id = get_current_user().id
+    obj.modified_by_id = get_current_user_id()
     db.session.add(obj)
     db.session.commit()
     obj = self.get_object(id)
@@ -308,7 +308,7 @@ class Resource(ModelView):
         'Required attribute "{0}" not found'.format(self.model_name), 400, []))
     ggrc.builder.json.create(obj, src)
     #FIXME Fake the modified_by_id until we have that information in session.
-    obj.modified_by_id = get_current_user().id
+    obj.modified_by_id = get_current_user_id()
     db.session.add(obj)
     db.session.commit()
     get_indexer().create_record(fts_record_for(obj))

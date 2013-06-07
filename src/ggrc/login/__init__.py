@@ -49,6 +49,13 @@ def get_current_user():
   else:
     return None
 
+def get_current_user_id():
+  user = get_current_user()
+  if user:
+    return user.id
+  else:
+    return None
+
 def login_required(func):
   if get_login_module():
     return flask_login.login_required(func)
