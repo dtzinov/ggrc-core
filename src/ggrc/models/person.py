@@ -30,3 +30,16 @@ class Person(Base, db.Model):
       'name',
       PublishOnly('object_people'),
       ]
+
+  # Methods required by Flask-Login
+  def is_authenticated(self):
+    return True
+
+  def is_active(self):
+    return True #self.active
+
+  def is_anonymous(self):
+    return False
+
+  def get_id(self):
+    return unicode(self.id)

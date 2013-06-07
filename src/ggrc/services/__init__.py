@@ -58,13 +58,15 @@ def all_collections():
 def init_all_services(app):
   """Register all gGRC REST services with the Flask application ``app``."""
   from .common import Resource
+  from ggrc.login import login_required
 
   for k,v in all_collections():
-    Resource.add_to(app, '/api/{0}'.format(k), v)
+    Resource.add_to(
+      app, '/api/{0}'.format(k), v, decorators=(login_required,))
 
   from .search import search
   app.add_url_rule(
-    '/search', 'search', search)
+    '/search', 'search', login_required(search))
 
   from .description import ServiceDescription
   app.add_url_rule(

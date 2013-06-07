@@ -10,7 +10,7 @@ class TooltipView(BaseObjectView):
   base_template = 'base_objects/tooltip.haml'
 
   @classmethod
-  def add_to(cls, app, url, model_class=None):
+  def add_to(cls, app, url, model_class=None, decorators=()):
     if model_class:
       view_class_name = '{0}TooltipView'.format(model_class.__name__)
       view_class = type(
@@ -23,6 +23,7 @@ class TooltipView(BaseObjectView):
     else:
       view_class = cls
     view_func = view_class.as_view(view_class.endpoint_name())
+    view_func = cls.decorate_view_func(view_func, decorators)
     view_route = '{url_prefix}/<{pk_type}:{pk}>/tooltip'.format(
         url_prefix=url,
         pk_type=cls.pk_type,

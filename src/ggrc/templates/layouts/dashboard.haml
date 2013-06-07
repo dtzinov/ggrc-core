@@ -86,7 +86,8 @@
                     %i.grcicon-user
                     %span
                       -# FIXME: Use actual account information
-                      -#%strong=current_user.email
+                      %strong
+                        =current_user.email
                     %i.grcicon-carot-white
                   %ul.dropdown-menu{'aria-labelledby': 'drop1', 'role': "menu"}
                     -# FIXME: Restrict view to administrators
@@ -106,7 +107,7 @@
                         Set Layout as Default
                     %li
                       -# FIXME: Fix link
-                      %a{'href': "logout_path", 'tabindex': "-1"}
+                      %a{'href': '={ url_for("logout") }', 'tabindex': "-1"}
                         %i.grcicon-logout
                         Logout
                 %li.screen.dropdown.dropdown-black.black-link

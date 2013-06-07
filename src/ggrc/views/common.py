@@ -63,7 +63,7 @@ class BaseObjectView(ModelView):
     return rendered_template
 
   @classmethod
-  def add_to(cls, app, url, model_class=None):
+  def add_to(cls, app, url, model_class=None, decorators=()):
     if model_class:
       view_class = type(
         '{0}ObjectView'.format(model_class.__name__),
@@ -77,6 +77,7 @@ class BaseObjectView(ModelView):
       view_class = cls
 
     view_func = view_class.as_view(view_class.endpoint_name())
+    view_func = cls.decorate_view_func(view_func, decorators)
     view_route = '{url}/<{type}:{pk}>'.format(
         url=url, type=cls.pk_type, pk=cls.pk)
     app.add_url_rule(view_route,

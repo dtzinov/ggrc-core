@@ -8,11 +8,12 @@ import ggrc.builder.json
 import hashlib
 import json
 import time
-from flask import url_for, request, current_app
+from flask import g, url_for, request, current_app
 from flask.views import View
 from ggrc import db
 from ggrc.fulltext import get_indexer
 from ggrc.fulltext.recordbuilder import fts_record_for
+from ggrc.login import get_current_user
 from wsgiref.handlers import format_date_time
 from .attribute_query import AttributeQueryBuilder
 
@@ -149,6 +150,14 @@ class ModelView(View):
       return url_for(cls.endpoint_name(), *args[1:], id=args[0].id, **kwargs)
     return url_for(cls.endpoint_name(), *args, **kwargs)
 
+  @classmethod
+  def decorate_view_func(cls, view_func, decorators):
+    if not isinstance(decorators, (list, tuple)):
+      decorators = (decorators,)
+    for decorator in reversed(decorators):
+      view_func = decorator(view_func)
+    return view_func
+
 
 # View base class for Views handling
 #   - /resources (GET, POST)
@@ -248,7 +257,7 @@ class Resource(ModelView):
         'Required attribute "{0}" not found'.format(self.model_name), 400, []))
     ggrc.builder.json.update(obj, src)
     #FIXME Fake the modified_by_id until we have that information in session.
-    obj.modified_by_id = 1
+    obj.modified_by_id = get_current_user().id
     db.session.add(obj)
     db.session.commit()
     obj = self.get_object(id)
@@ -298,7 +307,7 @@ class Resource(ModelView):
         'Required attribute "{0}" not found'.format(self.model_name), 400, []))
     ggrc.builder.json.create(obj, src)
     #FIXME Fake the modified_by_id until we have that information in session.
-    obj.modified_by_id = 1
+    obj.modified_by_id = get_current_user().id
     db.session.add(obj)
     db.session.commit()
     get_indexer().create_record(fts_record_for(obj))
@@ -306,7 +315,7 @@ class Resource(ModelView):
       self.object_for_json(obj), obj.updated_at, id=obj.id, status=201)
 
   @classmethod
-  def add_to(cls, app, url, model_class=None):
+  def add_to(cls, app, url, model_class=None, decorators=()):
     if model_class:
       service_class = type(model_class.__name__, (Resource,), {
         '_model': model_class,
@@ -316,6 +325,7 @@ class Resource(ModelView):
     else:
       service_class = cls
     view_func = service_class.as_view(service_class.endpoint_name())
+    view_func = cls.decorate_view_func(view_func, decorators)
     app.add_url_rule(
         url,
         defaults={cls.pk: None},

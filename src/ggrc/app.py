@@ -17,6 +17,10 @@ from . import db
 db.app = app
 db.init_app(app)
 
+# Configure Flask-Login
+import ggrc.login
+ggrc.login.init_app(app)
+
 # Configure webassets for app
 from . import assets
 app.jinja_env.add_extension('webassets.ext.jinja2.assets')
