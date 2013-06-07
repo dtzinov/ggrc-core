@@ -17,3 +17,4 @@ VERSION = "s3"
 # Initialize from environment if present
 import os
 SQLALCHEMY_DATABASE_URI = os.environ.get('GGRC_DATABASE_URI', '')
+SECRET_KEY = os.environ.get('GGRC_SECRET_KEY', 'Replace-with-something-secret')

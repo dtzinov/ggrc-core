@@ -32,6 +32,7 @@
       #right_column.span6.widget-area
         -with widget_class = 'widget-tabs'
           -include 'dashboard/_programs.haml'
-          -#if g.user.can_manage_risk()
+          -#FIXME: Restrict 'risk' visibility
+          -#  e.g., if current_user.can_manage_risk()
           -include 'dashboard/_risk.haml'
         -include 'shared/_add_widget_section.haml'

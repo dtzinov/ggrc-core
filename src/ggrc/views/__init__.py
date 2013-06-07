@@ -35,24 +35,22 @@ from flask import render_template
 #
 
 @app.route("/")
-def hello():
+def index():
   """The initial entry point of the app
   """
   return render_template("welcome/index.haml")
 
-@app.route("/login")
-def login():
-  """The login page
-  """
-  return render_template("user_sessions/login.html")
+from ggrc.login import login_required
 
 @app.route("/dashboard")
+@login_required
 def dashboard():
   """The dashboard page
   """
   return render_template("dashboard/index.haml")
 
 @app.route("/design")
+@login_required
 def styleguide():
   """The style guide page
   """
@@ -107,8 +105,9 @@ def init_all_object_views(app):
   from .common import BaseObjectView
 
   for k,v in all_object_views():
-    BaseObjectView.add_to(app, '/{0}'.format(k), v)
+    BaseObjectView.add_to(
+      app, '/{0}'.format(k), v, decorators=(login_required,))
 
   for k,v in all_tooltip_views():
-    TooltipView.add_to(app, '/{0}'.format(k), v)
-
+    TooltipView.add_to(
+      app, '/{0}'.format(k), v, decorators=(login_required,))
