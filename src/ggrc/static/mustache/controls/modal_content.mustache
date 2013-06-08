@@ -6,16 +6,16 @@
       <label>
         Title
         <span class="required">*</i>
-        <i class="grcicon-help-black"></i>
+        <i class="grcicon-help-black" rel="tooltip" title="Enter Title"></i>
       </label>
       <input class="input-block-level" placeholder="Enter Title" name="title" type="text" value="{{this.title}}">
     </div>
     <div class="span3">
       <label>
         Company Control?
-        <i class="grcicon-help-black"></i>
+        <i class="grcicon-help-black" rel="tooltip" title="Is it company control?"></i>
       </label>
-      {{!FIXIT: Proposed. If it won't be implemented, remove this one}}
+      {{!FIXME: Proposed. If it won't be implemented, remove this one}}
       <select name="company_control" class="input-block-level">
         <option selected="selected" value="0">No</option>
         <option value="1">Yes</option>
@@ -25,9 +25,9 @@
       <label>
         Directive
         <span class="required">*</i>
-        <i class="grcicon-help-black"></i>
+        <i class="grcicon-help-black" rel="tooltip" title="Select Directive"></i>
       </label>
-      {{!FIXIT: Need List of possible directives // We need titles followed by CODE, not just CODE}}
+      {{!FIXME: Need List of possible directives // We need titles followed by CODE, not just CODE}}
       <select class="input-block-level" name="directive.id">
         {{#all 'Directive'}}
         <option value="{{id}}">{{title}} ({{slug}})</option>
@@ -40,7 +40,7 @@
       <label>
         Description
         <span class="required">*</span>
-        <i class="grcicon-help-black"></i>
+        <i class="grcicon-help-black" rel="tooltip" title="Enter Description"></i>
       </label>
       <div class="wysiwyg-area">
         <textarea id="control_description" class="span12 double wysihtml5" name="description" placeholder="Enter Description">{{{description}}}</textarea>
@@ -49,12 +49,12 @@
     <div class="span6">
       <label>
         Owner/Person of Contact
-        <i class="grcicon-help-black"></i>
+        <i class="grcicon-help-black" rel="tooltip" title="Enter Owner/Person of Contact"></i>
       </label>
       <input class="input-block-level" name="owner" placeholder="Enter email address" type="text" value="{{owner}}">
       <label>
         Control URL
-        <i class="grcicon-help-black"></i>
+        <i class="grcicon-help-black" rel="tooltip" title="Enter Control URL"></i>
       </label>
       <input class="input-block-level" name="url" placeholder="http://www.domain.com/" type="text" value="{{url}}">
     </div>
@@ -85,14 +85,14 @@
       <div class="span6">
         <label>
           Code
-          <i class="grcicon-help-black"></i>
+          <i class="grcicon-help-black" rel="tooltip" title="Enter Code"></i>
         </label>
         <input class="input-block-level" name="slug" placeholder="CONTROL-XXX" type="text" value="{{slug}}">
       </div>
       <div class="span6">
         <label>
           Reference URL
-          <i class="grcicon-help-black"></i>
+          <i class="grcicon-help-black" rel="tooltip" title="Enter Reference URL"></i>
         </label>
         <input class="input-block-level" name="url" placeholder="http://www.domain.com/" type="text" value="{{url}}">
       </div>
@@ -101,7 +101,7 @@
       <div class="span3">
         <label>
           Kind
-          <i class="grcicon-help-black"></i>
+          <i class="grcicon-help-black" rel="tooltip" title="Choose Control Kind"></i>
         </label>
         <select class="input-block-level" name="kind.id" numeric="numeric">
           <option {{^kind.id}}selected="selected"{{/kind.id}} value="">None</option>
@@ -114,7 +114,7 @@
       <div class="span3">
         <label>
           Fraud Related
-          <i class="grcicon-help-black"></i>
+          <i class="grcicon-help-black" rel="tooltip" title="Is control fraud related?"></i>
         </label>
         <select class="input-block-level" name="fraud_related">
           <option selected="selected" value="">Choose</option>
@@ -125,7 +125,7 @@
       <div class="span3">
         <label>
           Significance
-          <i class="grcicon-help-black"></i>
+          <i class="grcicon-help-black" rel="tooltip" title="Choose Significance"></i>
         </label>
         <select class="input-block-level" name="key_control">
           <option selected="selected" value="">Choose</option>
@@ -136,7 +136,7 @@
       <div class="span3">
         <label>
           Means
-          <i class="grcicon-help-black"></i>
+          <i class="grcicon-help-black" rel="tooltip" title="Define Control Means"></i>
         </label>
         <select class="span12" name="means.id" numeric="numeric">
           <option value="" {{^means.id}}selected="selected"{{/means.id}}>None</option>
@@ -150,9 +150,9 @@
       <div class="span6">
         <label>
           Assertions
-          <i class="grcicon-help-black"></i>
+          <i class="grcicon-help-black" rel="tooltip" title="Choose Control Assertions"></i>
         </label>
-        {{!FIXIT: Couldn't find variable name for this one w/ POSTMAN}}
+        {{!FIXME: Couldn't find variable name for this one w/ POSTMAN}}
         <select class="input-block-level" multiple="multiple" name="assertions">
           <option value="17">Accuracy</option>
           <option value="18">Classification</option>
@@ -168,9 +168,9 @@
       <div class="span6">
         <label>
           Categories
-          <i class="grcicon-help-black"></i>
+          <i class="grcicon-help-black" rel="tooltip" title="Choose Control Categories"></i>
         </label>
-        {{!FIXIT: Couldn't find variable name for this one w/ POSTMAN}}
+        {{!FIXME: Couldn't find variable name for this one w/ POSTMAN}}
         <select class="input-block-level" multiple="multiple" name="categories.id">
           {{#all 'Category'}}
           <option value="{{id}}">{{name}}</option>
@@ -182,7 +182,7 @@
       <div class="span12">
         <label>
           Notes
-          <i class="grcicon-help-black"></i>
+          <i class="grcicon-help-black" rel="tooltip" title="Enter Additional Notes"></i>
         </label>
         <div class="wysiwyg-area">
           <textarea id="control_notes" class="span12 double wysihtml5" name="notes" placeholder="Enter Notes">{{{notes}}}</textarea>

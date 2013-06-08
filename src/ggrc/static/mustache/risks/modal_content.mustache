@@ -6,7 +6,7 @@
       <label>
         Title
         <span class="required">*</span>
-        <i class="grcicon-help-black"></i>
+        <i class="grcicon-help-black" rel="tooltip" title="Enter Title"></i>
       </label>
       <input class="input-block-level" placeholder="Enter Title" name="title" type="text" value="{{this.title}}">
     </div>
@@ -16,7 +16,7 @@
       <label>
         Description
         <span class="required">*</span>
-        <i class="grcicon-help-black"></i>
+        <i class="grcicon-help-black" rel="tooltip" title="Enter Description"></i>
       </label>
       <div class="wysiwyg-area">
         <textarea id="risk_description" class="span12 double wysihtml5" name="description" placeholder="Enter Description">{{{description}}}</textarea>
@@ -25,12 +25,12 @@
     <div class="span6">
       <label>
         Owner/Person of Contact
-        <i class="grcicon-help-black"></i>
+        <i class="grcicon-help-black" rel="tooltip" title="Enter Owner/Person of Contact"></i>
       </label>
       <input class="input-block-level" name="owner" placeholder="Enter Title" type="text" value="{{owner}}">
       <label>
-        Direct URL
-        <i class="grcicon-help-black"></i>
+        Risk URL
+        <i class="grcicon-help-black" rel="tooltip" title="Enter URL"></i>
       </label>
       <input class="input-block-level" name="url" placeholder="http://www.domain.com/" type="text" value="{{url}}">
     </div>
@@ -61,14 +61,14 @@
       <div class="span6">
         <label>
           Code
-          <i class="grcicon-help-black"></i>
+          <i class="grcicon-help-black" rel="tooltip" title="Enter Code"></i>
         </label>
         <input class="input-block-level" name="slug" placeholder="RISK-XXX" type="text" value="{{slug}}">
       </div>
       <div class="span6">
         <label>
           Reference URL
-          <i class="grcicon-help-black"></i>
+          <i class="grcicon-help-black" rel="tooltip" title="Enter Reference URL"></i>
         </label>
         <input class="input-block-level" name="url" placeholder="http://www.domain.com/" type="text" value="{{url}}">
       </div>
@@ -77,7 +77,7 @@
       <div class="span4">
         <label>
           Inherent Risk
-          <i class="grcicon-help-black"></i>
+          <i class="grcicon-help-black" rel="tooltip" title="Enter Inherent Risk"></i>
         </label>
         <div class="wysiwyg-area">
           <textarea id="inherent_risk" class="span12 double wysihtml5" name="inherent_risk" placeholder="Enter Inherent Risk">{{{inherent_risk}}}</textarea>
@@ -86,9 +86,9 @@
       <div class="span4">
         <label>
           Risk Mitigation
-          <i class="grcicon-help-black"></i>
+          <i class="grcicon-help-black" rel="tooltip" title="Enter Risk Mitigation"></i>
         </label>
-        {{!FIXIT: Couldn't find variable name for this one w/ POSTMAN}}
+        {{!FIXME: Couldn't find variable name for this one w/ POSTMAN}}
         <div class="wysiwyg-area">
           <textarea id="risk_mitigation" class="span12 double wysihtml5" name="risk_mitigation" placeholder="Enter Risk Mitigation">{{{risk_mitigation}}}</textarea>
         </div>
@@ -96,7 +96,7 @@
       <div class="span4">
         <label>
           Residual Risk
-          <i class="grcicon-help-black"></i>
+          <i class="grcicon-help-black" rel="tooltip" title="Enter Residual Risk"></i>
         </label>
         <div class="wysiwyg-area">
           <textarea id="residual_risk" class="span12 double wysihtml5" name="residual_risk" placeholder="Enter Residual Risk">{{{residual_risk}}}</textarea>
@@ -115,7 +115,7 @@
       <div class="span6">
         <label>
           Likelihood
-          <i class="grcicon-help-black"></i>
+          <i class="grcicon-help-black" rel="tooltip" title="Set Likelihood"></i>
         </label>
         <div class="wysiwyg-area">
           <select name="likelihood_rating">
@@ -131,7 +131,7 @@
       <div class="span6">
         <label>
           Impact Description
-          <i class="grcicon-help-black"></i>
+          <i class="grcicon-help-black" rel="tooltip" title="Enter Impact Description"></i>
         </label>
         <div class="wysiwyg-area">
           <textarea id="impact_description" class="span12 double wysihtml5" name="impact" placeholder="Enter Impact Description">{{{impact}}}</textarea>
@@ -142,7 +142,7 @@
       <div class="span6">
         <label>
           Threat Vector
-          <i class="grcicon-help-black"></i>
+          <i class="grcicon-help-black" rel="tooltip" title="Enter Threat Vector"></i>
         </label>
         <div class="wysiwyg-area">
           <textarea id="threat_vector" class="span12 double wysihtml5" name="threat_vector" placeholder="Enter Threat Vector">{{{threat_vector}}}</textarea>
@@ -151,7 +151,7 @@
       <div class="span6">
         <label>
           Company-wide Reputation Impact
-          <i class="grcicon-help-black"></i>
+          <i class="grcicon-help-black" rel="tooltip" title="Choose Reputation Impact"></i>
         </label>
         <select name="reputational_impact_rating">
           <option value="1">1 - Minimal</option>
@@ -166,7 +166,7 @@
       <div class="span6">
         <label>
           Trigger/Immediate/Proximate Cause
-          <i class="grcicon-help-black"></i>
+          <i class="grcicon-help-black" rel="tooltip" title="Enter Trigger/Immediate/Proximate Cause"></i>
         </label>
         <div class="wysiwyg-area">
           <textarea id="risk_trigger" class="span12 double wysihtml5" name="risk_trigger" placeholder="Enter Trigger/Immediate/Proximate Cause">{{{trigger}}}</textarea>
@@ -175,7 +175,7 @@
       <div class="span6">
         <label>
           Company-wide Financial Impact
-          <i class="grcicon-help-black"></i>
+          <i class="grcicon-help-black" rel="tooltip" title="Choose Financial Impact"></i>
         </label>
         <select name="financial_impact_rating">
           <option value="1">1 - Minimal</option>
@@ -190,7 +190,7 @@
       <div class="span6">
         <label>
           Pre-conditions/Contributory Causes
-          <i class="grcicon-help-black"></i>
+          <i class="grcicon-help-black" rel="tooltip" title="Enter Pre-conditions/Contributory Causes"></i>
         </label>
         <div class="wysiwyg-area">
           <textarea id="preconditions" class="span12 double wysihtml5" name="preconditions" placeholder="Pre-conditions/Contributory Causes">{{{preconditions}}}</textarea>
@@ -199,7 +199,7 @@
       <div class="span6">
         <label>
           Company-wide Operational Impact
-          <i class="grcicon-help-black"></i>
+          <i class="grcicon-help-black" rel="tooltip" title="Choose Operational Impact"></i>
         </label>
         <select name="operational_impact_rating">
           <option value="1">1 - Minimal</option>
