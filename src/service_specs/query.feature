@@ -8,6 +8,7 @@ Feature: Collection filtering via query parameters
   Background:
     Given service description
   
+  @wip
   Scenario Outline: A single query parameter supplied to a collection finds matching resources
     Given a new "<resource_type>" named "resource1"
     And a new "<resource_type>" named "resource2"
@@ -123,3 +124,14 @@ Feature: Collection filtering via query parameters
     Then "control" is in query result
     When Querying "Control" with "directive.kind__in=bar,baz"
     Then "control" is not in query result
+
+  Scenario: Property link objects and be included with __include
+    Given a new "Directive" named "directive"
+    And "directive" property "kind" is "Testing__include1"
+    And "directive" is POSTed to its collection
+    And a new "Program" named "program"
+    And "directive" is added to links property "directives" of "program"
+    And "program" is POSTed to its collection
+    When Querying "Program" with "program_directives.directive.kind=Testing__include1&__include=directives"
+    Then "program" is in query result
+    And evaluate "context.queryresultcollection['programs_collection']['programs'][0]['directives'][0]['kind'] == 'Testing__include1'"

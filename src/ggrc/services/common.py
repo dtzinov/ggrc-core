@@ -8,12 +8,13 @@ import ggrc.builder.json
 import hashlib
 import json
 import time
-from flask import g, url_for, request, current_app
+from flask import url_for, request, current_app
 from flask.views import View
 from ggrc import db
 from ggrc.fulltext import get_indexer
 from ggrc.fulltext.recordbuilder import fts_record_for
 from ggrc.login import get_current_user_id
+from werkzeug.exceptions import BadRequest
 from wsgiref.handlers import format_date_time
 from .attribute_query import AttributeQueryBuilder
 
@@ -347,6 +348,27 @@ class Resource(ModelView):
     json_obj = ggrc.builder.json.publish(obj)
     return { model_name: json_obj }
 
+  def get_properties_to_include(self):
+    #FIXME This needs to be improved to deal with branching paths... if that's
+    #desirable or needed.
+    inclusions = request.args.get('__include')
+    if inclusions is not None:
+      if len(inclusions) == 0:
+        raise BadRequest(
+            'The __include query parameter requires at least one field to be '
+            'included.')
+      paths = inclusions.split(',')
+      inclusions = []
+      for p in paths:
+        path = p.split('.')
+        if len(path) == 1:
+          inclusions.append(path)
+        else:
+          inclusions.append((path[0], path[1:]))
+    else:
+      inclusions = ()
+    return inclusions
+
   def collection_for_json(
       self, objects, model_plural=None, collection_name=None):
     model_plural = model_plural or self.model_plural
@@ -354,7 +376,8 @@ class Resource(ModelView):
 
     objects_json = []
     for object in objects:
-      object_for_json = ggrc.builder.json.publish(object)
+      object_for_json = ggrc.builder.json.publish(
+          object, self.get_properties_to_include())
       objects_json.append(object_for_json)
 
     collection_json = {

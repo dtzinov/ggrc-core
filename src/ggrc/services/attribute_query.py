@@ -5,9 +5,12 @@
 
 import datetime
 import iso8601
+from collections import namedtuple
 from sqlalchemy import and_, cast
 from sqlalchemy.types import AbstractType, Boolean, Date, DateTime
 from werkzeug.exceptions import BadRequest
+
+AttributeQuery = namedtuple('AttributeQuery', 'filter joinlist')
 
 class AttributeQueryBuilder(object):
   def __init__(self, model):
@@ -94,12 +97,11 @@ class AttributeQueryBuilder(object):
         filter_expressions.extend(filters)
       except BadRequest:
         # FIXME: raise BadRequest when client-side is ready for it
-        # * when fixed, remove appropriate @wip's in service_specs/query.feature
+        # * when fixed, remove appropriate @wip's in 
+        #   service_specs/query.feature
         pass
     if filter_expressions:
       filter = filter_expressions[0]
       for f in filter_expressions[1:]:
         filter = and_(f)
-      return (filter, joinlist)
-    else:
-      return (None, None)
+    return AttributeQuery(filter, joinlist)
