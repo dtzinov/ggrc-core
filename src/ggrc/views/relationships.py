@@ -5,6 +5,8 @@ from ggrc.app import app
 from ggrc.models.relationship import Relationship
 from ggrc.models.relationship_types import RelationshipTypes
 from ggrc.services.common import as_json
+import ggrc.builder
+
 from flask import url_for, request, current_app
 from werkzeug.urls import url_encode
 
@@ -52,6 +54,13 @@ class RelatedObjectResults(object):
   def get_relationship_type(self, vr):
     return RelationshipTypes.get_type(vr['relationship_type'])
 
+  def get_result_related_object(self, obj):
+    data = ggrc.builder.json.publish(obj)
+    return { 'url': data['viewLink'], 'object': data }
+
+  def get_result_related_objects(self, objects):
+    return [self.get_result_related_object(obj) for obj in objects]
+
   def get_result(self, vr):
     rt = self.get_relationship_type(vr)
 
@@ -70,12 +79,14 @@ class RelatedObjectResults(object):
         objects = [o.destination for o in self.related_is_dst_query(vr).all()]
 
     return {
-      'relationship_type_id': vr['relationship_type'],
-      'relationship_title': self.get_title(vr, direction),
-      'relationship_description': self.get_description(vr, direction),
-      'related_type': self.far_type, #.underscore.pluralize,
-      'edit_url': self.get_edit_url(vr),
-      'objects': objects
+        'relationship_type': {
+          'id': vr['relationship_type'],
+          'title': self.get_title(vr, direction),
+          'description': self.get_description(vr, direction),
+          'related_type': self.far_type, #.underscore.pluralize,
+          'edit_url': self.get_edit_url(vr),
+          },
+        'related_objects': self.get_result_related_objects(objects)
       }
 
   def get_description(self, vr, direction='forward'):
@@ -88,7 +99,7 @@ class RelatedObjectResults(object):
   def get_title(self, vr, direction='forward'):
     rt = self.get_relationship_type(vr)
     if rt:
-      return "{obj_type} #{phrase} #{far_type}".format(
+      return "{obj_type} {phrase} {far_type}".format(
         obj_type=self.obj_type, #.titleize,
         phrase=rt['{0}_phrase'.format(direction)],
         far_type=self.far_type) #.pluralize) #.titleize)
