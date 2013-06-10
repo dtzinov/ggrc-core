@@ -29,13 +29,15 @@
             -for model in models
               -set far_model_name = model['related_model']
               -set far_table_name = far_model_name|underscore
+              -set far_table_plural = far_model_name|underscore
               -set source_link = related_objects_link(instance.id, instance.__class__.__name__, far_model_name)
               %li.tab-btn{ 'class': "tab-btn text-={ far_table_name }"}
                 %a{ 'href': '#related-={ far_table_name }-pane',
                     'data-toggle': 'tab',
                     'data-source': '={ source_link }',
-                    'data-template': '/assets/related.mustache',
-                    'data-refresh-time': '60' }
+                    'data-template': '/static/mustache/related.mustache',
+                    'data-refresh-time': '60',
+                    'data-object-plural': '={ far_table_plural }' }
                   %i{ 'class': "grcicon-={ far_table_name }-color" }
                   %span.collapse_tab_text
                     =far_model_name|title

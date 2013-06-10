@@ -41,16 +41,17 @@ CMS.Controllers.Filterable("CMS.Controllers.QuickSearch", {
       , template = $tab.data("template") || "<div></div>"
       , model_name = $tab.attr("data-model") || $tab.attr("data-object-singular")
       , model = can.getObject("CMS.Models." + model_name) || can.getObject("GGRC.Models." + model_name)
-      , view_data = new can.Observe({
-        list: new model.List()
-        //, list_view : template
-        , observer: that.options.observer
-        , tooltip_view : "/static/mustache/dashboard/object_tooltip.mustache"
-      });
-
-      $tab.data("view_data", view_data);
+      , view_data = null;
 
       if(model) {
+        view_data = new can.Observe({
+          list: new model.List()
+          //, list_view : template
+          , observer: that.options.observer
+          , tooltip_view : "/static/mustache/dashboard/object_tooltip.mustache"
+        });
+
+        $tab.data("view_data", view_data);
         $tab.data("model", model);
         model.findAll().done(function(data) {
           if($tab.is("li.active a")) {
@@ -78,10 +79,12 @@ CMS.Controllers.Filterable("CMS.Controllers.QuickSearch", {
       $(pane).scrollTop(0);
       $(spinner.el).css({ width: '100px', height: '100px', left: '50px', top: '50px', zIndex : calculate_spinner_z_index });
 
-      can.view(template /*GGRC.mustache_path + "/dashboard/quick_search_results.mustache"*/, view_data, function(frag, xhr) {
-        $tab.data('tab-loaded', true);
-        $(pane).html(frag).trigger("loaded", xhr, $tab.data("list"));
-      });
+      if (view_data) {
+        can.view(template /*GGRC.mustache_path + "/dashboard/quick_search_results.mustache"*/, view_data, function(frag, xhr) {
+          $tab.data('tab-loaded', true);
+          $(pane).html(frag).trigger("loaded", xhr, $tab.data("list"));
+        });
+      }
     });
   }
 
