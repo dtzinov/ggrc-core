@@ -100,3 +100,7 @@ def check_property_value(context, property_name, resource_name, expected):
   resource = getattr(context, resource_name)
   actual = resource.get(property_name)
   assert expected == actual, 'Expected {}, found {}'.format(expected, actual)
+
+@then('evaluate "{expression}"')
+def evaluate_expression(context, expression):
+  assert eval(expression) == True
