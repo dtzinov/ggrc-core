@@ -21,8 +21,12 @@
 
 -block header
   %ul.breadcrumbs
-    %li=link_to 'dashboard', dashboard_path
-    %li=instance.slug
+    %li
+      %a{ 'href': '={ url_for("dashboard") }' }
+        Dashboard
+    %li
+      %span
+        =instance.title
 
   %h1.business
     .grcobject.business{ 'rel': "tooltip", 'data-placement': "bottom", 'title': "#{model_title}" }
@@ -67,6 +71,8 @@
       #right_column.span4.widget-area
         -with widget_class = 'business'
           -#include lookup('info')
+          -include 'base_objects/_info.haml'
+          
           -#include lookup('more_info')
         -#if instance|has_valid_relationships
           -#include lookup('add_widget_section')

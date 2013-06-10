@@ -1,0 +1,62 @@
+-extends 'layouts/_widget_box.haml'
+
+-set model = controller.model
+-set model_name = controller.model_name
+-set model_title = model_name|title
+
+-block widget_title
+  =model_title
+  Info
+
+-block widget_help
+  base_object_info
+
+-block widget_id
+  base_object_info_widget
+
+-block main
+  %ul.info-list
+    %li.float-element
+      %label
+        Code
+      %span
+        %strong
+          =instance.slug
+    %li.float-element
+      %label
+        Title
+      %span
+        %strong
+          =instance.title
+    %li.float-element
+      %label
+        Kind
+      %span.text-business
+        %i{ 'class': 'grcicon-={model_name}-color'}
+        =model_title
+
+    %li
+      %label
+        Description
+      -if instance.description != ""
+        -# FIXME: Write display_as_html helper
+        =#display_as_html instance.description
+      -else
+        .rtf
+          %p.no-data no description available
+    -if instance.url
+      %li.float-element
+        %label
+          Direct link
+        %span
+          -# FIXME: 'href': "={absolute_url(instance.url)}"
+          %a.inner-element{ 'href': "={instance.url}", 'target': '_blank' }
+            =instance.url
+
+  %section.footer
+    .row-fluid
+      .span6
+        %p.footer-left
+          Created: ={instance.created_at.strftime("%m/%d/%y")}
+
+  
