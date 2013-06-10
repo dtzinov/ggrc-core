@@ -177,19 +177,32 @@
             Company Control Programs
           %i.grcicon-company_controls-color
           =cc_programs|length
-          -#TODO Same as above
+          -#TODO : Same as above
     -elif object == 'dataasset' or object == 'market' or object == 'facility' or object == 'product' or object == 'project' or object == 'orggroup'
       .row-fluid
-        .span6
+        -#TODO : Make sure Controls and Programs counters are valid
+        -#.span6
           %h4
             People
           %i.grcicon-user-black
           =instance.people|length 
-        .span6
+        -#.span6
           %h4
             References
           %i.grcicon-document
           =instance.documents|length
+        .span6
+          %h4
+            Controls
+          %i.grcicon-control-color
+          =instance.controls|length 
+        .span6
+          %h4
+            Programs
+          %i.grcicon-program-color
+          =instance.programs|length
+
+
     -elif object == 'process' or object == 'system'
       -set sub_systems = []
       -set sub_processes = []
