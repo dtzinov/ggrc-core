@@ -30,7 +30,7 @@
 
   %h1.business
     .grcobject.business{ 'rel': "tooltip", 'data-placement': "bottom", 'title': "#{model_title}" }
-      -if model_title == "Org Group"
+      -if model_title == "Orggroup"
         %i.grcicon-orggroup
       -elif model_title == "Market"
         %i.grcicon-market
@@ -38,8 +38,13 @@
         %i.grcicon-facility
       -elif model_title == "Project"
         %i.grcicon-project
-      -elif model_title == "Data Asset"
+      -elif model_title == "Dataasset"
         %i.grcicon-dataasset
+      -elif model_title == "System"
+        -if instance.is_biz_process
+          %i.grcicon-process
+        -else
+          %i.grcicon-system
       -else
         &nbsp;
     =instance.title
@@ -49,7 +54,12 @@
     %li
       %a{ 'href': "url-for-edit-#{model_name}-#{instance.id}", 'data-toggle': 'modal-ajax-form', 'data-modal-reset': 'reset', 'data-form-target': 'refresh', 'data-modal-class': 'modal-wide', 'title': "Edit #{model_title}" }
         %i.grcicon-edit
-        %span Edit #{model_title}
+        %span
+          Edit
+          -if instance.is_biz_process
+            Process
+          -else
+            #{model_title}
 
 -block subheader_plus
   %a.navbarplus.fltrt{ 'href': "url-for-new-#{model_name}", 'data-toggle': 'modal-ajax-form', 'data-modal-reset': 'reset', 'data-form-target': 'redirect', 'data-modal-class': 'modal-wide'}
@@ -62,17 +72,20 @@
         -#   e.g. 'programs/_main.haml', 'programs/_main.html', 'base_objects/_main.haml', ...
         -#   perhaps traverse MRO, then 'shared/'
         -with widget_class = 'business'
-          -#include lookup("main", instance)
+          -include 'base_objects/_main.haml'
         -#if instance|has_valid_relationships
-          -with widget_class = 'widget-tabs widget-tabs-horizontal business'
+        -with widget_class = 'widget-tabs widget-tabs-horizontal business'
             -#include lookup('related')
+          -include 'shared/_related.haml'
           -#include lookup('add_widget_section')
+
+
 
       #right_column.span4.widget-area
         -with widget_class = 'business'
           -#include lookup('info')
           -include 'base_objects/_info.haml'
-          
           -#include lookup('more_info')
+          -include 'base_objects/_more_info.haml'
         -#if instance|has_valid_relationships
           -#include lookup('add_widget_section')

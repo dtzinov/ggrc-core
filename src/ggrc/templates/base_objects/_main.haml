@@ -1,0 +1,15 @@
+-extends 'layouts/_widget_box.haml'
+
+-set model = controller.model
+-set model_name = controller.model_name
+-set model_plural = controller.model_plural|title
+
+-block widget_help
+  base_objects_main
+
+-block widget_id
+  base_object_tree_widget
+
+-block widget_title
+  =model_plural
+  , Processes, Controls

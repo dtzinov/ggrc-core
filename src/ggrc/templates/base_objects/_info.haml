@@ -5,7 +5,10 @@
 -set model_title = model_name|title
 
 -block widget_title
-  =model_title
+  -if instance.is_biz_process
+    Process
+  -else
+    =model_title
   Info
 
 -block widget_help
@@ -32,8 +35,12 @@
       %label
         Kind
       %span.text-business
-        %i{ 'class': 'grcicon-={model_name}-color'}
-        =model_title
+        -if instance.is_biz_process
+          %i{ 'class': 'grcicon-process-color'}
+          Process
+        -else
+          %i{ 'class': 'grcicon-={model_name}-color'}
+          =model_title
 
     %li
       %label
@@ -47,7 +54,8 @@
     -if instance.url
       %li.float-element
         %label
-          Direct link
+          =model_title
+          URL
         %span
           -# FIXME: 'href': "={absolute_url(instance.url)}"
           %a.inner-element{ 'href': "={instance.url}", 'target': '_blank' }
