@@ -3,16 +3,13 @@
 -set model_name = controller.model_name
 -set model_plural = controller.model_plural
 
--set widget_title = (widget_title|default("Related to " + model_name))
--#if local_assigns[:widget_title].nil?
+-set widget_title = (widget_title|default("Related to " + model_name|title))
 
 -set near_model = model.__class__.__name__
 -if near_model == "System" and instance.is_biz_process
   -set near_model = "Process"
 
--set models = ["Program"]
--#set models = related_objects(instance)
--#left_models, right_models = arranged_related_objects(instance)
+-set models = related_objects(instance)
 
 -block widget_title
   =widget_title
@@ -30,20 +27,23 @@
         .tabbable
           %ul.nav.nav-tabs
             -for model in models
-              -set table_name = model|underscore
-              -set icon = "grcicon-={ model|lower }-color"
-              %li.tab-btn{ 'class': "tab-btn text-={ model.downcase }"}
-                %a{ 'href': '#related-={ table_name }-pane',
+              -set far_model_name = model['related_model']
+              -set far_table_name = far_model_name|underscore
+              -set source_link = related_objects_link(instance.id, instance.__class__.__name__, far_model_name)
+              %li.tab-btn{ 'class': "tab-btn text-={ far_table_name }"}
+                %a{ 'href': '#related-={ far_table_name }-pane',
                     'data-toggle': 'tab',
-                    'data-source': 'related_objects_flow_relationships_path(:oid => instance.id, :otype: near_model, :related_model: model)',
+                    'data-source': '={ source_link }',
                     'data-template': '/assets/related.mustache',
                     'data-refresh-time': '60' }
-                  %i{ 'class': "={ icon }" }
+                  %i{ 'class': "grcicon-={ far_table_name }-color" }
                   %span.collapse_tab_text
-                    =model|title
+                    =far_model_name|title
                   -# FIXME: Include related object counts
                   =#{ ' ' + instance.count_other_objects(model).to_s }
     .tab-content
       -for model in models
-        .tab-pane{ 'id': "related-={ model_plural|underscore }-pane" }
-          Data for #{ model_name|title }
+        -set far_model_name = model['related_model']
+        -set far_table_name = far_model_name|underscore
+        .tab-pane{ 'id': "related-={ far_table_name }-pane" }
+          Data for #{ far_model_name|title }

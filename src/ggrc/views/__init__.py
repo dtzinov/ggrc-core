@@ -5,6 +5,7 @@
 
 from ggrc.app import db, app
 from .tooltip import TooltipView
+from .relationships import RelatedObjectResults
 
 """ggrc.views
 Handle non-RESTful views, e.g. routes which return HTML rather than JSON
