@@ -22,7 +22,10 @@
           .item-title
             .row-fluid
               .span9
-                %a.custom-popover-trigger{ 'href': 'flow_cycle_path(cycle)', 'data-popover-href': 'tooltip_flow_cycle_path(cycle)', 'data-popover-trigger': 'sticky-hover' }
+                %a.custom-popover-trigger{
+                    'href': 'flow_cycle_path(cycle)',
+                    'data-popover-href': '={ url_for("CycleTooltipView", id=cycle.id) }',
+                    'data-popover-trigger': 'sticky-hover' }
                   .oneline
                     %span.title
                       -if cycle.complete
