@@ -88,6 +88,7 @@ class AttributeQueryBuilder(object):
 
   def collection_filters(self, args):
     """Create filter expressions using ``request.args``"""
+    filter = None
     joinlist = []
     filter_expressions = []
     for arg, value in args.items():
@@ -103,5 +104,5 @@ class AttributeQueryBuilder(object):
     if filter_expressions:
       filter = filter_expressions[0]
       for f in filter_expressions[1:]:
-        filter = and_(f)
+        filter = and_(filter, f)
     return AttributeQuery(filter, joinlist)
