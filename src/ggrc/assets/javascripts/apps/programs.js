@@ -65,7 +65,7 @@ $(function() {
       dir.attr("sections", new can.Observe.List());
     })
     s.each(function(sec) {
-      sec.directive_id && CMS.Models.Directive.findInCacheById(sec.directive_id).sections.push(sec);
+      sec.directive && sec.directive.id && CMS.Models.Directive.findInCacheById(sec.directive.id).sections.push(sec);
     });
 
     $sections_tree.cms_controllers_tree_view({
