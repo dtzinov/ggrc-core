@@ -1,8 +1,7 @@
-
 # Copyright (C) 2013 Google Inc., authors, and contributors <see AUTHORS file>
 # Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
-# Created By:
-# Maintained By:
+# Created By: david@reciprocitylabs.com
+# Maintained By: david@reciprocitylabs.com
 
 import json
 from flask import request
@@ -17,8 +16,8 @@ class ServiceDescription(MethodView):
   def get(self):
     from ggrc import services
     endpoints = {}
-    for context_path, service in services.all_collections():
-      service = getattr(services, service.__name__)
+    for entry in services.all_collections():
+      service = getattr(services, entry.model_class.__name__)
       endpoints[service.__name__] = {
           'href': service.url_for(),
           #TODO additional fields

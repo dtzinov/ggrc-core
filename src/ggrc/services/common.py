@@ -88,6 +88,20 @@ class ModelView(View):
     else:
       return self.model.__tablename__
 
+  @property
+  def modified_attr_name(self):
+    return 'updated_at'
+
+  @property
+  def modified_attr(self):
+    """Return the model attribute to be used for Last-Modified header and
+    sorting collection elements.
+    """
+    return getattr(self.model, self.modified_attr_name)
+
+  def modified_at(self, obj):
+    return getattr(obj, self.modified_attr_name)
+
   # Default model/DB helpers
   def get_collection(self):
     if hasattr(self.model, 'eager_query'):
@@ -101,7 +115,7 @@ class ModelView(View):
         for j in joinlist:
           query = query.join(j)
         query = query.filter(filter)
-    return query.order_by(self.model.updated_at.desc())
+    return query.order_by(self.modified_attr.desc())
 
   def get_object(self, id):
     # This could also use `self.pk`
@@ -130,14 +144,14 @@ class ModelView(View):
 
   def collection_last_modified(self):
     """Calculate the last time a member of the collection was modified. This
-    method relies on the fact that the collection table has an `updated_at`
-    column; services for models that don't have this field **MUST** override
-    this method.
+    method relies on the fact that the collection table has an `updated_at` or
+    other column with a relevant timestamp; services for models that don't have
+    this field **MUST** override this method.
     """
     result = db.session.query(
-        self.model.updated_at).order_by(self.model.updated_at.desc()).first()
+        self.modified_attr).order_by(self.modified_attr.desc()).first()
     if result is not None:
-      return result.updated_at
+      return self.modified_at(result)
     return datetime.datetime.now()
 
   # Routing helpers
@@ -216,7 +230,7 @@ class Resource(ModelView):
       return current_app.make_response((
         '', 304, [('Etag', self.etag(object_for_json))]))
     return self.json_success_response(
-      self.object_for_json(obj), obj.updated_at)
+      self.object_for_json(obj), self.modified_at(obj))
 
   def validate_headers_for_put_or_delete(self, obj):
     missing_headers = []
@@ -230,7 +244,7 @@ class Resource(ModelView):
         'If-Match is required.', 428, [('Content-Type', 'text/plain')]))
     if request.headers['If-Match'] != self.etag(self.object_for_json(obj)) or \
        request.headers['If-Unmodified-Since'] != \
-          self.http_timestamp(obj.updated_at):
+          self.http_timestamp(self.modified_at(obj)):
       return current_app.make_response((
           'The resource has been changed. The conflict must be resolved and '
           'the request resubmitted with an up to date Etag for If-Match '
@@ -264,7 +278,7 @@ class Resource(ModelView):
     obj = self.get_object(id)
     get_indexer().update_record(fts_record_for(obj))
     return self.json_success_response(
-        self.object_for_json(obj), obj.updated_at)
+        self.object_for_json(obj), self.modified_at(obj))
 
   def delete(self, id):
     obj = self.get_object(id)
@@ -278,7 +292,7 @@ class Resource(ModelView):
     db.session.commit()
     get_indexer().delete_record(self.url_for(id=id))
     return self.json_success_response(
-      self.object_for_json(obj), obj.updated_at)
+      self.object_for_json(obj), self.modified_at(obj))
 
   def collection_get(self):
     if 'Accept' in self.request.headers and \
@@ -313,7 +327,7 @@ class Resource(ModelView):
     db.session.commit()
     get_indexer().create_record(fts_record_for(obj))
     return self.json_success_response(
-      self.object_for_json(obj), obj.updated_at, id=obj.id, status=201)
+      self.object_for_json(obj), self.modified_at(obj), id=obj.id, status=201)
 
   @classmethod
   def add_to(cls, app, url, model_class=None, decorators=()):

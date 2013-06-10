@@ -4,9 +4,16 @@
 # Created By:
 # Maintained By:
 
+from collections import namedtuple
 from .common import *
+from .log_event import LogEvents
 
 """All gGRC REST services."""
+
+ServiceEntry = namedtuple('ServiceEntry', 'name model_class service_class')
+
+def service(name, model_class, service_class=Resource):
+  return ServiceEntry(name, model_class, service_class)
 
 def all_collections():
   """The list of all gGRC collection services as a list of
@@ -15,54 +22,58 @@ def all_collections():
   from ggrc.models import all_models as models
 
   return [
-    ('categorizations', models.Categorization),
-    ('categories', models.Category),
-    ('controls', models.Control),
-    ('control_assessments', models.ControlAssessment),
-    ('control_controls', models.ControlControl),
-    ('control_risks', models.ControlRisk),
-    ('control_sections', models.ControlSection),
-    ('cycles', models.Cycle),
-    ('data_assets', models.DataAsset),
-    ('directives', models.Directive),
-    ('documents', models.Document),
-    ('facilities', models.Facility),
-    ('help', models.Help),
-    ('log_events', models.LogEvent),
-    ('markets', models.Market),
-    ('meetings', models.Meeting),
-    ('object_documents', models.ObjectDocument),
-    ('object_people', models.ObjectPerson),
-    ('options', models.Option),
-    ('org_groups', models.OrgGroup),
-    ('pbc_lists', models.PbcList),
-    ('people', models.Person),
-    ('population_samples', models.PopulationSample),
-    ('products', models.Product),
-    ('projects', models.Project),
-    ('programs', models.Program),
-    ('program_directives', models.ProgramDirective),
-    ('relationships', models.Relationship),
-    ('requests', models.Request),
-    ('responses', models.Response),
-    ('risks', models.Risk),
-    ('risky_attributes', models.RiskyAttribute),
-    ('risk_risky_attributes', models.RiskRiskyAttribute),
-    ('sections', models.Section),
-    ('systems', models.System),
-    ('systems_systems', models.SystemSystem),
-    ('system_controls', models.SystemControl),
-    ('transactions', models.Transaction),
+    service('categorizations', models.Categorization),
+    service('categories', models.Category),
+    service('controls', models.Control),
+    service('control_assessments', models.ControlAssessment),
+    service('control_controls', models.ControlControl),
+    service('control_risks', models.ControlRisk),
+    service('control_sections', models.ControlSection),
+    service('cycles', models.Cycle),
+    service('data_assets', models.DataAsset),
+    service('directives', models.Directive),
+    service('documents', models.Document),
+    service('facilities', models.Facility),
+    service('help', models.Help),
+    service('log_events', models.LogEvent, LogEvents),
+    service('markets', models.Market),
+    service('meetings', models.Meeting),
+    service('object_documents', models.ObjectDocument),
+    service('object_people', models.ObjectPerson),
+    service('options', models.Option),
+    service('org_groups', models.OrgGroup),
+    service('pbc_lists', models.PbcList),
+    service('people', models.Person),
+    service('population_samples', models.PopulationSample),
+    service('products', models.Product),
+    service('projects', models.Project),
+    service('programs', models.Program),
+    service('program_directives', models.ProgramDirective),
+    service('relationships', models.Relationship),
+    service('requests', models.Request),
+    service('responses', models.Response),
+    service('risks', models.Risk),
+    service('risky_attributes', models.RiskyAttribute),
+    service('risk_risky_attributes', models.RiskRiskyAttribute),
+    service('sections', models.Section),
+    service('systems', models.System),
+    service('systems_systems', models.SystemSystem),
+    service('system_controls', models.SystemControl),
+    service('transactions', models.Transaction),
     ]
 
 def init_all_services(app):
   """Register all gGRC REST services with the Flask application ``app``."""
-  from .common import Resource
+  #from .common import Resource
   from ggrc.login import login_required
 
-  for k,v in all_collections():
-    Resource.add_to(
-      app, '/api/{0}'.format(k), v, decorators=(login_required,))
+  for entry in all_collections():
+    entry.service_class.add_to(
+      app,
+      '/api/{0}'.format(entry.name),
+      entry.model_class,
+      decorators=(login_required,),
+      )
 
   from .search import search
   app.add_url_rule(
