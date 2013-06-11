@@ -375,6 +375,8 @@
           %section.content
             %a.btn{ 'data-toggle': 'modal', 'href': '#selectorSectionToControl' }
               Section to Control Mapper
+            %a.btn{ 'data-toggle': 'modal', 'href': '#selectorPeople' }
+              People Selector
             %a.btn{ 'data-toggle': 'modal', 'href': '#selectorSectionToControlNA' }
               Section to Control Mapper N/A
             %a.btn{ 'data-toggle': 'modal', 'href': '#helpModalEmpty' }
@@ -3098,7 +3100,6 @@
               %a{ 'href': '#', 'class': 'show-hidden-fields hide-hidden-fields' }
                 %i.grcicon-hide
                 Hide Advanced
-
     .modal-footer
       .row-fluid
         .span6
@@ -3184,7 +3185,6 @@
               %a{ 'href': '#', 'class': 'show-hidden-fields hide-hidden-fields' }
                 %i.grcicon-hide
                 Hide Advanced
-
     .modal-footer
       .row-fluid
         .span6
@@ -3193,3 +3193,188 @@
           .confirm-buttons
             %a.btn.btn-primary.preventdoubleclick
               Save
+
+
+  -# People Selector
+  #selectorPeople{ 'class': 'modal modal-selector hide fade', 'tabindex': '-1' }
+    .modal-header
+      .pull-right
+        %a.btn.btn-mini{ 'data-dismiss': 'modal', 'href': '#' }
+          %i.grcicon-x-grey
+      %h2
+        Map People to
+        PCI Compliance Program
+    .modal-filter
+      .row-fluid
+        .span3
+          &nbsp;
+        .span6
+          .modal-search
+            %a.btn.btn-mini.search-reset{ 'href': '#' }
+              %i.grcicon-x-grey
+            %input{ 'type': 'text', 'class': 'input-block-level', 'placeholder': 'Search people' }
+        -#.span3.checkbox-filter
+          %input{ 'type': 'checkbox', 'id': 'control-type-filter', 'class': 'control-type-filter inline pull-right', 'checked': 'checked' }
+          %label{ 'class': 'inline pull-right', 'for': 'control-type-filter' }
+            Controls for this program only:
+        .span3
+          .pull-right
+            %a.btn.btn-add{ 'href': '#' }
+              %i.grcicon-add
+              Person
+    .modal-content
+      .row-fluid
+        .span3
+          .selector-info{ 'style': 'margin-right:-10%;' }
+            .pull-right
+              %a{ 'class': 'btn btn-mini', 'rel': 'tooltip', 'title': 'Edit' }
+                %i.grcicon-edit
+              %a{ 'class': 'btn btn-mini', 'rel': 'tooltip', 'title': 'Remove' }
+                %i.grcicon-remove
+            %p
+              %img{ 'src': '/static/images/sample/profile100.jpg', 'alt': '' }
+            %h4
+              Ernest Mandel
+              %br
+              Program Manager
+              %br
+              %small
+                Google, inc
+              %small
+              %br
+                %a{ 'href': 'mailto:ernestmandel@gmail.com' }
+                  ernestmandel@gmail.com
+        .span4
+          .search-title
+            .row-fluid
+              .span6
+                %h4
+                  Search Results (9)
+              .span6
+                .guide
+                  &nbsp;
+          .selector-list
+            %ul.tree-structure.simple
+              %li.control
+                .item-main
+                  .item-title
+                    .row-fluid
+                      .span11
+                        .oneline
+                          %span.title Alexander Mikkovski
+                          %span.address alexmikkovski@google.com
+                      .span1
+                        %input{ 'type': 'checkbox', 'rel': 'tooltip', 'title': 'map' }
+              %li.control
+                .item-main
+                  .item-title
+                    .row-fluid
+                      .span11
+                        .oneline
+                          %span.title Douglas Hyde
+                          %span.address douglashyde@google.com
+                      .span1
+                        %input{ 'type': 'checkbox', 'rel': 'tooltip', 'title': 'map' }
+              %li.control
+                .item-main
+                  .item-title
+                    .row-fluid
+                      .span11
+                        .oneline
+                          %span.title Gilbert Bourgeaud
+                          %span.address gilbertbourgeaud@google.com
+                      .span1
+                        %input{ 'type': 'checkbox', 'rel': 'tooltip', 'title': 'map' }
+              %li.control.selected
+                .item-main
+                  .item-title
+                    .row-fluid
+                      .span11
+                        .oneline
+                          %span.title Ernest Mandel
+                          %span.address ernestmandel@google.com
+                      .span1
+                        %input{ 'type': 'checkbox', 'rel': 'tooltip', 'title': 'map' }
+              %li.control
+                .item-main
+                  .item-title
+                    .row-fluid
+                      .span11
+                        .oneline
+                          %span.title Lev Davidovich Bronstein
+                          %span.address levdavidovichbronstein@google.com
+                      .span1
+                        %input{ 'type': 'checkbox', 'rel': 'tooltip', 'title': 'map', 'checked': 'checked' }
+              %li.control
+                .item-main
+                  .item-title
+                    .row-fluid
+                      .span11
+                        .oneline
+                          %span.title Chris Hani
+                          %span.address chris.hani@google.com
+                      .span1
+                        %input{ 'type': 'checkbox', 'rel': 'tooltip', 'title': 'map', 'checked': 'checked' }
+              %li.control
+                .item-main
+                  .item-title
+                    .row-fluid
+                      .span11
+                        .oneline
+                          %span.title Michael Yuhanna
+                          %span.address michael.yuhanna@google.com
+                      .span1
+                        %input{ 'type': 'checkbox', 'rel': 'tooltip', 'title': 'map' }
+              %li.control
+                .item-main
+                  .item-title
+                    .row-fluid
+                      .span11
+                        .oneline
+                          %span.title Herbert Ernst
+                          %span.address herbert.ernst@google.com
+                      .span1
+                        %input{ 'type': 'checkbox', 'rel': 'tooltip', 'title': 'map' }
+              %li.control
+                .item-main
+                  .item-title
+                    .row-fluid
+                      .span11
+                        .oneline
+                          %span.title Rita Antoinette
+                          %span.address rita.antoinette@google.com
+                      .span1
+                        %input{ 'type': 'checkbox', 'rel': 'tooltip', 'title': 'map' }
+        .span5{ 'style': 'margin-left:0; width:42.17094%' }
+          .selector-info
+            %h4
+              %i.grcicon-user-black
+              Related People (2)
+            %ul.linked-people
+              %li
+                %select.role.pull-right
+                  %option
+                    Accountable
+                  %option
+                    Responsible
+                %a{ 'href': '#', 'class': 'jump-to-control' }
+                  %span
+                    Lev Davidovich Bronstein
+              %li
+                %select.role.pull-right
+                  %option
+                    Accountable
+                  %option
+                    Responsible
+                %a{ 'href': '#', 'class': 'jump-to-control' }
+                  %span
+                    Chris Hani
+    .modal-footer
+      .row-fluid
+        .span6
+          .deny-buttons
+        .span6
+          .confirm-buttons
+            %a.btn.btn-primary.preventdoubleclick{ 'data-toggle': 'modal-submit', 'href': '#' }
+              Save
+
