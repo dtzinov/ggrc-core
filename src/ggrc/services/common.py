@@ -164,7 +164,10 @@ class ModelView(View):
   def url_for(cls, *args, **kwargs):
     if args and isinstance(args[0], db.Model):
       return url_for(cls.endpoint_name(), *args[1:], id=args[0].id, **kwargs)
-    return url_for(cls.endpoint_name(), *args, **kwargs)
+    # preserve original query string
+    idx = request.url.find('?')
+    querystring = '' if idx < 0 else '?' + request.url[idx+1:]
+    return url_for(cls.endpoint_name(), *args, **kwargs) + querystring
 
   @classmethod
   def decorate_view_func(cls, view_func, decorators):
