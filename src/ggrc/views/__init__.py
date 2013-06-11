@@ -59,7 +59,8 @@ def styleguide():
 
 def _all_views(view_list):
   import ggrc.services
-  collections = dict(ggrc.services.all_collections())
+  collections = dict(
+      [(e.name, e.model_class) for e in ggrc.services.all_collections()])
 
   def with_model(object_plural):
     return (object_plural, collections.get(object_plural))
