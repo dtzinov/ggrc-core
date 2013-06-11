@@ -108,7 +108,7 @@ jQuery.extend(GGRC, {
       , "section" : CMS.Models.Section
     };
 
-    function resolve(subtree) {
+    function resolve(subtree, data) {
       if(typeof subtree === "undefined")
         return null;
       return can.isPlainObject(subtree) ?
@@ -117,7 +117,7 @@ jQuery.extend(GGRC, {
     }
 
     return can.reduce(Object.keys(data), function(a, b) {
-      return a || resolve(decision_tree[b]);
+      return a || resolve(decision_tree[b], data[b]);
     }, null);
   }
   , make_model_instance : function(data) {
