@@ -81,6 +81,49 @@ window.onerror = function(message, url, linenumber) {
     return zindex + 10;
   };
 
+jQuery.extend(GGRC, {
+  infer_object_type : function(data) {
+    var decision_tree = {
+      "program" : CMS.Models.Program
+      , "directive" : {
+        _key : "kind"
+        , "regulation" : CMS.Models.Regulation
+        , "policy" : CMS.Models.Policy
+        , "contract" : CMS.Models.Contract
+      }
+      , "org_group" : CMS.Models.OrgGroup
+      , "project" : CMS.Models.Project
+      , "facility" : CMS.Models.Facility
+      , "product" : CMS.Models.Product
+      , "data_asset" : CMS.Models.DataAsset
+      , "market" : CMS.Models.Market
+      , "system" : {
+        _key : "is_biz_process"
+        , "true" : CMS.Models.Process
+        , "false" : CMS.Models.StrictSystem
+      }
+      , "control" : CMS.Models.Control
+      , "risky_attribute" : CMS.Models.RiskyAttribute
+      , "risk" : CMS.Models.Risk
+      , "section" : CMS.Models.Section
+    };
+
+    function resolve(subtree) {
+      if(typeof subtree === "undefined")
+        return null;
+      return can.isPlainObject(subtree) ?
+        resolve(subtree[data[subtree._key]]) :
+        subtree;
+    }
+
+    return can.reduce(Object.keys(data), function(a, b) {
+      return a || resolve(decision_tree[b]);
+    }, null);
+  }
+  , make_model_instance : function(data) {
+    return GGRC.infer_object_type(data).model(data);
+  }
+});
 
 // Set up all PUT requests to the server to respect ETags, to ensure that
 //  we are not overwriting more recent data than was viewed by the user.
