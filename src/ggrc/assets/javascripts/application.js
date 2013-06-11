@@ -112,7 +112,7 @@ jQuery.extend(GGRC, {
       if(typeof subtree === "undefined")
         return null;
       return can.isPlainObject(subtree) ?
-        resolve(subtree[data[subtree._key]]) :
+        resolve(subtree[data[subtree._key]], data) :
         subtree;
     }
 
