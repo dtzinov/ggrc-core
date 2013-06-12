@@ -49,7 +49,7 @@
   .container-fluid
     #columns.row-fluid{ 'data-resize': "true" }
       #middle-column.span8.widget-area
-        -#with widget_class = 'widget-tabs widget-tabs-horizontal programs'
+        -with widget_class = 'widget-tabs widget-tabs-horizontal programs'
           -include 'programs/_main.haml'
         -if not instance.company_controls
           -with widget_class = 'widget-tabs widget-tabs-horizontal related business'
