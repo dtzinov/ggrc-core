@@ -48,13 +48,31 @@ $(function() {
     , policy : []
   }
 
+  var models_by_kind = {
+    regulation : CMS.Models.Regulation
+    , contract : CMS.Models.Contract
+    , policy : CMS.Models.Policy
+  }
+
   can.each(directives_by_type, function(v, k) {
-    can.ajax({url : "/api/directives", dataType : "json", data : { directive_meta_kind : k , program_id : program_id }})
+    query_params = { program_id : program_id }
+    meta_kinds = models_by_kind[k].meta_kinds
+    if (meta_kinds.length == 1) {
+      query_params.kind = meta_kinds[0];
+    } else {
+      query_params.kind__in = meta_kinds.join(",");
+    }
+    can.ajax({url : "/api/directives", dataType : "json", data : query_params})
     .done(function(d) {
-      directives_by_type[k] = d;
+      var directives = d.directives_collection.directives;
+      for (directive in directives) {
+        directives_by_type[k].push(
+          GGRC.make_model_instance({directive : directives[directive] }));
+      }
     });
   });
 
+  debugger
   var $sections_tree = $("#directives .tree-structure").append($(new Spinner().spin().el).css(spin_opts));
   $.when(
     CMS.Models.SectionSlug.findAll()

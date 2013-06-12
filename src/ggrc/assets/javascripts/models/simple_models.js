@@ -53,8 +53,10 @@ CMS.Models.Directive("CMS.Models.Regulation", {
     , url : "/api/directives"
     , data : {
       kind : "regulation"
+      
     }
   }
+  , meta_kinds : [ "Regulation" ]
 }, {});
 
 CMS.Models.Directive("CMS.Models.Policy", {
@@ -66,6 +68,7 @@ CMS.Models.Directive("CMS.Models.Policy", {
       kind : "policy"
     }
   }
+  , meta_kinds : [ "Company Policy", "Org Group Policy", "Data Asset Policy", "Product Policy", "Contract-Related Policy", "Company Controls Policy" ]
 }, {});
 
 CMS.Models.Directive("CMS.Models.Contract", {
@@ -77,6 +80,7 @@ CMS.Models.Directive("CMS.Models.Contract", {
       kind : "contract"
     }
   }
+  , meta_kinds : [ "Contract" ]
 }, {});
 
 can.Model.Cacheable("CMS.Models.OrgGroup", {

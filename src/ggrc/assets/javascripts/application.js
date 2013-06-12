@@ -108,11 +108,23 @@ jQuery.extend(GGRC, {
       , "section" : CMS.Models.Section
     };
 
+    function resolve_by_key(subtree, data) {
+      var kind = data[subtree._key];
+      var model;
+      can.each(subtree, function (v,k) {
+        if (k != "_key" && v.meta_kinds.indexOf(kind) >= 0) {
+          model = v;
+        }
+      });
+      return model;
+    }
+
     function resolve(subtree, data) {
       if(typeof subtree === "undefined")
         return null;
       return can.isPlainObject(subtree) ?
-        resolve(subtree[data[subtree._key]], data) :
+        //resolve(subtree[data[subtree._key]], data) :
+        resolve_by_key(subtree, data) :
         subtree;
     }
 
