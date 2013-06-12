@@ -23,15 +23,18 @@ Feature: Collection filtering via query parameters
     And GET of the resource "resource1"
     And GET of the resource "resource2"
     And GET of the resource "resource3"
-    Then "resource1" is in query result
+    Then query result selfLink query string is "<property_name>=<match_value1>"
+    And "resource1" is in query result
     And "resource2" is not in query result
     And "resource3" is not in query result
     When Querying "<resource_type>" with "<property_name>=<match_value2>"
-    Then "resource1" is not in query result
+    Then query result selfLink query string is "<property_name>=<match_value2>"
+    And "resource1" is not in query result
     And "resource2" is in query result
     And "resource3" is not in query result
     When Querying "<resource_type>" with "<property_name>=<nomatch_value>"
-    Then "resource1" is not in query result
+    Then query result selfLink query string is "<property_name>=<nomatch_value>"
+    And "resource1" is not in query result
     And "resource2" is not in query result
     And "resource3" is not in query result
 
@@ -53,11 +56,13 @@ Feature: Collection filtering via query parameters
     When Querying "Category" with "required=True"
     And GET of the resource "resource1"
     And GET of the resource "resource2"
-    Then "resource1" is in query result
-    Then "resource2" is not in query result
+    Then query result selfLink query string is "required=True"
+    And "resource1" is in query result
+    And "resource2" is not in query result
     When Querying "Category" with "required=False"
-    Then "resource1" is not in query result
-    Then "resource2" is in query result
+    Then query result selfLink query string is "required=False"
+    And "resource1" is not in query result
+    And "resource2" is in query result
 
   @wip
   Scenario: An invalid boolean query parameter supplied to a collection receives 400
@@ -121,9 +126,11 @@ Feature: Collection filtering via query parameters
     And "control" link property "directive" is "directive"
     And "control" is POSTed to its collection
     When Querying "Control" with "directive.kind__in=bar,foo"
-    Then "control" is in query result
+    Then query result selfLink query string is "directive.kind__in=bar,foo"
+    And "control" is in query result
     When Querying "Control" with "directive.kind__in=bar,baz"
-    Then "control" is not in query result
+    Then query result selfLink query string is "directive.kind__in=bar,baz"
+    And "control" is not in query result
 
   Scenario: Property link objects and be included with __include
     Given a new "Directive" named "directive"
@@ -133,5 +140,6 @@ Feature: Collection filtering via query parameters
     And "directive" is added to links property "directives" of "program"
     And "program" is POSTed to its collection
     When Querying "Program" with "program_directives.directive.kind=Testing__include1&__include=directives"
-    Then "program" is in query result
+    Then query result selfLink query string is "program_directives.directive.kind=Testing__include1&__include=directives"
+    And "program" is in query result
     And evaluate "context.queryresultcollection['programs_collection']['programs'][0]['directives'][0]['kind'] == 'Testing__include1'"
