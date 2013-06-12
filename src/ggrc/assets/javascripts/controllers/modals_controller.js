@@ -18,7 +18,8 @@ can.Control("GGRC.Controllers.Modals", {
     content_view : GGRC.mustache_path + "/help/help_modal_content.mustache"
     , header_view : GGRC.mustache_path + "/modals/modal_header.mustache"
     , button_view : null
-    , model : null
+    , model : null    // model class to use when finding or creating new
+    , instance : null // model instance to use instead of finding/creating (e.g. for update)
     , new_object_form : false
     , find_params : {}
   }
@@ -48,7 +49,9 @@ can.Control("GGRC.Controllers.Modals", {
   , fetch_data : function(params) {
     var that = this;
     var dfd;
-    if(this.options.model) {
+    if (this.options.instance) {
+      dfd = this.options.instance.refresh();
+    } else if (this.options.model) {
       dfd = this.options.new_object_form
           ? $.when(this.options.instance = new this.options.model(params || this.find_params()))
           : this.options.model.findAll(params || this.find_params()).then(function(data) {
@@ -120,14 +123,15 @@ can.Control("GGRC.Controllers.Modals", {
 
   , "{$footer} a.btn[data-toggle='modal-submit']:not(.disabled) click" : function(el, ev) {
     var instance = this.options.instance
-    , that = this;
+    , that = this
+    , ajd;
 
     can.each(this.options.$content.find("form").serializeArray(), this.proxy("set_value"));
 
-    var ajd = instance.save().done(function() {
+    ajd = instance.save().done(function() {
       that.element.modal_form("hide");
     }).fail(function(xhr, status) {
-      var error = xhr.getResponseHeader("X-Flash-Error")
+      var error = xhr.responseText
       , tmpl = '<div class="alert alert-error"><a href="#" class="close" data-dismiss="alert">&times;</a><span>'
         + error
         + '</span></div>';

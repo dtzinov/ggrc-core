@@ -121,7 +121,7 @@ jQuery.extend(GGRC, {
     }, null);
   }
   , make_model_instance : function(data) {
-    return GGRC.infer_object_type(data).model(data);
+    return GGRC.infer_object_type(data).model($.extend({}, data));
   }
 });
 

@@ -1,8 +1,8 @@
 /*
  * Copyright (C) 2013 Google Inc., authors, and contributors <see AUTHORS file>
  * Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
- * Created By:
- * Maintained By:
+ * Created By: dan@reciprocitylabs.com
+ * Maintained By: brad@reciprocitylabs.com
  */
 
 //= require bootstrap-modal
@@ -166,14 +166,23 @@
     },
 
     'form': function($target, $trigger, option) {
-      var form_target = $trigger.data('form-target');
+      var form_target = $trigger.data('form-target')
+      , model = CMS.Models[$trigger.attr("data-object-singular")]
+      , instance;
+      if($trigger.attr('data-object-id') === "page") {
+        instance = GGRC.make_model_instance(GGRC.page_object);
+      } else {
+        instance = model.findInCacheById($trigger.attr('data-object-id'));
+      }
+      
       $target
       .modal_form(option, $trigger)
       .ggrc_controllers_modals({
-        new_object_form : true
+        new_object_form : !$trigger.attr('data-object-id')
         , button_view : GGRC.Controllers.Modals.BUTTON_VIEW_SAVE_CANCEL
-        , model : CMS.Models[$trigger.attr("data-object-singular")]
-        , title : "New " + $trigger.attr("data-object-singular")
+        , model : model
+        , instance : instance
+        , title : (instance ? "Edit " : "New ") + $trigger.attr("data-object-singular")
         , content_view : GGRC.mustache_path + "/" + $trigger.attr("data-object-plural") + "/modal_content.mustache"
       });
 
