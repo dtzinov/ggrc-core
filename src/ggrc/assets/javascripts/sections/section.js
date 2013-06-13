@@ -12,7 +12,7 @@
 can.Model.Cacheable("CMS.Models.Section", {
   root_object : "section"
   , root_collection : "sections"
-  , findAll : "GET /api/sections?" + window.cms_singularize((/^\/([^\/]+)\//.exec(window.location.pathname) || ["",""])[1]) + "_id=" + (/^\/[^\/]+\/([^\/]+)/.exec(window.location.pathname) || ["",""])[1]
+  , findAll : "GET /api/sections?" + window.cms_singularize((/^\/([^\/]+)\//.exec(window.location.pathname) || ["",""])[1]) + ".id=" + (/^\/[^\/]+\/([^\/]+)/.exec(window.location.pathname) || ["",""])[1]
   , create : "POST /api/sections"
   , update : function(id, section) {
     var param = {};
@@ -248,7 +248,7 @@ CMS.Models.Section("CMS.Models.SectionSlug", {
 
     function treeify(list, directive_id, pid) {
       var ret = filter_out(list, function(s) { 
-        return s.parent && s.parent.id == pid && (!directive_id || (s.directive && s.directive.id === directive_id)) 
+        return (!s.parent && !pid) || (s.parent.id == pid && (!directive_id || (s.directive && s.directive.id === directive_id)));
       });
       can.$(ret).each(function() {
         this.children = treeify(list, this.directive ? this.directive.id : null, this.id);
