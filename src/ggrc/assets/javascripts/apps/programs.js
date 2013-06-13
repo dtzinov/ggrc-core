@@ -19,10 +19,10 @@ var program_id = /^\/programs\/(\d+)/.exec(window.location.pathname)[1];
 var spin_opts = { position : "absolute", top : 100, left : 100, height : 50, width : 50 };
 
 $(function() {
-  
+
   var $controls_tree = $("#controls .tree-structure").append($(new Spinner().spin().el).css(spin_opts));
   $.when(
-    CMS.Models.Category.findAll()
+    CMS.Models.Category.findTree()
     , CMS.Models.Control.findAll({ program_id : program_id })
   ).done(function(cats, ctls) {
     var uncategorized = cats[cats.length - 1]
@@ -46,7 +46,7 @@ $(function() {
     regulation : []
     , contract : []
     , policy : []
-  }
+  };
 
   var models_by_kind = {
     regulation : CMS.Models.Regulation
@@ -95,7 +95,7 @@ $(function() {
     directives_by_type[$(this).data("child-meta-type")] = data;
     $sections_tree.trigger("linkObject", $.extend($(this).data(), {
       data : directives_by_type.regulation.concat(directives_by_type.contract).concat(directives_by_type.policy)
-    }))
+    }));
   });
 
 });

@@ -11,9 +11,11 @@
 can.Model.Cacheable("CMS.Models.Category", {
   root_object : "category"
   , root_collection : "categories"
-  ,  findAll : function(params) {
+  ,  findAll : "GET /api/categories"
+  , findTree : function(params) {
     var root_object = this.root_object
-    , root_collection = this.root_collection;
+    , root_collection = this.root_collection
+    , that = this;
 
     function filter_out(original, predicate) {
       var target = [];
@@ -26,16 +28,14 @@ can.Model.Cacheable("CMS.Models.Category", {
     }
 
     function treeify(list, pid) {
-      var ret = filter_out(list, function(s) { return s.parent && (s.parent.id == pid); });
-      can.$(ret).each(function() {
-        this.children = treeify(list, this.id);
-      });
+      var ret = filter_out(list, function(s) { return (!s.parent && !pid) || (s.parent && (s.parent.id == pid)); });
+      // can.$(ret).each(function() {
+      //   this.children = treeify(list, this.id);
+      // });
       return ret;
     }
 
-    return can.ajax(
-      can.extend({ url : "/api/categories", dataType : "json"}, params)
-    ).then(
+    return this.findAll(params).then(
       function(list, xhr) {
         list = list[root_collection + "_collection"]
         ? list[root_collection + "_collection"]
@@ -51,9 +51,9 @@ can.Model.Cacheable("CMS.Models.Category", {
         var roots = treeify(list); //empties the list
         // for(var i = 0; i < roots.length; i++)
         //   list.push(roots[i]);
-        roots.push({ id : -1, name : "Uncategorized Controls" });
+        roots.push(that.findInCacheById(-1));
         return roots;
-      });
+    });
   }
   , attributes : {
     children : "CMS.Models.Category.models"
@@ -79,15 +79,17 @@ can.Model.Cacheable("CMS.Models.Category", {
     }]
 
   }
-  , init : function() { 
+  , init : function() {
     this._super && this._super.apply(this, arguments);
     this.tree_view_options.child_options[0].model = this;
 
     this.validatePresenceOf("title");
+
+    can.getObject("cache", this, true)[-1] = this.model({ id : -1, name : "Uncategorized Controls", controls : [] });
   }
 }, {
   init : function() {
-    var that = this
+    var that = this;
     this._super && this._super.apply(this, arguments);
 
     this.attr("descendant_controls", can.compute(function() {
