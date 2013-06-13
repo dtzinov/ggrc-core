@@ -55,10 +55,16 @@ can.Model.Cacheable("CMS.Models.Category", {
         return roots;
       });
   }
-  , model : function(params) {
-    var m = this._super(params);
-    m.attr("children", this.models(m.children));
-    return m;
+  , attributes : {
+    children : "CMS.Models.Category.models"
+    , controls : "CMS.Models.Control.models"
+  }
+  , serialize : {
+    "CMS.Models.Category.models" : function(val, type) {
+      return can.map(val, function(v) {
+        return {id : v.id, href : v.selfLink || v.href};
+      });
+    }
   }
   , tree_view_options : {
     list_view : "/static/mustache/controls/categories_tree.mustache"
@@ -83,18 +89,9 @@ can.Model.Cacheable("CMS.Models.Category", {
   init : function() {
     var that = this
     this._super && this._super.apply(this, arguments);
-    this.attr("linked_controls", new can.Model.List());
-
-    var cs = new can.Model.List();
-    if(this.children) {
-      for(var i = 0; i < this.children.length ; i ++) {
-        cs.push(new this.constructor(this.children[i].serialize()));
-      }
-    }
-    this.attr("children", cs);
 
     this.attr("descendant_controls", can.compute(function() {
-      return that.attr("linked_controls").concat(can.reduce(that.attr("children"), function(a, b) {
+      return that.attr("controls").concat(can.reduce(that.attr("children"), function(a, b) {
         return a.concat(can.makeArray(b.descendant_controls()));
       }, []));
     }));

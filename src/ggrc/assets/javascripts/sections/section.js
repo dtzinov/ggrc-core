@@ -127,7 +127,7 @@ can.Model.Cacheable("CMS.Models.Section", {
   , model : function(attrs) {
     var id;
     if((id = attrs.id || (attrs[this.root_object] && attrs[this.root_object].id)) && this.findInCacheById(id)) {
-      var cached = this.findInCacheById(id);
+      var cached = this.findInCacheById(id).attr(attrs.serialize ? attrs.serialize() : attrs);
       if($(this.linked_controls).filter(function() { return this instanceof CMS.Models.RegControl }).length)
         cached.update_linked_controls();
       else
@@ -210,7 +210,10 @@ can.Model.Cacheable("CMS.Models.Section", {
 });
 
 CMS.Models.Section("CMS.Models.SectionSlug", {
-  update : function(id, section) {
+  attributes : {
+    children : "CMS.Models.SectionSlug.models"
+  }
+  , update : function(id, section) {
     var param = this.process_args(
       section, 
       {not : [
@@ -245,10 +248,10 @@ CMS.Models.Section("CMS.Models.SectionSlug", {
 
     function treeify(list, directive_id, pid) {
       var ret = filter_out(list, function(s) { 
-        return s.parent_id == pid && (!directive_id || s.directive_id === directive_id) 
+        return s.parent && s.parent.id == pid && (!directive_id || (s.directive && s.directive.id === directive_id)) 
       });
       can.$(ret).each(function() {
-        this.children = treeify(list, this.directive_id, this.id);
+        this.children = treeify(list, this.directive ? this.directive.id : null, this.id);
       });
       return ret;
     }
@@ -266,7 +269,7 @@ CMS.Models.Section("CMS.Models.SectionSlug", {
           while(list.length > 0) {
             can.$(list).each(function(i, v) {
               // find a pseudo-root whose parent wasn't in the returned sections
-              if(can.$(list).filter(function(j, c) { return c !== v && c.id === v.parent_id && c.directive_id === v.directive_id }).length < 1) {
+              if(can.$(list).filter(function(j, c) { return c !== v && v.parent && c.id === v.parent.id && ((!c.directive && !v.directive) || (c.directive && v.directive && c.directive.id === v.directive.id)) }).length < 1) {
                 current = v;
                 list.splice(i, 1); //remove current from list
                 return false;
@@ -277,11 +280,6 @@ CMS.Models.Section("CMS.Models.SectionSlug", {
           }
           return roots;
         });
-  }
-  , model : function(params) {
-    var m = this._super(params);
-    m.attr("children", this.models(m.children));
-    return m;
   }
   , tree_view_options : {
     list_view : "/static/mustache/sections/tree.mustache"

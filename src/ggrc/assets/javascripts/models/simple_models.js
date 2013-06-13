@@ -28,11 +28,30 @@ can.Model.Cacheable("CMS.Models.Directive", {
   , findAll : "/api/directives"
   , findOne : "/api/directives/{id}"
   , create : "POST /api/directives"
+  , attributes : {
+    sections : "CMS.Models.SectionSlug.models"
+    , program : "CMS.Models.Program.model"
+  }
+  , model : function(attrs) {
+    if(!attrs[this.root_object]) {
+      attrs = { directive : attrs };
+    }
+    var kind = GGRC.infer_object_type(attrs) || CMS.Models.Directive;
+    var m = this.findInCacheById(attrs.directive.id);
+    if(!m || m.constructor !== kind) {
+      //We accidentally created a Directive or haven't created a subtype yet.
+      if(m) {
+        delete CMS.Models.Directive.cache[m.id];
+      }
+      m = this._super.apply(kind, arguments);
+    }
+    this.cache[m.id] = m;
+    return m;
+  }
 }, {
   init : function() {
     this._super && this._super.apply(this, arguments);
     var that = this;
-    this.attr("sections") || this.attr("sections", new CMS.Models.Section.List());
     this.attr("descendant_sections", can.compute(function() {
       return that.attr("sections").concat(can.reduce(that.sections, function(a, b) {
         return a.concat(can.makeArray(b.descendant_sections()));
@@ -48,39 +67,41 @@ can.Model.Cacheable("CMS.Models.Directive", {
 
 CMS.Models.Directive("CMS.Models.Regulation", {
   findAll : "/api/directives?kind=Regulation"
-  , create : {
-    type : "POST"
-    , url : "/api/directives"
-    , data : {
-      kind : "regulation"
-      
-    }
+  , defaults : {
+    kind : "regulation"
+  }
+  , attributes : {
+    sections : "CMS.Models.SectionSlug.models"
+    , program : "CMS.Models.Program.model"
   }
   , meta_kinds : [ "Regulation" ]
+  , cache : can.getObject("cache", CMS.Models.Directive, true)
 }, {});
 
 CMS.Models.Directive("CMS.Models.Policy", {
-  findAll : "/api/directives?kind=Company+Policy"
-  , create : {
-    type : "POST"
-    , url : "/api/directives"
-    , data : {
-      kind : "policy"
-    }
+  findAll : "/api/directives?kind__in=Company+Policy,Org+Group+Policy,Data+Asset+Policy,Product+Policy,Contract-Related+Policy,Company+Controls+Policy"
+  , defaults : {
+    kind : "policy"
   }
-  , meta_kinds : [ "Company Policy", "Org Group Policy", "Data Asset Policy", "Product Policy", "Contract-Related Policy", "Company Controls Policy" ]
+  , attributes : {
+    sections : "CMS.Models.SectionSlug.models"
+    , program : "CMS.Models.Program.model"
+  }
+  , meta_kinds : [  "Company Policy", "Org Group Policy", "Data Asset Policy", "Product Policy", "Contract-Related Policy", "Company Controls Policy" ]
+  , cache : can.getObject("cache", CMS.Models.Directive, true)
 }, {});
 
 CMS.Models.Directive("CMS.Models.Contract", {
   findAll : "/api/directives?kind=Contract"
-  , create : {
-    type : "POST"
-    , url : "/api/directives"
-    , data : {
-      kind : "contract"
-    }
+  , defaults : {
+    kind : "contract"
+  }
+  , attributes : {
+    sections : "CMS.Models.SectionSlug.models"
+    , program : "CMS.Models.Program.model"
   }
   , meta_kinds : [ "Contract" ]
+  , cache : can.getObject("cache", CMS.Models.Directive, true)
 }, {});
 
 can.Model.Cacheable("CMS.Models.OrgGroup", {

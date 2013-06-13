@@ -23,6 +23,7 @@ $(function() {
      $qs.find(".quick-search-results, section.content")
       .cms_controllers_quick_search({
         observer : obs
+        , spin : $qs.is(":not(section)")
       }).control(CMS.Controllers.QuickSearch);
 
   }

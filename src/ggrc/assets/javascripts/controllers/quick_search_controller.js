@@ -20,6 +20,7 @@
 CMS.Controllers.Filterable("CMS.Controllers.QuickSearch", {
   defaults : {
     list_view : "/static/mustache/dashboard/object_list.mustache"
+    , spin : true
   }
 }, {
 
@@ -38,10 +39,12 @@ CMS.Controllers.Filterable("CMS.Controllers.QuickSearch", {
       , href = $tab.attr('href') || $tab.data('tab-href')
       , loaded = $tab.data('tab-loaded')
       , pane = ($tab.data('tab-target') || $tab.attr('href'))
+      , $pane = $(pane)
       , template = $tab.data("template") || "<div></div>"
       , model_name = $tab.attr("data-model") || $tab.attr("data-object-singular")
       , model = can.getObject("CMS.Models." + model_name) || can.getObject("GGRC.Models." + model_name)
-      , view_data = null;
+      , view_data = null
+      , spinner;
 
       if(model) {
         view_data = new can.Observe({
@@ -73,16 +76,18 @@ CMS.Controllers.Filterable("CMS.Controllers.QuickSearch", {
         });
       }
 
-      var spinner = new Spinner({ }).spin();
-      $(pane).html(spinner.el);
-      // Scroll up so spinner doesn't get pushed out of visibility
-      $(pane).scrollTop(0);
-      $(spinner.el).css({ width: '100px', height: '100px', left: '50px', top: '50px', zIndex : calculate_spinner_z_index });
+      if(that.options.spin) {
+        spinner = new Spinner({ }).spin();
+        $pane.html(spinner.el);
+        // Scroll up so spinner doesn't get pushed out of visibility
+        $pane.scrollTop(0);
+        $(spinner.el).css({ width: '100px', height: '100px', left: '50px', top: '50px', zIndex : calculate_spinner_z_index });
+      }
 
       if (view_data) {
         can.view(template /*GGRC.mustache_path + "/dashboard/quick_search_results.mustache"*/, view_data, function(frag, xhr) {
           $tab.data('tab-loaded', true);
-          $(pane).html(frag).trigger("loaded", xhr, $tab.data("list"));
+          $pane.html(frag).trigger("loaded", xhr, $tab.data("list"));
         });
       }
     });

@@ -27,14 +27,14 @@ $(function() {
   ).done(function(cats, ctls) {
     var uncategorized = cats[cats.length - 1]
     , cat_ctls = [];
-    can.each(cats, function(c) {
-      if(!c.category_ids || c.category_ids.length < 1) {
-        uncategorized.linked_controls.push(c);
-      }
-      can.each(c.category_ids, function(id) {
-        CMS.Models.Category.findInCacheById(id).linked_controls.push(c);
-      });
-    })
+    // can.each(cats, function(c) {
+    //   if(!c.category_ids || c.category_ids.length < 1) {
+    //     uncategorized.linked_controls.push(c);
+    //   }
+    //   can.each(c.category_ids, function(id) {
+    //     CMS.Models.Category.findInCacheById(id).linked_controls.push(c);
+    //   });
+    // })
 
     $controls_tree.cms_controllers_tree_view({
       model : CMS.Models.Category
@@ -52,39 +52,24 @@ $(function() {
     regulation : CMS.Models.Regulation
     , contract : CMS.Models.Contract
     , policy : CMS.Models.Policy
-  }
+  };
+
+  var directive_dfds = [];
 
   can.each(directives_by_type, function(v, k) {
-    query_params = { program_id : program_id }
-    meta_kinds = models_by_kind[k].meta_kinds
-    if (meta_kinds.length == 1) {
-      query_params.kind = meta_kinds[0];
-    } else {
-      query_params.kind__in = meta_kinds.join(",");
-    }
-    can.ajax({url : "/api/directives", dataType : "json", data : query_params})
-    .done(function(d) {
-      var directives = d.directives_collection.directives;
-      for (directive in directives) {
-        directives_by_type[k].push(
-          GGRC.make_model_instance({directive : directives[directive] }));
-      }
-    });
+    var query_params = { program_id : program_id }
+    directive_dfds.push(models_by_kind[k].findAll(query_params)
+    .done(function(directives) {
+      directives_by_type[k] = directives;
+    }));
   });
 
-  debugger
   var $sections_tree = $("#directives .tree-structure").append($(new Spinner().spin().el).css(spin_opts));
-  $.when(
-    CMS.Models.SectionSlug.findAll()
-    , CMS.Models.Directive.findAll({ program_id : program_id })
-  ).done(function(s, d) {
-    
-    d.each(function(dir) {
-      dir.attr("sections", new can.Observe.List());
-    })
-    s.each(function(sec) {
-      sec.directive && sec.directive.id && CMS.Models.Directive.findInCacheById(sec.directive.id).sections.push(sec);
-    });
+  $.when.apply(
+    $
+    , [CMS.Models.SectionSlug.findAll()].concat(directive_dfds)
+  ).done(function(s, r, p, c) {
+    var d = r.concat(p).concat(c);
 
     $sections_tree.cms_controllers_tree_view({
       model : CMS.Models.Directive
