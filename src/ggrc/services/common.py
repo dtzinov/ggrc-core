@@ -61,8 +61,6 @@ class ModelView(View):
   pk_type = 'int'
 
   _model = None
-  _model_name = 'object'
-  _model_plural = 'objects'
 
   # Simple accessor properties
   @property
@@ -72,22 +70,6 @@ class ModelView(View):
   @property
   def model(self):
     return self._model
-
-  # Model/DB Inspection
-  # TODO: Fix -- this is cheating
-  @property
-  def model_name(self):
-    if self.model is None:
-      return self._model_name
-    else:
-      return self.model.__name__.lower()
-
-  @property
-  def model_plural(self):
-    if self.model is None:
-      return self._model_plural
-    else:
-      return self.model.__tablename__
 
   @property
   def modified_attr_name(self):
@@ -161,13 +143,18 @@ class ModelView(View):
     return cls.__name__
 
   @classmethod
-  def url_for(cls, *args, **kwargs):
-    if args and isinstance(args[0], db.Model):
-      return url_for(cls.endpoint_name(), *args[1:], id=args[0].id, **kwargs)
+  def url_for_preserving_querystring(cls, *args, **kwargs):
+    url = cls.url_for(*args, **kwargs)
     # preserve original query string
     idx = request.url.find('?')
     querystring = '' if idx < 0 else '?' + request.url[idx+1:]
-    return url_for(cls.endpoint_name(), *args, **kwargs) + querystring
+    return url + querystring
+
+  @classmethod
+  def url_for(cls, *args, **kwargs):
+    if args and isinstance(args[0], db.Model):
+      return url_for(cls.endpoint_name(), *args[1:], id=args[0].id, **kwargs)
+    return url_for(cls.endpoint_name(), *args, **kwargs)
 
   @classmethod
   def decorate_view_func(cls, view_func, decorators):
@@ -399,7 +386,7 @@ class Resource(ModelView):
 
     collection_json = {
       collection_name: {
-        'selfLink': self.url_for(),
+        'selfLink': self.url_for_preserving_querystring(),
         model_plural: objects_json,
         }
       }
