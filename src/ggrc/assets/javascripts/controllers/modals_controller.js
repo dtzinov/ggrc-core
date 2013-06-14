@@ -140,6 +140,7 @@ can.Control("GGRC.Controllers.Modals", {
 
       error && that.options.$content.find(".flash").append(tmpl);
     });
+    this.bindXHRToButton(ajd, el, "Saving, please wait...");
   }
 
   , destroy : function() {

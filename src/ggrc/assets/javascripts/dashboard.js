@@ -626,11 +626,17 @@ jQuery(function($) {
 //make buttons non-clickable when saving
 jQuery(function($) {
   can.extend(can.Control.prototype, {
-    bindXHRToButton : function(xhr, el) {
+    bindXHRToButton : function(xhr, el, newtext) {
       // binding of an ajax to a click is something we do manually
-      $(el).addClass("disabled pending-ajax").attr("disabled", true);
+      var $el = $(el)
+      , oldtext = $el.text();
+
+      if(newtext) {
+        $el.text(newtext);
+      }
+      $el.addClass("disabled pending-ajax").attr("disabled", true);
       xhr.always(function() {
-        $(el).removeAttr("disabled").removeClass("disabled pending-ajax");
+        $el.removeAttr("disabled").removeClass("disabled pending-ajax").text(oldtext);
       });
     }
   });
