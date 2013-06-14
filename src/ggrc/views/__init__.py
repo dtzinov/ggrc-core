@@ -6,25 +6,11 @@
 from ggrc.app import db, app
 from .tooltip import TooltipView
 from .relationships import RelatedObjectResults
+from . import filters
 
 """ggrc.views
 Handle non-RESTful views, e.g. routes which return HTML rather than JSON
 """
-
-# Additional template filters
-#
-
-@app.template_filter("underscore")
-def underscore_filter(s):
-  """Change spaces to underscores and make lowercase
-  """
-  return "_".join(s.lower().split(' '))
-
-@app.template_filter("nospace")
-def nospace_filter(s):
-  """Remove spaces
-  """
-  return "".join(s.split(' '))
 
 @app.context_processor
 def inject_config():
