@@ -17,6 +17,10 @@ from . import db
 db.app = app
 db.init_app(app)
 
+# Initialize models
+import ggrc.models
+ggrc.models.init_app(app)
+
 # Configure Flask-Login
 import ggrc.login
 ggrc.login.init_app(app)

@@ -105,7 +105,7 @@ class ModelView(View):
     return self.get_collection().filter(self.model.id == id).first()
 
   def not_found_message(self):
-    return '{0} not found.'.format(self.model_name.title())
+    return '{0} not found.'.format(self.model._inflector.title_singular)
 
   def not_found_response(self):
     return current_app.make_response((self.not_found_message(), 404, []))
@@ -256,11 +256,12 @@ class Resource(ModelView):
     if header_error:
       return header_error
     src = UnicodeSafeJsonWrapper(self.request.json)
+    root_attribute = self.model._inflector.table_singular
     try:
-      src = src[self.model_name]
+      src = src[root_attribute]
     except KeyError, e:
       return current_app.make_response((
-        'Required attribute "{0}" not found'.format(self.model_name), 400, []))
+        'Required attribute "{0}" not found'.format(root_attribute), 400, []))
     ggrc.builder.json.update(obj, src)
     #FIXME Fake the modified_by_id until we have that information in session.
     obj.modified_by_id = get_current_user_id()
@@ -306,11 +307,12 @@ class Resource(ModelView):
         'Content-Type must be application/json', 415,[]))
     obj = self.model()
     src = UnicodeSafeJsonWrapper(self.request.json)
+    root_attribute = self.model._inflector.table_singular
     try:
-      src = src[self.model_name]
+      src = src[root_attribute]
     except KeyError, e:
       return current_app.make_response((
-        'Required attribute "{0}" not found'.format(self.model_name), 400, []))
+        'Required attribute "{0}" not found'.format(root_attribute), 400, []))
     ggrc.builder.json.create(obj, src)
     #FIXME Fake the modified_by_id until we have that information in session.
     obj.modified_by_id = get_current_user_id()
@@ -348,7 +350,7 @@ class Resource(ModelView):
     return as_json(obj, **kwargs)
 
   def object_for_json(self, obj, model_name=None):
-    model_name = model_name or self.model_name
+    model_name = model_name or self.model._inflector.table_singular
     json_obj = ggrc.builder.json.publish(obj)
     return { model_name: json_obj }
 
@@ -375,7 +377,7 @@ class Resource(ModelView):
 
   def collection_for_json(
       self, objects, model_plural=None, collection_name=None):
-    model_plural = model_plural or self.model_plural
+    model_plural = model_plural or self.model._inflector.table_plural
     collection_name = collection_name or '{0}_collection'.format(model_plural)
 
     objects_json = []

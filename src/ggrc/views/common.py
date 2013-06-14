@@ -32,13 +32,15 @@ class BaseObjectView(ModelView):
       'instance': obj,
       'controller': self,
       'instance_json':
-        lambda: as_json({ self.model_name: ggrc.builder.json.publish(obj) })
+        lambda: as_json({
+            self.model._inflector.table_singular: ggrc.builder.json.publish(obj)
+          })
       }
 
   def render_template_for_object(self, obj):
     context = self.get_context_for_object(obj)
     template_paths = [
-      self.model_template.format(model_plural=self.model_plural),
+      self.model_template.format(model_plural=self.model._inflector.table_plural),
       self.base_template
       ]
     return render_template(template_paths, **context)
