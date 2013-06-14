@@ -27,7 +27,16 @@ can.Model.Cacheable("CMS.Models.Control", {
     , documents : "CMS.Models.Document.models"
     , implementing_controls : "CMS.Models.Control.models"
     //, implemented_controls : "CMS.Models.Control.models"
-    , directive : "CMS.Models.Directive.model"
+    //, directive : "CMS.Models.Directive.model"
+    //, sections : "CMS.Models.SectionSlug.models"
+  }
+  , serialize : {
+    "CMS.Models.Directive.model" : function(val, type) {
+      return {id : val.id, href : val.selfLink || val.href };
+    }
+    , "CMS.Models.SectionSlug.models" : function(val, type) {
+      return can.map(val, function(v) { return {id : v.id, href : v.selfLink || v.href }; });
+    }
   }
   // , model : function(attrs) {
   //   var id;
@@ -129,21 +138,21 @@ CMS.Models.Control("CMS.Models.RegControl", {
 						//unmap
 						ics = new can.Model.List();
 						can.each(control.implementing_controls, function(ctl) {
-                            //TODO : Put removal functionality into the Cacheable, in the vein of addElementToChildList,
-                            //  and update this code to simply remove the unmap code.
-                            //We are needing to manually trigger changes in Model.List due to CanJS being unable to
-                            //  trigger template changes for lists automatically.
+              //TODO : Put removal functionality into the Cacheable, in the vein of addElementToChildList,
+              //  and update this code to simply remove the unmap code.
+              //We are needing to manually trigger changes in Model.List due to CanJS being unable to
+              //  trigger template changes for lists automatically.
 							if(ctl.id !== params.ccontrol)
 							{
 								ics.push(ctl);
 							}
-        					control.attr("implementing_controls", ics);
-        					control.updated();
-                        });
-                    } else {
-                        //map
-                        control.addElementToChildList("implementing_controls", CMS.Models.Control.findInCacheById(params.ccontrol));
-                    }
+              control.attr("implementing_controls", ics);
+              control.updated();
+            });
+          } else {
+            //map
+            control.addElementToChildList("implementing_controls", CMS.Models.Control.findInCacheById(params.ccontrol));
+          }
 				}
 			}
 		});

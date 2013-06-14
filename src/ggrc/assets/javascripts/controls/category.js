@@ -74,7 +74,7 @@ can.Model.Cacheable("CMS.Models.Category", {
       , property : "children"
     }, {
       model : CMS.Models.Control
-      , property : "linked_controls"
+      , property : "controls"
       , list_view : "/static/mustache/controls/tree_with_section_mappings.mustache"
     }]
 

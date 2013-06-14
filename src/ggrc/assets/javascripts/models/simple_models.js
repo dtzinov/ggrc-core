@@ -30,7 +30,12 @@ can.Model.Cacheable("CMS.Models.Directive", {
   , create : "POST /api/directives"
   , attributes : {
     sections : "CMS.Models.SectionSlug.models"
-    , program : "CMS.Models.Program.model"
+    //, program : "CMS.Models.Program.model"
+  }
+  , serialize : {
+    "CMS.Models.Program.model" : function(val, type) {
+      return {id : val.id, href : val.selfLink || val.href};
+    }
   }
   , model : function(attrs) {
     if(!attrs[this.root_object]) {
@@ -42,10 +47,14 @@ can.Model.Cacheable("CMS.Models.Directive", {
       //We accidentally created a Directive or haven't created a subtype yet.
       if(m) {
         delete CMS.Models.Directive.cache[m.id];
+        m = this._super.call(kind, $.extend(m.serialize(), attrs));
+      } else {
+        m = this._super.call(kind, attrs);
       }
-      m = this._super.apply(kind, arguments);
+      this.cache[m.id] = m;
+    } else {
+      m = this._super.apply(this, arguments);
     }
-    this.cache[m.id] = m;
     return m;
   }
 }, {
@@ -53,15 +62,19 @@ can.Model.Cacheable("CMS.Models.Directive", {
     this._super && this._super.apply(this, arguments);
     var that = this;
     this.attr("descendant_sections", can.compute(function() {
-      return that.attr("sections").concat(can.reduce(that.sections, function(a, b) {
+      var sections;
+      if(!that.attr("sections"))
+        return [];
+      sections = [].slice.call(that.attr("sections"), 0);
+      return can.reduce(that.sections, function(a, b) {
         return a.concat(can.makeArray(b.descendant_sections()));
-      }, []));
+      }, sections);
     }));
     this.attr("descendant_sections_count", can.compute(function() {
       return that.attr("descendant_sections")().length;
     }));
   }
-  , lowercase_kind : function() { return this.kind.toLowerCase(); }
+  , lowercase_kind : function() { return this.kind ? this.kind.toLowerCase() : undefined; }
 
 });
 
@@ -72,7 +85,12 @@ CMS.Models.Directive("CMS.Models.Regulation", {
   }
   , attributes : {
     sections : "CMS.Models.SectionSlug.models"
-    , program : "CMS.Models.Program.model"
+    //, program : "CMS.Models.Program.model"
+  }
+  , serialize : {
+    "CMS.Models.Program.model" : function(val, type) {
+      return {id : val.id, href : val.selfLink || val.href};
+    }
   }
   , meta_kinds : [ "Regulation" ]
   , cache : can.getObject("cache", CMS.Models.Directive, true)
@@ -85,7 +103,12 @@ CMS.Models.Directive("CMS.Models.Policy", {
   }
   , attributes : {
     sections : "CMS.Models.SectionSlug.models"
-    , program : "CMS.Models.Program.model"
+    //, program : "CMS.Models.Program.model"
+  }
+  , serialize : {
+    "CMS.Models.Program.model" : function(val, type) {
+      return {id : val.id, href : val.selfLink || val.href};
+    }
   }
   , meta_kinds : [  "Company Policy", "Org Group Policy", "Data Asset Policy", "Product Policy", "Contract-Related Policy", "Company Controls Policy" ]
   , cache : can.getObject("cache", CMS.Models.Directive, true)
@@ -98,7 +121,12 @@ CMS.Models.Directive("CMS.Models.Contract", {
   }
   , attributes : {
     sections : "CMS.Models.SectionSlug.models"
-    , program : "CMS.Models.Program.model"
+    //, program : "CMS.Models.Program.model"
+  }
+  , serialize : {
+    "CMS.Models.Program.model" : function(val, type) {
+      return {id : val.id, href : val.selfLink || val.href};
+    }
   }
   , meta_kinds : [ "Contract" ]
   , cache : can.getObject("cache", CMS.Models.Directive, true)

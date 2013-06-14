@@ -1,8 +1,9 @@
 {{#list}}
-  <li class="control" data-object-id="{{id}}" data-object-type="control" data-object-meta-type="control">
+  <li class="control" data-object-id="{{instance.id}}" data-object-type="control" data-object-meta-type="control">
     <div class="item-main">
       <div class="openclose lastchild"></div>
       <div class="item-title">
+        {{#instance}}
         <div class="row-fluid">
           <div class="span8">
             <div class="oneline expand-on-hover">
@@ -63,6 +64,7 @@
             <i class="grcicon-goto"></i>
           </a>
         </div>
+        {{/instance}}
       </div>
     </div>
   </li>

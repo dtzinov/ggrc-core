@@ -27,6 +27,9 @@ can.Model.Cacheable("CMS.Models.Section", {
       , data : param
     });
   }
+  , attributes : {
+    children : "CMS.Models.Section.model"
+  }
   , map_rcontrol : function(params, section) {
     return can.ajax({
       url : "/mapping/map_rcontrol"
@@ -116,7 +119,6 @@ can.Model.Cacheable("CMS.Models.Section", {
             section.linked_controls.push.apply(section.linked_controls, flatctls);
             linkedctl.bind_section(section);
             ~can.inArray(section.id, linkedctl.mapped_section_ids) || linkedctl.mapped_section_ids.push(section.id);
-            
           }
           section.updated();
         }
@@ -128,7 +130,7 @@ can.Model.Cacheable("CMS.Models.Section", {
     var id;
     if((id = attrs.id || (attrs[this.root_object] && attrs[this.root_object].id)) && this.findInCacheById(id)) {
       var cached = this.findInCacheById(id).attr(attrs.serialize ? attrs.serialize() : attrs);
-      if($(this.linked_controls).filter(function() { return this instanceof CMS.Models.RegControl }).length)
+      if($(this.linked_controls).filter(function() { return this instanceof CMS.Models.RegControl; }).length)
         cached.update_linked_controls();
       else
         cached.update_linked_controls_ccontrol_only();
@@ -142,14 +144,6 @@ can.Model.Cacheable("CMS.Models.Section", {
   init : function() {
 
     this._super();
-
-    var cs = new can.Model.List();
-    if(this.children) {
-      for(var i = 0; i < this.children.length ; i ++) {
-        cs.push(new this.constructor(this.children[i].serialize()));
-      }
-    }
-    this.attr("children", cs);
 
     var that = this;
     this.each(function(value, name) {
@@ -188,8 +182,9 @@ can.Model.Cacheable("CMS.Models.Section", {
       //nasty hack -- assuming that RegControls are always listed before their respective implementing controls
       var oldrctl = oldlinked.shift();
       var rctl = null;
-      if(oldrctl instanceof CMS.Models.RegControl || !(oldrctl instanceof CMS.Models.Control) ) 
+      if(oldrctl instanceof CMS.Models.RegControl || !(oldrctl instanceof CMS.Models.Control) ) {
         rctl = CMS.Models.RegControl.findInCacheById(oldrctl.id || oldrctl.control.id);
+      }
       if(rctl) {
         lcs.push(rctl);
         rctl.bind_section(this);
@@ -212,11 +207,12 @@ can.Model.Cacheable("CMS.Models.Section", {
 CMS.Models.Section("CMS.Models.SectionSlug", {
   attributes : {
     children : "CMS.Models.SectionSlug.models"
+    , controls : "CMS.Models.Control.models"
   }
   , update : function(id, section) {
     var param = this.process_args(
-      section, 
-      {not : [
+      section
+      , { not : [
         "parent_id"
         , "created_at"
         , "id"
@@ -285,7 +281,7 @@ CMS.Models.Section("CMS.Models.SectionSlug", {
     list_view : "/static/mustache/sections/tree.mustache"
     , child_options : [{
       model : CMS.Models.Control
-      , property : "linked_controls"
+      , property : "controls"
       , list_view : "/static/mustache/controls/tree.mustache"
     }, {
       model : CMS.Models.SectionSlug

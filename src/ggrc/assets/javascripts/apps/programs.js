@@ -27,14 +27,11 @@ $(function() {
   ).done(function(cats, ctls) {
     var uncategorized = cats[cats.length - 1]
     , cat_ctls = [];
-    // can.each(cats, function(c) {
-    //   if(!c.category_ids || c.category_ids.length < 1) {
-    //     uncategorized.linked_controls.push(c);
-    //   }
-    //   can.each(c.category_ids, function(id) {
-    //     CMS.Models.Category.findInCacheById(id).linked_controls.push(c);
-    //   });
-    // })
+    can.each(ctls, function(c) {
+      if(!c.categorizations || c.categorizations.length < 1) {
+        uncategorized.controls.push(c);
+      }
+    });
 
     $controls_tree.cms_controllers_tree_view({
       model : CMS.Models.Category

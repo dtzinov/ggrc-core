@@ -7,6 +7,13 @@
 
 //= require can.jquery-all
 
+can.Observe("can.Observe.TreeOptions", {
+  defaults : {
+    instance : null
+    , children_drawn : false
+  }
+}, {});
+
 can.Control("CMS.Controllers.TreeView", {
   //static properties
   defaults : {
@@ -65,10 +72,38 @@ can.Control("CMS.Controllers.TreeView", {
     if(list) {
       this.options.attr("list", list.length == null ? [list] : list);
     }
-    that.add_child_lists(that.options.attr("list")); //since the view is handling adding new controllers now, configure before rendering.
-    can.view(this.options.list_view, this.options, function(frag) {;
+    this.options.list.replace(can.map(this.options.list, function(v) {
+      if(v instanceof can.Observe.TreeOptions) {
+        return v;
+      } else {
+        return new can.Observe.TreeOptions().attr("instance", v).attr("start_expanded", that.options.start_expanded);
+      }
+    }));
+    if(that.options.start_expanded) {
+      that.add_child_lists(that.options.attr("list")); //since the view is handling adding new controllers now, configure before rendering.
+    }
+    can.view(this.options.list_view, this.options, function(frag) {
       that.element && that.element.html(frag);
     });
+  }
+
+  , ".item-main expand" : function(el, ev) {
+    ev.stopPropagation();
+    var instance = el.data("model");
+    var parent = can.reduce(this.options.list, function(a, b) {
+      switch(true) {
+        case !!a : return a;
+        case b.instance === instance: return b;
+        default: return null;
+      }
+    }, null);
+    if(!parent.child_options && this.options.draw_children) {
+      this.add_child_lists_to_child(parent);
+    }
+  }
+
+  , ".openclose:not(.active) click" : function(el, ev) {
+    el.trigger("expand");
   }
 
   , add_child_lists : function(list) {
@@ -76,40 +111,50 @@ can.Control("CMS.Controllers.TreeView", {
     if(that.options.draw_children) {
       //Recursively define tree views anywhere we have subtree configs.
       can.each(list, function(item) {
-        item.attr("child_options", new can.Observe.List());
-        can.each(that.options.child_options.length != null ? that.options.child_options : [that.options.child_options], function(data) {
-          var options = new can.Observe();
-          data.each(function(v, k) {
-            options.attr(k, v);
-          });
-          item.child_options.push(options);
-          that.add_child_list(item, options);
-        });
+        that.add_child_lists_to_child(item);        
       });
     }
   }
 
+  , add_child_lists_to_child : function(item) {
+    var that = this;
+    if(!item.child_options)
+      item.attr("child_options", new can.Observe.TreeOptions.List());
+    can.each(this.options.child_options.length != null ? this.options.child_options : [this.options.child_options], function(data) {
+      var options = new can.Observe.TreeOptions();
+      data.each(function(v, k) {
+        options.attr(k, v);
+      });
+      that.add_child_list(item, options);
+      item.child_options.push(options);
+    });
+  }
+
   // data is an entry from child options.  if child options is an array, run once for each.
-  , add_child_list : function(item, data) {  
+  , add_child_list : function(item, data) {
     //var $subtree = $("<ul class='tree-structure'>").appendTo(el);
     //var model = $(el).closest("[data-model]").data("model");
     data.attr({ start_expanded : false });
     var find_params;
     if(data.property) {
-     data.attr("list", item[data.property]);
+      find_params = item.instance[data.property];
+      if(find_params && find_params.length) {
+        find_params = find_params.slice(0);
+      }
+     data.attr("list", find_params);
     } else {
       find_params = data.attr("find_params");
       if(!find_params) {
         data.attr("find_params", {});
       }
        if(data.parent_find_param){
-        data.attr("find_params." + data.parent_find_param, item.id);
+        data.attr("find_params." + data.parent_find_param, item.instance.id);
       } else {
-        data.attr("find_params.parent_id", item.id);
+        data.attr("find_params.parent.id", item.instance.id);
       }
     }
     // $subtree.cms_controllers_tree_view(opts);
-  } 
+  }
 
   , " newChild" : function(el, ev, data) {
     var that = this;
