@@ -12,8 +12,11 @@ can.Model("can.Model.Cacheable", {
 
   init : function() {
     this.bind("created", function(ev, new_obj) {
+      var cache = can.getObject("cache", new_obj.constructor, true);
       if(new_obj.id) {
-        can.getObject("cache", new_obj.constructor, true)[new_obj.id] = new_obj;
+        cache[new_obj.id] = new_obj;
+        if(cache[undefined] === new_obj)
+          delete cache[undefined];
       }
     });
     this.bind("destroyed", function(ev, old_obj) {

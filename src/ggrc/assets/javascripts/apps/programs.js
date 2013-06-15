@@ -23,14 +23,25 @@ $(function() {
   var $controls_tree = $("#controls .tree-structure").append($(new Spinner().spin().el).css(spin_opts));
   $.when(
     CMS.Models.Category.findTree()
-    , CMS.Models.Control.findAll({ program_id : program_id })
+    , CMS.Models.Control.findAll({ "directive.program_directives.program_id" : program_id })
   ).done(function(cats, ctls) {
     var uncategorized = cats[cats.length - 1]
-    , cat_ctls = [];
+    , ctl_cache = {}
+    , uncat_cache = {};
     can.each(ctls, function(c) {
-      if(!c.categorizations || c.categorizations.length < 1) {
-        uncategorized.controls.push(c);
-      }
+      uncat_cache[c.id] = ctl_cache[c.id] = c;
+    });
+    function link_controls(c) {
+      //empty out the category controls that aren't part of the program
+      c.controls.replace(can.map(c.controls, function(ctl) {
+        delete uncat_cache[c.id];
+        return ctl_cache[c.id];
+      }));
+      can.each(c.children, link_controls);
+    }
+    can.each(cats, link_controls);
+    can.each(Object.keys(uncat_cache), function(cid) {
+        uncategorized.controls.push(uncat_cache[cid]);
     });
 
     $controls_tree.cms_controllers_tree_view({
@@ -54,7 +65,7 @@ $(function() {
   var directive_dfds = [];
 
   can.each(directives_by_type, function(v, k) {
-    var query_params = { program_id : program_id }
+    var query_params = { "program_directives.program_id" : program_id };
     directive_dfds.push(models_by_kind[k].findAll(query_params)
     .done(function(directives) {
       directives_by_type[k] = directives;
@@ -72,6 +83,7 @@ $(function() {
       model : CMS.Models.Directive
       , list : d
       , list_view : "/static/mustache/directives/tree.mustache"
+      , start_expanded : false
       , child_options : [{
         model : CMS.Models.SectionSlug
         , property : "sections"

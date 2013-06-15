@@ -6,8 +6,8 @@
     <span class="code">{{slug}}</span>
   </a>
 
-  {{#pack list=linked_controls na=na}}
-  <a data-placement="right" {{#linked_controls.length}}data-popover-trigger="sticky-hover" data-original-title="Mapped Controls" data-content="{{render '/static/mustache/controls/list_popover.mustache'}}"{{/linked_controls.length}}>
+  {{#pack list=controls na=na}}
+  <a data-placement="right" {{#controls.length}}data-popover-trigger="sticky-hover" data-original-title="Mapped Controls" data-content="{{render '/static/mustache/controls/list_popover.mustache'}}"{{/controls.length}}>
     {{{withattr 'href' '/mapping_section/dialog/\{\{id\}\}'}}}
     {{{withclass 'attached badge controllistRM status list:badge-warning !list:na:badge-warning !list:!na:badge-important'}}
     {{#if list.length}}}

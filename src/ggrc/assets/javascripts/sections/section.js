@@ -170,9 +170,7 @@ can.Model.Cacheable("CMS.Models.Section", {
   }
 
   , update_linked_controls_ccontrol_only : function() {
-    this.linked_controls && this.linked_controls.replace(can.map(this.linked_controls, function(lc) {
-      return new CMS.Models.Control(lc.serialize ? lc.serialize() : lc);
-    }));
+    this.controls && this.controls.replace(CMS.Models.Control.models(this.controls));
   }
 
   , update_linked_controls : function() {

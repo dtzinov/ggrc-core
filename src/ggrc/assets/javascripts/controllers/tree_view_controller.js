@@ -111,7 +111,9 @@ can.Control("CMS.Controllers.TreeView", {
     if(that.options.draw_children) {
       //Recursively define tree views anywhere we have subtree configs.
       can.each(list, function(item) {
-        that.add_child_lists_to_child(item);        
+        setTimeout(function() {
+          that.add_child_lists_to_child(item);        
+        }, 1000);
       });
     }
   }
