@@ -62,9 +62,9 @@ CMS.Controllers.Filterable("CMS.Controllers.QuickSearch", {
             view_data.attr('list', data);
             can.Observe.stopBatch();
           } else {
-            setTimeout(function() {
+            GGRC.queue_event(function() {
               view_data.attr("list", data);
-            }, 100);
+            });
           }
           $tab.find(".item-count").html(data ? data.length : 0);
         });

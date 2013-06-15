@@ -83,7 +83,6 @@ $(function() {
       model : CMS.Models.Directive
       , list : d
       , list_view : "/static/mustache/directives/tree.mustache"
-      , start_expanded : false
       , child_options : [{
         model : CMS.Models.SectionSlug
         , property : "sections"

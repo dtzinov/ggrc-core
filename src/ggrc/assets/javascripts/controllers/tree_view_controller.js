@@ -79,11 +79,13 @@ can.Control("CMS.Controllers.TreeView", {
         return new can.Observe.TreeOptions().attr("instance", v).attr("start_expanded", that.options.start_expanded);
       }
     }));
-    if(that.options.start_expanded) {
-      that.add_child_lists(that.options.attr("list")); //since the view is handling adding new controllers now, configure before rendering.
-    }
     can.view(this.options.list_view, this.options, function(frag) {
-      that.element && that.element.html(frag);
+      GGRC.queue_event(function() {
+        that.element && that.element.html(frag);
+        if(that.options.start_expanded) {
+          that.add_child_lists(that.options.attr("list")); //since the view is handling adding new controllers now, configure before rendering.
+        }
+      });
     });
   }
 
@@ -111,9 +113,9 @@ can.Control("CMS.Controllers.TreeView", {
     if(that.options.draw_children) {
       //Recursively define tree views anywhere we have subtree configs.
       can.each(list, function(item) {
-        setTimeout(function() {
+        GGRC.queue_event(function() {
           that.add_child_lists_to_child(item);        
-        }, 1000);
+        });
       });
     }
   }
