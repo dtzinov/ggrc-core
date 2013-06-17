@@ -79,7 +79,7 @@ class RelatedObjectResults(object):
         direction = 'forward'
         objects = [o.destination for o in self.related_is_dst_query(vr).all()]
 
-    model = ggrc.models.get_model(self.far_type)
+    model = ggrc.models.get_model(self.far_real_type)
 
     return {
         'relationship_type': {

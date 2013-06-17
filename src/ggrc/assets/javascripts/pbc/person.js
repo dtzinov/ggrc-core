@@ -119,10 +119,10 @@ can.Model.Cacheable("CMS.Models.ObjectPerson", {
 
             typeof _super === "function" && _super.call(this);
             this.attr("person", CMS.Models.get_instance(
-                  "Person", this.person_id || this.person.id));
+                  "Person", this.person_id || (this.person && this.person.id)));
             this.attr("personable", CMS.Models.get_instance(
-                  this.personable_type || this.personable.type,
-                  this.personable_id || this.personable.id));
+                  this.personable_type || (this.personable && this.personable.type),
+                  this.personable_id || (this.personable && this.personable.id)));
             /*this.attr(
                 "person"
                 , CMS.Models.Person.findInCacheById(this.person_id)

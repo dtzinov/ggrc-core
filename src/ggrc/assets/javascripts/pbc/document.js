@@ -97,9 +97,6 @@ can.Model.Cacheable("CMS.Models.ObjectDocument", {
         });
     }
     , destroy : "DELETE /api/object_documents/{id}"
-    , attributes : {
-      document : "CMS.Models.Document.model"
-    }
 }, {
     init : function() {
         var _super = this._super;
@@ -107,12 +104,11 @@ can.Model.Cacheable("CMS.Models.ObjectDocument", {
             var that = this;
 
             typeof _super === "function" && _super.call(this);
-            // this.attr("document", CMS.Models.get_instance(
-            //       "Document", this.document_id || this.document.id));
-            this.documentable_id &&
-              this.attr("documentable", CMS.Models.get_instance(
-                    this.documentable_type || this.documentable.type,
-                    this.documentable_id || this.documentable.id));
+            this.attr("document", CMS.Models.get_instance(
+                  "Document", this.document_id || (this.document && this.document.id)));
+            this.attr("documentable", CMS.Models.get_instance(
+                  this.documentable_type || (this.documentable && this.documentable.type),
+                  this.documentable_id || (this.documentable && this.documentable.id)));
             /*this.attr(
                 "document"
                 , CMS.Models.Document.findInCacheById(this.document_id)
