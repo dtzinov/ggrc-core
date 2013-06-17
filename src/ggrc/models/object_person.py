@@ -31,7 +31,10 @@ class ObjectPerson(Base, Timeboxed, db.Model):
 
   @personable.setter
   def personable(self, value):
-    setattr(self, self.personable_attr, value)
+    self.personable_id = value.id if value is not None else None
+    self.personable_type = value.__class__.__name__ if value is not None \
+        else None
+    return setattr(self, self.personable_attr, value)
 
   _publish_attrs = [
       'role',
@@ -61,8 +64,8 @@ class Personable(object):
         )
 
   _publish_attrs = [
-      'people',
-      PublishOnly('object_people'),
+      PublishOnly('people'),
+      'object_people',
       ]
 
   @classmethod

@@ -104,4 +104,4 @@ def register_inflections(inflector):
     _inflection_to_model[value] = inflector.model
 
 def get_model(s):
-  return _inflection_to_model[s]
+  return _inflection_to_model.get(s, None)
