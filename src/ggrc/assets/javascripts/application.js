@@ -81,6 +81,9 @@ window.onerror = function(message, url, linenumber) {
     return zindex + 10;
   };
 
+(function(GGRC) {
+  var eventqueue = [];
+
 jQuery.extend(GGRC, {
   infer_object_type : function(data) {
     var decision_tree = {
@@ -108,11 +111,23 @@ jQuery.extend(GGRC, {
       , "section" : CMS.Models.Section
     };
 
+    function resolve_by_key(subtree, data) {
+      var kind = data[subtree._key];
+      var model;
+      can.each(subtree, function (v,k) {
+        if (k != "_key" && v.meta_kinds.indexOf(kind) >= 0) {
+          model = v;
+        }
+      });
+      return model;
+    }
+
     function resolve(subtree, data) {
       if(typeof subtree === "undefined")
         return null;
       return can.isPlainObject(subtree) ?
-        resolve(subtree[data[subtree._key]], data) :
+        //resolve(subtree[data[subtree._key]], data) :
+        resolve_by_key(subtree, data) :
         subtree;
     }
 
@@ -123,7 +138,26 @@ jQuery.extend(GGRC, {
   , make_model_instance : function(data) {
     return GGRC.infer_object_type(data).model($.extend({}, data));
   }
+
+  , queue_event : function(event) {
+    var timegap = 100 //ms
+    , currentTimeout = null;
+    function runNext() {
+      var fn = eventqueue.shift();
+      fn && fn();
+      if(eventqueue.length) {
+        currentTimeout = null;
+      } else {
+        currentTimeout = setTimeout(runNext, timegap);
+      }
+    }
+    eventqueue.push(event);
+    if(!currentTimeout) {
+      currentTimeout = setTimeout(runNext, timegap);
+    }
+  }
 });
+})(GGRC);
 
 // Set up all PUT requests to the server to respect ETags, to ensure that
 //  we are not overwriting more recent data than was viewed by the user.

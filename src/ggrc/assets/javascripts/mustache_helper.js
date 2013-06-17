@@ -379,24 +379,24 @@ Mustache.registerHelper("pack", function() {
       if(typeof obj === "function") {
           objects[i] = obj = obj();
       }
-    if(obj instanceof can.Observe) {
-      obj.bind("change", function(ev, attr, how, newVal, oldVal) {
-        var tokens, idx, subobj;
-        switch(how) {
-        case "remove":
-        case "add":
-        tokens = attr.split(".");
-        idx = tokens.pop();
-        subobj = can.getObject(tokens.join("."), pack);
-        subobj && (subobj instanceof can.Observe.List 
-          ? subobj.splice.apply(subobj, how === "remove" ? [+idx, 1] : [+idx, 0, newVal])
-          : pack.attr(attr, newVal));
-        break;
-        default:          
-        pack.attr(attr, newVal);
-        }
-      });
-    }
+    // if(obj instanceof can.Observe) {
+    //   obj.bind("change", function(ev, attr, how, newVal, oldVal) {
+    //     var tokens, idx, subobj;
+    //     switch(how) {
+    //     case "remove":
+    //     case "add":
+    //     tokens = attr.split(".");
+    //     idx = tokens.pop();
+    //     subobj = can.getObject(tokens.join("."), pack);
+    //     subobj && (subobj instanceof can.Observe.List 
+    //       ? subobj.splice.apply(subobj, how === "remove" ? [+idx, 1] : [+idx, 0, newVal])
+    //       : pack.attr(attr, newVal));
+    //     break;
+    //     default:          
+    //     pack.attr(attr, newVal);
+    //     }
+    //   });
+    // }
     if(obj._data) {
       obj = obj._data;
     }

@@ -286,9 +286,11 @@ jQuery(function($) {
       .tab('show');
     $($tab.find('> a').attr("href")).one("loaded", function() {
       if($tab.not(".quick-search-results .tabbable > ul > li").length) { //don't load the quickfind
-        setTimeout(function() {
-          $tab.siblings().find("> a").trigger("show"); //load all the others for counts after this one is showing
-        }, 100);
+        $tab.siblings().find("> a").each(function(i, a) {
+          GGRC.queue_event(function() {
+            $(a).trigger("show"); //load all the others for counts after this one is showing
+          });
+        });
       }
     })
   });

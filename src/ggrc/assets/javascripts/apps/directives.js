@@ -51,7 +51,7 @@ jQuery(function($) {
         , parent_model : getPageModel()
         , parent_id : directive_id
       });
-      $(ev.target).trigger('kill-all-popovers');
+      $(document.body).trigger('kill-all-popovers');
     });
   });
 });

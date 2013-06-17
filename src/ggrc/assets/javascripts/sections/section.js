@@ -12,7 +12,7 @@
 can.Model.Cacheable("CMS.Models.Section", {
   root_object : "section"
   , root_collection : "sections"
-  , findAll : "GET /api/sections?" + window.cms_singularize((/^\/([^\/]+)\//.exec(window.location.pathname) || ["",""])[1]) + "_id=" + (/^\/[^\/]+\/([^\/]+)/.exec(window.location.pathname) || ["",""])[1]
+  , findAll : "GET /api/sections?" + window.cms_singularize((/^\/([^\/]+)\//.exec(window.location.pathname) || ["",""])[1]) + ".id=" + (/^\/[^\/]+\/([^\/]+)/.exec(window.location.pathname) || ["",""])[1]
   , create : "POST /api/sections"
   , update : function(id, section) {
     var param = {};
@@ -26,6 +26,9 @@ can.Model.Cacheable("CMS.Models.Section", {
       , dataType : "json"
       , data : param
     });
+  }
+  , attributes : {
+    children : "CMS.Models.Section.model"
   }
   , map_rcontrol : function(params, section) {
     return can.ajax({
@@ -116,7 +119,6 @@ can.Model.Cacheable("CMS.Models.Section", {
             section.linked_controls.push.apply(section.linked_controls, flatctls);
             linkedctl.bind_section(section);
             ~can.inArray(section.id, linkedctl.mapped_section_ids) || linkedctl.mapped_section_ids.push(section.id);
-            
           }
           section.updated();
         }
@@ -127,8 +129,8 @@ can.Model.Cacheable("CMS.Models.Section", {
   , model : function(attrs) {
     var id;
     if((id = attrs.id || (attrs[this.root_object] && attrs[this.root_object].id)) && this.findInCacheById(id)) {
-      var cached = this.findInCacheById(id);
-      if($(this.linked_controls).filter(function() { return this instanceof CMS.Models.RegControl }).length)
+      var cached = this.findInCacheById(id).attr(attrs.serialize ? attrs.serialize() : attrs);
+      if($(this.linked_controls).filter(function() { return this instanceof CMS.Models.RegControl; }).length)
         cached.update_linked_controls();
       else
         cached.update_linked_controls_ccontrol_only();
@@ -142,14 +144,6 @@ can.Model.Cacheable("CMS.Models.Section", {
   init : function() {
 
     this._super();
-
-    var cs = new can.Model.List();
-    if(this.children) {
-      for(var i = 0; i < this.children.length ; i ++) {
-        cs.push(new this.constructor(this.children[i].serialize()));
-      }
-    }
-    this.attr("children", cs);
 
     var that = this;
     this.each(function(value, name) {
@@ -176,9 +170,7 @@ can.Model.Cacheable("CMS.Models.Section", {
   }
 
   , update_linked_controls_ccontrol_only : function() {
-    this.linked_controls && this.linked_controls.replace(can.map(this.linked_controls, function(lc) {
-      return new CMS.Models.Control(lc.serialize ? lc.serialize() : lc);
-    }));
+    this.controls && this.controls.replace(CMS.Models.Control.models(this.controls));
   }
 
   , update_linked_controls : function() {
@@ -188,8 +180,9 @@ can.Model.Cacheable("CMS.Models.Section", {
       //nasty hack -- assuming that RegControls are always listed before their respective implementing controls
       var oldrctl = oldlinked.shift();
       var rctl = null;
-      if(oldrctl instanceof CMS.Models.RegControl || !(oldrctl instanceof CMS.Models.Control) ) 
+      if(oldrctl instanceof CMS.Models.RegControl || !(oldrctl instanceof CMS.Models.Control) ) {
         rctl = CMS.Models.RegControl.findInCacheById(oldrctl.id || oldrctl.control.id);
+      }
       if(rctl) {
         lcs.push(rctl);
         rctl.bind_section(this);
@@ -210,10 +203,14 @@ can.Model.Cacheable("CMS.Models.Section", {
 });
 
 CMS.Models.Section("CMS.Models.SectionSlug", {
-  update : function(id, section) {
+  attributes : {
+    children : "CMS.Models.SectionSlug.models"
+    , controls : "CMS.Models.Control.models"
+  }
+  , update : function(id, section) {
     var param = this.process_args(
-      section, 
-      {not : [
+      section
+      , { not : [
         "parent_id"
         , "created_at"
         , "id"
@@ -245,10 +242,10 @@ CMS.Models.Section("CMS.Models.SectionSlug", {
 
     function treeify(list, directive_id, pid) {
       var ret = filter_out(list, function(s) { 
-        return s.parent_id == pid && (!directive_id || s.directive_id === directive_id) 
+        return (!s.parent && !pid) || (s.parent.id == pid && (!directive_id || (s.directive && s.directive.id === directive_id)));
       });
       can.$(ret).each(function() {
-        this.children = treeify(list, this.directive_id, this.id);
+        this.children = treeify(list, this.directive ? this.directive.id : null, this.id);
       });
       return ret;
     }
@@ -266,7 +263,7 @@ CMS.Models.Section("CMS.Models.SectionSlug", {
           while(list.length > 0) {
             can.$(list).each(function(i, v) {
               // find a pseudo-root whose parent wasn't in the returned sections
-              if(can.$(list).filter(function(j, c) { return c !== v && c.id === v.parent_id && c.directive_id === v.directive_id }).length < 1) {
+              if(can.$(list).filter(function(j, c) { return c !== v && v.parent && c.id === v.parent.id && ((!c.directive && !v.directive) || (c.directive && v.directive && c.directive.id === v.directive.id)) }).length < 1) {
                 current = v;
                 list.splice(i, 1); //remove current from list
                 return false;
@@ -278,16 +275,11 @@ CMS.Models.Section("CMS.Models.SectionSlug", {
           return roots;
         });
   }
-  , model : function(params) {
-    var m = this._super(params);
-    m.attr("children", this.models(m.children));
-    return m;
-  }
   , tree_view_options : {
     list_view : "/static/mustache/sections/tree.mustache"
     , child_options : [{
       model : CMS.Models.Control
-      , property : "linked_controls"
+      , property : "controls"
       , list_view : "/static/mustache/controls/tree.mustache"
     }, {
       model : CMS.Models.SectionSlug

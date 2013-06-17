@@ -22,6 +22,22 @@ can.Model.Cacheable("CMS.Models.Control", {
       , data : this.process_args(params, ["notes", "title", "description"])
     });
   }
+  , attributes : {
+    object_documents : "CMS.Models.ObjectDocument.models"
+    , documents : "CMS.Models.Document.models"
+    , implementing_controls : "CMS.Models.Control.models"
+    //, implemented_controls : "CMS.Models.Control.models"
+    //, directive : "CMS.Models.Directive.model"
+    //, sections : "CMS.Models.SectionSlug.models"
+  }
+  , serialize : {
+    "CMS.Models.Directive.model" : function(val, type) {
+      return {id : val.id, href : val.selfLink || val.href };
+    }
+    , "CMS.Models.SectionSlug.models" : function(val, type) {
+      return can.map(val, function(v) { return {id : v.id, href : v.selfLink || v.href }; });
+    }
+  }
   // , model : function(attrs) {
   //   var id;
   //   if((id = attrs.id || (attrs[this.root_object] && attrs[this.root_object].id)) && this.findInCacheById(id)) {
@@ -89,18 +105,6 @@ can.Model.Cacheable("CMS.Models.Control", {
 CMS.Models.Control("CMS.Models.ImplementedControl", {
 	findAll : "GET /api/controls/{id}/implemented_controls"
 }, {
-	init : function() {
-		if(this.control) {
-			var attrs = this.control._attrs();
-			for(var i in attrs) {
-				if(attrs.hasOwnProperty(i)) {
-					this.attr(i, this.control[i]);
-				}
-			}
-			this.removeAttr("control");
-		}
-		this._super();
-	}
 });
 
 /*
@@ -118,6 +122,9 @@ CMS.Models.ImplementedControl("CMS.Models.ImplementingControl", {
 // This creates a subclass of the Control model
 CMS.Models.Control("CMS.Models.RegControl", {
 	findAll : "GET /api/programs/{id}/controls"
+  , attributes : {
+    implementing_controls : "CMS.Models.ImplementingControl.models"
+  }
 	, map_ccontrol : function(params, control) {
 		return can.ajax({
 			url : "/mapping/map_ccontrol"
@@ -131,21 +138,21 @@ CMS.Models.Control("CMS.Models.RegControl", {
 						//unmap
 						ics = new can.Model.List();
 						can.each(control.implementing_controls, function(ctl) {
-                            //TODO : Put removal functionality into the Cacheable, in the vein of addElementToChildList,
-                            //  and update this code to simply remove the unmap code.
-                            //We are needing to manually trigger changes in Model.List due to CanJS being unable to
-                            //  trigger template changes for lists automatically.
+              //TODO : Put removal functionality into the Cacheable, in the vein of addElementToChildList,
+              //  and update this code to simply remove the unmap code.
+              //We are needing to manually trigger changes in Model.List due to CanJS being unable to
+              //  trigger template changes for lists automatically.
 							if(ctl.id !== params.ccontrol)
 							{
 								ics.push(ctl);
 							}
-        					control.attr("implementing_controls", ics);
-        					control.updated();
-                        });
-                    } else {
-                        //map
-                        control.addElementToChildList("implementing_controls", CMS.Models.Control.findInCacheById(params.ccontrol));
-                    }
+              control.attr("implementing_controls", ics);
+              control.updated();
+            });
+          } else {
+            //map
+            control.addElementToChildList("implementing_controls", CMS.Models.Control.findInCacheById(params.ccontrol));
+          }
 				}
 			}
 		});
@@ -154,11 +161,6 @@ CMS.Models.Control("CMS.Models.RegControl", {
 	init : function() {
 		this._super();
 		this.attr((this.control ? "control." : "") + "type", "regulation");
-		var impls = new can.Model.List();
-		can.each(this.implementing_controls, function(val, i) {
-			impls.push(new CMS.Models.ImplementingControl(val.serialize()));
-		});
-		this.attr("implementing_controls", impls);
 	}
 	, map_ccontrol : function(params) {
 		return this.constructor.map_ccontrol(can.extend({}, params, {rcontrol : this.id}), this);

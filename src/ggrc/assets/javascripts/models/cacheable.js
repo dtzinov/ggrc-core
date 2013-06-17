@@ -12,8 +12,11 @@ can.Model("can.Model.Cacheable", {
 
   init : function() {
     this.bind("created", function(ev, new_obj) {
+      var cache = can.getObject("cache", new_obj.constructor, true);
       if(new_obj.id) {
-        can.getObject("cache", new_obj.constructor, true)[new_obj.id] = new_obj;
+        cache[new_obj.id] = new_obj;
+        if(cache[undefined] === new_obj)
+          delete cache[undefined];
       }
     });
     this.bind("destroyed", function(ev, old_obj) {
@@ -167,6 +170,28 @@ can.Model("can.Model.Cacheable", {
       data['last-modified'] = xhr.getResponseHeader("Last-Modified");
     })
     .then(can.proxy(this.constructor, "model"));
+  }
+  , serialize : function() {
+    var that = this, serial = {};
+    if(arguments.length) {
+      return this._super.apply(this, arguments);
+    }
+    this.each(function(val, name) {
+      var fun_name;
+      if(that.constructor.attributes && that.constructor.attributes[name]) {
+        fun_name = that.constructor.attributes[name].split(".").reverse()[0];
+        if(fun_name === "models") {
+          serial[name] = can.map(val, function(v) { return {id : v.id, href : v.selfLink || v.href };});
+        } else if(fun_name === "model") {
+          serial[name] = { id : val.id, href : val.selfLink || val.href };
+        } else {
+          serial[name] = that._super(name);
+        }
+      } else {
+        serial[name] = that._super(name);
+      }
+    });
+    return serial;
   }
 });
 

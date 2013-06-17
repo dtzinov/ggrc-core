@@ -82,19 +82,23 @@ can.Control("CMS.Controllers.Related", {
     $.ajax({
       url: source,
       dataType: 'json',
-      data: undefined,
+      data: undefined
     }).then(function(data) {
       // Empty and add data to the result node
       x = $dest;
-      $dest.empty()
-      $dest.append(can.view(template, data))
-      $tab.data('last-loaded', Date.now())
+      $dest.empty();
+      can.view(template, data, function(frag) {
+        GGRC.queue_event(function() {
+          $dest.append(frag);
+        });
+      });
+      $tab.data('last-loaded', Date.now());
     },
     function(xhr, status, error) {
       // Server error, display some debugging information.
-      $dest.empty()
-      $dest.append("Error: " + xhr.status + ":" + error)
-      $tab.data('last-loaded', Date.now())
+      $dest.empty();
+      $dest.append("Error: " + xhr.status + ":" + error);
+      $tab.data('last-loaded', Date.now());
     });
 
   }
