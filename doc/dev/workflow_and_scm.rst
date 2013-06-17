@@ -33,17 +33,16 @@ General Workflow
        .. sourcecode:: bash
 
           git hf update
-          git hf feature rebase
+          git hf feature pull
+          git hf feature merge
 
-     Though, if you are collaborating on a feature branch, a feature pull to
-     keep up to date with collaborators will be required and feature merge
-     should be preferred to rebase as follows:
+     Though, if you aren't collaborating on a feature branch, a feature rebase
+     can be used instead:
 
        .. sourcecode:: bash
 
           git hf update
-          git hf feature pull
-          git hf feature merge
+          git hf feature rebase
 
   #. Make required changes and push them to the feature branch on GitHub by
      issuing the following on the command line:
@@ -76,7 +75,7 @@ General Workflow
 
       .. sourcecode:: bash
 
-         git branch -D feature_name
+         git branch -D feature/feature_name
 
   #. Click the 'Finish' button on the relevant Pivotal Tracker item. If the
      item was a chore, congratulations, you're done! If the item was a feature
