@@ -17,7 +17,7 @@ FULLTEXT_INDEXER = None
 # Deployment-specific variables
 COMPANY = "Company, Inc."
 COMPANY_LOGO_TEXT = "Company GRC"
-VERSION = "s4"
+VERSION = "s5"
 
 # Initialize from environment if present
 import os
