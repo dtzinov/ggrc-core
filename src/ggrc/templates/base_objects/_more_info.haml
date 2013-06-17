@@ -1,0 +1,20 @@
+-extends 'layouts/_widget_box.haml'
+
+-block widget_title
+  References
+  %span
+    =instance.object_documents|length
+  , People
+  %span
+    =instance.object_people|length
+
+-block widget_help
+  program_more_info
+
+-block widget_id
+  program_more_info_widget
+
+-block main
+  %ul.tree-structure.simple
+    -include 'documents/_object_list.haml'
+    -include 'people/_object_list.haml'

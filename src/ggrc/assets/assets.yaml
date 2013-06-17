@@ -42,6 +42,7 @@ dashboard-js-files:
   - controllers/filterable_controller.js
   - controllers/dashboard_widgets.js
   - controllers/modals_controller.js
+  - controllers/modal_selector_controller.js
   - controllers/help_controller.js
   - controllers/quick_search_controller.js
   - controllers/resize_widgets_controller.js

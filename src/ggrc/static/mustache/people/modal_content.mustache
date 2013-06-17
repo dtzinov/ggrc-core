@@ -1,0 +1,41 @@
+{{#instance}}
+<form action="javascript://">
+  <div class="row-fluid">
+    <div class="span3">
+      <label for="person_name">Name</label>
+      <input class="span12" id="person_name" name="name" placeholder="John Doe" size="30" type="text">
+      <br>
+    </div>
+    <div class="span3">
+      <label for="person_email">Email <span class="required">*</span></label>
+      <input class="span12" id="person_email" name="email" placeholder="john@acme" size="30" type="text">
+      <span class="help-inline">
+      </span>
+
+      <br>
+    </div>
+    <div class="span3">
+      <label for="person-language">Language</label>
+      <select class="input-small" id="person-language" name="language_id">
+      </select>
+      <span class="help-inline">
+      </span>
+
+    </div>
+    <div class="span2 disabled fltrt">
+      <label>Status</label>
+      <input class="span12" disabled="disabled" placeholder="Deprecated" type="text">
+    </div>
+  </div>
+  <div class="row-fluid">
+    <div class="span12">
+      <label for="person_company">Company</label>
+      <input class="span12" id="person_company" name="company" placeholder="Acme, Inc." size="30" type="text">
+      <span class="help-inline">
+      </span>
+      <br>
+    </div>
+  </div>
+  <br>
+</form>
+{{/instance}}

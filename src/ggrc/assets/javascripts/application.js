@@ -42,7 +42,7 @@ window.onerror = function(message, url, linenumber) {
     type : "post"
     , url : "/api/log_events"
     , dataType : "json"
-    , data : {logevent : {severity : "error", description : message + " (at " + url + ":" + linenumber + ")"}}
+    , data : {log_event : {severity : "error", description : message + " (at " + url + ":" + linenumber + ")"}}
   });
 };
 

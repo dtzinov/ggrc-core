@@ -438,7 +438,7 @@ input.disabled.pending-ajax{
 
 // backdrop
 
-.modal-backdrop {
+.modal-backdrop, .modal-backdrop.fade.in {
   @include opacity(0.4);
 }
 

@@ -1,0 +1,62 @@
+{{!div class="modal-body"}}
+{{#instance}}
+<form action="javascript://">
+  <div class="row-fluid">
+    <div class="span12">
+      <label>
+        Title
+        <span class="required">*</span>
+        <i class="grcicon-help-black" rel="tooltip" title="Enter Title"></i>
+      </label>
+      <input class="input-block-level" placeholder="Enter Title" name="title" type="text" value="{{this.title}}">
+    </div>
+    {{!<div class="span2">
+      <label for="document_year_id">Year</label>
+      <select class="span12" id="document_year_id" name="year_id">
+        <option value=""></option>
+      </select>
+      <span class="help-inline"></span>
+    </div>
+    <div class="span2">
+      <label for="document_language_id">Language</label>
+      <select class="span12" id="document_language_id" name="language_id">
+        <option value=""></option>
+      </select>
+      <span class="help-inline"></span>
+    </div>
+    <div class="span2">
+      <label for="document_kind_id">Reference Kind</label>
+      <select class="span12 " id="document_kind_id" name="kind_id">
+        <option value=""></option>
+      </select>
+      <span class="help-inline"></span>
+    </div>
+    <div class="span2">
+      <label for="document_type_id">DocType</label>
+      <select class="span12 " id="document_type_id" name="type_id">
+        <option value=""></option>
+      </select>
+      <span class="help-inline"></span>
+    </div>}}
+  </div>
+  <div class="row-fluid">
+    <div class="span12">
+      <label>
+        Description
+        <i class="grcicon-help-black" rel="tooltip" title="Enter Description"></i>
+      </label>
+      <div class="wysiwyg-area">
+        <textarea id="system_description" class="span12 double wysihtml5" name="description" placeholder="Enter Description">{{{description}}}</textarea>
+      </div>
+    </div>
+  </div>
+  <div class="row-fluid">
+    <div class="span12">
+      <label for="document_link">URL <span class="required">*</span></label>
+      <input class="span12" id="document_link" name="link" placeholder="https://www.example.com/xyz.pdf" size="30" type="text">
+      <span class="help-inline"></span>
+    </div>
+  </div>
+</form>
+{{/instance}}
+{{!/div}}

@@ -10,13 +10,12 @@
               References
               %span.grc-badge{ 'class': '={ "no-object" if not all_object_documents|length else "" }' }
                 (#{ all_object_documents|length })
-              %a.pull-right{ 'href': 'list_edit_flow_object_documents_path(:object_type: instance.class.name, :object_id: instnce.id)', 'data-toggle': 'modal-ajax-relationship-selector', 'data-modal-reset': 'reset', 'data-list-target': '#referenceList', 'data-modal-class': 'modal-wide', 'rel': 'tooltip', 'data-placement': 'left', 'title': 'Link References' }
+              %a.pull-right{ 'href': 'javascript://', 'data-toggle': 'modal-selector', 'data-modal-selector-options': 'object_documents', 'data-list-target': '#referenceList', 'data-modal-class': 'modal-wide', 'rel': 'tooltip', 'data-placement': 'left', 'title': 'Link References' }
                 %i.grcicon-link
 
 
   %script#reference_list_item{ 'type': 'text/html', 'data-member': 'object_document'}
     %li.controlSlot{ 'data-id': '<%= document.id %>' }
-      <% if (document.link_url && document.link_url.length > 0) { %>
       .item-main
         .item-title
           .row-fluid
@@ -27,18 +26,6 @@
                     <%= document.title || document.link_url || '&nbsp;' %>
                 %span.option
                   <%= document.document_type || '&nbsp;' %>
-
-      <% } else { %>
-      .item-main
-        .item-title
-          .row-fluid
-            .span12
-              .oneline
-                %span.addition-info
-                  <%= document.title || document.link_url || '&nbsp;' %>
-                %span.option
-                  <%= document.document_type || '&nbsp;' %>
-      <% } %>
 
   %ul#referenceList.tree-structure{ 'data-template-id': 'reference_list_item' }
     -for object_item in all_object_documents
