@@ -62,7 +62,7 @@ General Workflow
      This will create a GitHub pull request from the feature branch to the
      develop branch. Another gGRC-Core developer *should* review and accept,
      reject, or ask other developers for more comments. Developers **should not**
-     accept their own pull requests.
+     Gccept their own pull requests.
 
   #. Once a feature branch pull request has been accepted and merged into
      develop the feature branch should be deleted by issuing the following:
@@ -71,12 +71,23 @@ General Workflow
 
          git hf feature finish
 
-    Occassionally the local branch won't be deleted and an error message will
-    suggest a command to delete the local branch. It should be used, as follows:
+     Occassionally the local branch won't be deleted and an error message will
+     suggest a command to delete the local branch. It should be used, as
+     follows:
 
       .. sourcecode:: bash
 
          git branch -D feature_name
+
+  #. Click the 'Finish' button on the relevant Pivotal Tracker item. If the
+     item was a chore, congratulations, you're done! If the item was a feature
+     or bug it will also need to be *delivered*.
+     
+     If the pull request was accepted then the code was merged into develop and
+     should have been deployed to the Continuous Integration environment and
+     has been *delivered*. Push the 'Delivered' button to indicate that the
+     feature or bug is ready for testing on the Continuous Integration
+     instance of gGRC-Core.
 
 Gotchas
 =======
