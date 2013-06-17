@@ -71,21 +71,24 @@
                 {{{withattr 'data-original-title' "<div class='row-fluid'><div class='span12'><h3><a href='javascript://' data-id='{id}' class='btn btn-mini pull-right controllist' rel='tooltip' title='Map Controls to Section'><i class='grcicon-section-color'></i><i class='grcicon-reg-map'></i><i class='grcicon-control-color'></i></a><i class='grcicon-control-color'></i>Mapped Controls</h3></div></div>"}}}
                 <i class="grcicon-control-color"></i>
                 
-                {{#if na}}
-                    {{^list}} 
+                {{#na}}
+                  {{#with list}}
+                    {{#if length}}
+                      <span>{{length}}</span>
+                    {{else}} 
                       <small class="warning">N/A</small>
-                    {{/list}}
-                  {{#list.length}}
-                      <span>{{this}}</span>
-                  {{/list.length}}
-                {{else}}
-                    {{^list}} 
+                    {{/if}}
+                  {{/with}}
+                {{/na}}
+                {{^na}}
+                  {{#with list}}
+                    {{#if length}} 
+                      <span>{{length}}</span>
+                    {{else}}
                       <strong class="error">0</strong>
-                    {{/list}}
-                  {{#list.length}}
-                      <span>{{this}}</span>
-                  {{/list.length}}
-                {{/if}}  
+                    {{/if}}
+                  {{/with}}
+                {{/na}}  
               </a>
               {{/pack}}
             </div>
