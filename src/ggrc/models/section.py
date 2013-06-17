@@ -30,3 +30,12 @@ class Section(Hierarchical, BusinessObject, db.Model):
       'notes',
       'controls',
       ]
+
+  @classmethod
+  def eager_query(cls):
+    from sqlalchemy import orm
+
+    query = super(Section, cls).eager_query()
+    return query.options(
+        orm.joinedload('directive'),
+        orm.subqueryload_all('control_sections.control'))
