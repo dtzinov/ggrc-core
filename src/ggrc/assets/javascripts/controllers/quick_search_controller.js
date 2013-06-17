@@ -40,13 +40,17 @@ CMS.Controllers.Filterable("CMS.Controllers.QuickSearch", {
       , loaded = $tab.data('tab-loaded')
       , pane = ($tab.data('tab-target') || $tab.attr('href'))
       , $pane = $(pane)
-      , template = $tab.data("template") || "<div></div>"
+      , template = $tab.data("template")
       , model_name = $tab.attr("data-model") || $tab.attr("data-object-singular")
       , model = can.getObject("CMS.Models." + model_name) || can.getObject("GGRC.Models." + model_name)
       , view_data = null
       , spinner;
 
-      if(model) {
+      if(!template && typeof console !== "undefined") {
+        console.warn("No template defined for quick_search in ", $pane.attr("id"));
+      }
+
+      if(model && template) {
         view_data = new can.Observe({
           list: new model.List()
           //, list_view : template
