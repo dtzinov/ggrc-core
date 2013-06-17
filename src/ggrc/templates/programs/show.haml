@@ -53,7 +53,8 @@
           -include 'programs/_main.haml'
         -if not instance.company_controls
           -with widget_class = 'widget-tabs widget-tabs-horizontal related business'
-            -include 'shared/_related.haml'
+            -with widget_title = "Impact/Scope"
+              -include 'shared/_related.haml'
         -if instance.company_controls
           -with widget_class = 'widget-tabs widget-tabs-horizontal programs'
             -include 'programs/_linked_programs.haml'

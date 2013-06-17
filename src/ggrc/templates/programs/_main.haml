@@ -53,11 +53,11 @@
     %ul.nav.nav-tabs
       -if not instance.company_controls
         %li.text-governance.active
-          %a{ 'href': '#directives', 'data-toggle': 'tab', 'data-object-plural': 'directives' }
+          %a{ 'href': '#directives', 'data-toggle': 'tab', 'data-object-plural': 'directives', 'data-model': 'Directive' }
             %i.grcicon-directive-color
             Directives
       %li.text-governance
-        %a{ 'href': '#controls', 'data-toggle': 'tab', 'data-object-plural': 'controls' }
+        %a{ 'href': '#controls', 'data-toggle': 'tab', 'data-object-plural': 'controls', 'data-model': 'Control' }
           %i.grcicon-control-color
           Controls
 

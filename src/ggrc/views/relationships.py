@@ -23,14 +23,14 @@ class RelatedObjectResults(object):
     return Relationship.query.filter_by(
       destination_type=self.obj_real_type,
       destination_id=self.obj_id,
-      source_type=self.far_type,
+      source_type=self.far_real_type,
       relationship_type_id=vr['relationship_type'])
 
   def related_is_dst_query(self, vr):
     return Relationship.query.filter_by(
       source_type=self.obj_real_type,
       source_id=self.obj_id,
-      destination_type=self.far_type,
+      destination_type=self.far_real_type,
       relationship_type_id=vr['relationship_type'])
 
   def get_edit_url(self, vr):
@@ -84,6 +84,7 @@ class RelatedObjectResults(object):
           'title': self.get_title(vr, direction),
           'description': self.get_description(vr, direction),
           'related_type': self.far_type, #.underscore.pluralize,
+          'related_side': "source" if direction == "forward" else "destination",
           'edit_url': self.get_edit_url(vr),
           },
         'related_objects': self.get_result_related_objects(objects)
