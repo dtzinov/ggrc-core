@@ -389,6 +389,10 @@
             %br
               %a.btn{ 'data-toggle': 'modal', 'href': '#baseObjectNew' }
                 Base Objects
+              %a.btn{ 'data-toggle': 'modal', 'href': '#editRole' }
+                Edit Role
+
+
 
         %section#objects.widget
           %section.header
@@ -3378,3 +3382,128 @@
             %a.btn.btn-primary.preventdoubleclick{ 'data-toggle': 'modal-submit', 'href': '#' }
               Save
 
+
+  -# Edit Role
+  #editRole{ 'class': 'modal modal-wide hide fade', 'tabindex': '-1' }
+    .modal-header
+      .pull-right
+        %a.btn.btn-mini{ 'data-dismiss': 'modal', 'href': '#' }
+          %i.grcicon-x-grey
+      %h2
+        Edit Role
+    .modal-body
+      .row-fluid
+        .span6
+          %label
+            Role Name
+            %span.required
+              *
+            %i.grcicon-help-black{ 'rel': 'tooltip', 'title': 'Title of Program'}
+          %input{ 'type': 'text', 'class': 'input-block-level', 'placeholder': 'Enter Title', 'value': 'SOX Program Manager' }
+        .span6
+          %label
+            Object
+            %span.required
+              *
+            %i.grcicon-help-black{ 'rel': 'tooltip', 'title': 'Choose Object'}
+          %select{ 'class': 'input-block-level' }
+            %option
+              SOX Program
+            
+      .row-fluid
+        .span12
+          %br
+          %label
+            Role-specific Priviledges for Dependent Objects
+            %i.grcicon-help-black{ 'rel': 'tooltip', 'title': 'Describe program in few sentences'}
+          .checkbox-area
+            %input{ 'type': 'checkbox', 'checked': 'checked' }
+              Create
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            %input{ 'type': 'checkbox', 'checked': 'checked' }
+              Read
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            %input{ 'type': 'checkbox', 'checked': 'checked' }
+              Update
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            %input{ 'type': 'checkbox', 'checked': 'checked' }
+              Delete
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            %input{ 'type': 'checkbox', 'checked': 'checked' }
+              List
+          
+      .row-fluid
+        .span12
+          .expand-link
+            %a{ 'href': 'javascript://', 'class': 'show-hidden-fields' }
+              %span.out
+                %i.grcicon-show
+                Show
+              %span.in
+                %i.grcicon-hide
+                Hide
+              Advanced
+      .hidden-fields-area{ 'style': 'display:none'}
+        .row-fluid
+          .span2
+            %label
+              Program Info
+            .checkbox-area
+              %input{ 'type': 'checkbox', 'checked': 'checked' }
+                View
+              %br
+              %input{ 'type': 'checkbox', 'checked': 'checked' }
+                Modify
+          .span2
+            %label
+              Controls
+            .checkbox-area
+              %input{ 'type': 'checkbox', 'checked': 'checked' }
+                View
+              %br
+              %input{ 'type': 'checkbox', 'checked': 'checked' }
+                Modify
+          .span2
+            %label
+              Directives
+            .checkbox-area
+              %input{ 'type': 'checkbox', 'checked': 'checked' }
+                View
+              %br
+              %input{ 'type': 'checkbox', 'checked': 'checked' }
+                Modify
+          .span2
+            %label
+              References
+            .checkbox-area
+              %input{ 'type': 'checkbox', 'checked': 'checked' }
+                View
+              %br
+              %input{ 'type': 'checkbox', 'checked': 'checked' }
+                Modify
+          .span2
+            %label
+              People
+            .checkbox-area
+              %input{ 'type': 'checkbox', 'checked': 'checked' }
+                View
+              %br
+              %input{ 'type': 'checkbox', 'checked': 'checked' }
+                Modify
+          .span2
+            %label
+              Impact/Scope
+            .checkbox-area
+              %input{ 'type': 'checkbox', 'checked': 'checked' }
+                View
+              %br
+              %input{ 'type': 'checkbox', 'checked': 'checked' }
+                Modify
+    .modal-footer
+      .row-fluid
+        .span6
+          .deny-buttons
+        .span6
+          .confirm-buttons
+            %a.btn.btn-primary.preventdoubleclick
+              Save
