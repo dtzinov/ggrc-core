@@ -62,7 +62,7 @@ General Workflow
      This will create a GitHub pull request from the feature branch to the
      develop branch. Another gGRC-Core developer *should* review and accept,
      reject, or ask other developers for more comments. Developers **should not**
-     Gccept their own pull requests.
+     accept their own pull requests.
 
   #. Once a feature branch pull request has been accepted and merged into
      develop the feature branch should be deleted by issuing the following:
@@ -71,9 +71,8 @@ General Workflow
 
          git hf feature finish
 
-     Occassionally the local branch won't be deleted and an error message will
-     suggest a command to delete the local branch. It should be used, as
-     follows:
+    Occassionally the local branch won't be deleted and an error message will
+    suggest a command to delete the local branch. It should be used, as follows:
 
       .. sourcecode:: bash
 
@@ -101,6 +100,4 @@ changes that you wish to preserve:
 .. sourcecode:: bash
 
    git reset --hard
-
-
 
