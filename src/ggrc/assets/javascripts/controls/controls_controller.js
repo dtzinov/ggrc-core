@@ -19,6 +19,7 @@
       , show : "/static/mustache/controls/show.mustache"
       , model : CMS.Models.Control
       , id : null
+      , search_param : null
       , spinner_while_filtering : true
       , spinner_style : {"position" : "absolute", "left" : 50, "top" : 50, "height": 150, "width": 150}
       //, list_model : CMS.Models.Control.List
@@ -51,7 +52,11 @@
       }
     }
     , fetch_list : function() {
-      this.find_all_deferred = this.options.model.findAll({ id : this.options.id }, this.proxy("draw_list"));
+      var params = {};
+      if(this.options.search_param) {
+        params[this.options.search_param] = this.options.id;
+      }
+      this.find_all_deferred = this.options.model.findAll(params, this.proxy("draw_list"));
     }
     , draw_list : function(list) {
       if(list) {

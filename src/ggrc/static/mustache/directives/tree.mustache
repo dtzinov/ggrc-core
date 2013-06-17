@@ -1,6 +1,7 @@
 {{#list}}
-<li class="directive" data-object-id="{{id}}" data-object-sub-type="{{lowercase_kind}}" data-object-type="{{constructor.shortName}}" data-object-meta-type="directive">
-    <div class="item-main">
+<li class="directive" data-object-id="{{instance.id}}" data-object-sub-type="{{instance.lowercase_kind}}" data-object-type="{{instance.constructor.shortName}}" data-object-meta-type="directive">
+    {{#instance}}
+    <div class="item-main" {{data 'model'}}>
       {{#draw_children}}
           <div class="openclose {{#if start_expanded}}active{{/if}}"></div>
       {{/draw_children}}
@@ -53,12 +54,15 @@
         </div>
       </div>
     </div>
-    {{#draw_children}}
+    {{/instance}}
+    {{#if draw_children}}
+    {{^if_null 'z'}} {{! this line is just chopping the context stack down to one element}}
     <div class="item-content" {{#start_expanded}}style="display: block;"{{/start_expanded}}>
       {{#child_options}}
       <ul class="tree-structure" {{data 'options'}} {{ (el) -> el.cms_controllers_tree_view(el.data("options")) }}></ul>
       {{/child_options}}
     </div>
-    {{/draw_children}}
+    {{/if_null}}
+    {{/if}}
   </li>
 {{/list}}

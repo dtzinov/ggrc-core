@@ -19,22 +19,30 @@ var program_id = /^\/programs\/(\d+)/.exec(window.location.pathname)[1];
 var spin_opts = { position : "absolute", top : 100, left : 100, height : 50, width : 50 };
 
 $(function() {
-  
+
   var $controls_tree = $("#controls .tree-structure").append($(new Spinner().spin().el).css(spin_opts));
   $.when(
-    CMS.Models.Category.findAll()
-    , CMS.Models.Control.findAll({ program_id : program_id })
+    CMS.Models.Category.findTree()
+    , CMS.Models.Control.findAll({ "directive.program_directives.program_id" : program_id })
   ).done(function(cats, ctls) {
     var uncategorized = cats[cats.length - 1]
-    , cat_ctls = [];
-    can.each(cats, function(c) {
-      if(!c.category_ids || c.category_ids.length < 1) {
-        uncategorized.linked_controls.push(c);
-      }
-      can.each(c.category_ids, function(id) {
-        CMS.Models.Category.findInCacheById(id).linked_controls.push(c);
-      });
-    })
+    , ctl_cache = {}
+    , uncat_cache = {};
+    can.each(ctls, function(c) {
+      uncat_cache[c.id] = ctl_cache[c.id] = c;
+    });
+    function link_controls(c) {
+      //empty out the category controls that aren't part of the program
+      c.controls.replace(can.map(c.controls, function(ctl) {
+        delete uncat_cache[c.id];
+        return ctl_cache[c.id];
+      }));
+      can.each(c.children, link_controls);
+    }
+    can.each(cats, link_controls);
+    can.each(Object.keys(uncat_cache), function(cid) {
+        uncategorized.controls.push(uncat_cache[cid]);
+    });
 
     $controls_tree.cms_controllers_tree_view({
       model : CMS.Models.Category
@@ -46,27 +54,30 @@ $(function() {
     regulation : []
     , contract : []
     , policy : []
-  }
+  };
+
+  var models_by_kind = {
+    regulation : CMS.Models.Regulation
+    , contract : CMS.Models.Contract
+    , policy : CMS.Models.Policy
+  };
+
+  var directive_dfds = [];
 
   can.each(directives_by_type, function(v, k) {
-    can.ajax({url : "/api/directives", dataType : "json", data : { directive_meta_kind : k , program_id : program_id }})
-    .done(function(d) {
-      directives_by_type[k] = d;
-    });
+    var query_params = { "program_directives.program_id" : program_id };
+    directive_dfds.push(models_by_kind[k].findAll(query_params)
+    .done(function(directives) {
+      directives_by_type[k] = directives;
+    }));
   });
 
   var $sections_tree = $("#directives .tree-structure").append($(new Spinner().spin().el).css(spin_opts));
-  $.when(
-    CMS.Models.SectionSlug.findAll()
-    , CMS.Models.Directive.findAll({ program_id : program_id })
-  ).done(function(s, d) {
-    
-    d.each(function(dir) {
-      dir.attr("sections", new can.Observe.List());
-    })
-    s.each(function(sec) {
-      sec.directive && sec.directive.id && CMS.Models.Directive.findInCacheById(sec.directive.id).sections.push(sec);
-    });
+  $.when.apply(
+    $
+    , [CMS.Models.SectionSlug.findAll()].concat(directive_dfds)
+  ).done(function(s, r, p, c) {
+    var d = r.concat(p).concat(c);
 
     $sections_tree.cms_controllers_tree_view({
       model : CMS.Models.Directive
@@ -92,7 +103,7 @@ $(function() {
     directives_by_type[$(this).data("child-meta-type")] = data;
     $sections_tree.trigger("linkObject", $.extend($(this).data(), {
       data : directives_by_type.regulation.concat(directives_by_type.contract).concat(directives_by_type.policy)
-    }))
+    }));
   });
 
 });
