@@ -1,8 +1,8 @@
 
 # Copyright (C) 2013 Google Inc., authors, and contributors <see AUTHORS file>
 # Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
-# Created By:
-# Maintained By:
+# Created By: dan@reciprocitylabs.com
+# Maintained By: dan@reciprocitylabs.com
 
 from .all_models import *
 
@@ -51,3 +51,9 @@ def drop_db(use_migrations=False, quiet=False):
     drop_db_with_migrations(quiet)
   else:
     drop_db_with_drop_all()
+
+def init_app(app):
+  from .all_models import all_models
+  [model._inflector for model in all_models]
+
+from .inflector import get_model

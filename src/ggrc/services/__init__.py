@@ -19,7 +19,7 @@ def all_collections():
   """The list of all gGRC collection services as a list of
   (url, ModelClass) tuples.
   """
-  from ggrc.models import all_models as models
+  import ggrc.models.all_models as models
 
   return [
     service('categorizations', models.Categorization),

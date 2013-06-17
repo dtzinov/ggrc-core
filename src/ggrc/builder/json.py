@@ -193,10 +193,9 @@ class UpdateAttrHandler(object):
     # rel_class = None
     # return cls.query_for(rel_class, json_obj, attr_name, True)
     if attr_name in json_obj:
-      url = json_obj[attr_name]['href']
-      rel_class_name = _request_ctx_stack.top.url_adapter.match(url, 'GET')[0]
-      from ggrc import models
-      rel_class = getattr(models, rel_class_name)
+      import ggrc.models
+      rel_class_name = json_obj[attr_name]['type']
+      rel_class = ggrc.models.get_model(rel_class_name)
       return cls.query_for(rel_class, json_obj, attr_name, False)
     return None
 
@@ -211,7 +210,7 @@ class Builder(AttributeInfo):
     """
     if include:
       return publish(obj, inclusions)
-    result = {'id': obj.id, 'href': url_for(obj)}
+    result = {'id': obj.id, 'type': type(obj).__name__, 'href': url_for(obj)}
     for path in inclusions:
       if type(path) is not str and type(path) is not unicode:
         attr_name, remaining_path = path[0], path[1:]

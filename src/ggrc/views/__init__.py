@@ -14,7 +14,11 @@ Handle non-RESTful views, e.g. routes which return HTML rather than JSON
 
 @app.context_processor
 def inject_config():
-  return dict(config=app.config)
+  from ggrc.models import get_model
+  return dict(
+      get_model=get_model,
+      config=app.config
+      )
 
 from flask import render_template
 

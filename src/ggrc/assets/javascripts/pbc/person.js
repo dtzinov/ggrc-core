@@ -13,18 +13,19 @@
 can.Model.Cacheable("CMS.Models.Person", {
    root_object : "person"
    , root_collection : "people"
-   , findAll : "GET /people.json"
-    , create : function(params) {
+   , findAll : "GET /api/people"
+   , create : function(params) {
         var _params = {
             person : {
-                name : params.name
-                , email : params.ldap
+                name : params.person.name
+                , email : params.person.ldap || params.person.email
+                , company : params.person.company
                 , company_id : params.company_id
             }
         };
         return $.ajax({
             type : "POST"
-            , "url" : "/people.json"
+            , "url" : "/api/people"
             , dataType : "json"
             , data : _params
         });
@@ -32,7 +33,7 @@ can.Model.Cacheable("CMS.Models.Person", {
     , search : function(request, response) {
         return $.ajax({
             type : "get"
-            , url : "/people.json"
+            , url : "/api/people"
             , dataType : "json"
             , data : {s : request.term}
             , success : function(data) {
@@ -68,18 +69,23 @@ can.Model.Cacheable("CMS.Models.Person", {
 can.Model.Cacheable("CMS.Models.ObjectPerson", {
     root_object : "object_person"
     , root_collection : "object_people"
+    , findAll: "GET /api/object_people"
     , create : function(params) {
         var _params = {
             object_person : {
-                personable_id : params.xable_id
-                , person_id : params.person_id
-                , role : params.role
-                , personable_type : params.xable_type
+              personable: {
+                id: params.object_person.personable_id || params.xable_id,
+                type: params.object_person.personable_type || params.xable_type
+              }
+            , person: {
+                id: params.object_person.person_id
+              }
+            , role : params.role
             }
         };
         return $.ajax({
             type : "POST"
-            , "url" : "/object_people.json"
+            , "url" : "/api/object_people"
             , dataType : "json"
             , data : _params
         });
@@ -87,20 +93,24 @@ can.Model.Cacheable("CMS.Models.ObjectPerson", {
     , update : function(id, object) {
         var _params = {
             object_person : {
-                personable_id : object.personable_id
-                , person_id : object.person_id
-                , role : object.role
-                , personable_type : object.personable_type
+              personable: {
+                id: params.object_person.personable_id || params.xable_id,
+                type: params.object_person.personable_type || params.xable_type
+              }
+            , person: {
+                id: params.object_person.person_id
+              }
+            , role : params.role
             }
         };
         return $.ajax({
             type : "PUT"
-            , "url" : "/object_people/" + id + ".json"
+            , "url" : "/api/object_people/" + id
             , dataType : "json"
             , data : _params
         });
     }
-    , destroy : "DELETE /object_people/{id}.json"
+    , destroy : "DELETE /api/object_people/{id}"
 }, {
     init : function() {
         var _super = this._super;
@@ -108,11 +118,16 @@ can.Model.Cacheable("CMS.Models.ObjectPerson", {
             var that = this;
 
             typeof _super === "function" && _super.call(this);
-            this.attr(
+            this.attr("person", CMS.Models.get_instance(
+                  "Person", this.person_id || this.person.id));
+            this.attr("personable", CMS.Models.get_instance(
+                  this.personable_type || this.personable.type,
+                  this.personable_id || this.personable.id));
+            /*this.attr(
                 "person"
-                , CMS.Models.Person.findInCacheById(this.person_id) 
-                || new CMS.Models.Person(this.person && this.person.serialize ? this.person.serialize() : this.person)); 
-
+                , CMS.Models.Person.findInCacheById(this.person_id)
+                || new CMS.Models.Person(this.person && this.person.serialize ? this.person.serialize() : this.person));
+*/
             this.each(function(value, name) {
               if (value === null)
               that.removeAttr(name);
@@ -122,6 +137,16 @@ can.Model.Cacheable("CMS.Models.ObjectPerson", {
         this.bind("created", can.proxy(reinit, this));
 
         reinit.call(this);
+    },
+    destroy: function() {
+      return $.ajax({
+        url: "/api/object_people/" + this.id
+      , headers: {
+          "If-Match": this.etag
+        , "If-Unmodified-Since": this['last-modified']
+        }
+      , type: "DELETE"
+      })
     }
 });
 

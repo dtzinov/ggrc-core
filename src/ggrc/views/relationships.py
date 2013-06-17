@@ -6,6 +6,7 @@ from ggrc.models.relationship import Relationship
 from ggrc.models.relationship_types import RelationshipTypes
 from ggrc.services.common import as_json
 import ggrc.builder
+import ggrc.models
 
 from flask import url_for, request, current_app
 from werkzeug.urls import url_encode
@@ -23,14 +24,14 @@ class RelatedObjectResults(object):
     return Relationship.query.filter_by(
       destination_type=self.obj_real_type,
       destination_id=self.obj_id,
-      source_type=self.far_type,
+      source_type=self.far_real_type,
       relationship_type_id=vr['relationship_type'])
 
   def related_is_dst_query(self, vr):
     return Relationship.query.filter_by(
       source_type=self.obj_real_type,
       source_id=self.obj_id,
-      destination_type=self.far_type,
+      destination_type=self.far_real_type,
       relationship_type_id=vr['relationship_type'])
 
   def get_edit_url(self, vr):
@@ -78,12 +79,19 @@ class RelatedObjectResults(object):
         direction = 'forward'
         objects = [o.destination for o in self.related_is_dst_query(vr).all()]
 
+    model = ggrc.models.get_model(self.far_type)
+
     return {
         'relationship_type': {
           'id': vr['relationship_type'],
           'title': self.get_title(vr, direction),
           'description': self.get_description(vr, direction),
           'related_type': self.far_type, #.underscore.pluralize,
+          'related_model_singular': model._inflector.model_singular,
+          'related_title_singular': model._inflector.title_singular,
+          'related_title_plural': model._inflector.title_plural,
+          'related_table_plural': model._inflector.table_plural,
+          'related_side': "source" if direction == "forward" else "destination",
           'edit_url': self.get_edit_url(vr),
           },
         'related_objects': self.get_result_related_objects(objects)

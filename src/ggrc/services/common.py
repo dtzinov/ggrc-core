@@ -61,8 +61,6 @@ class ModelView(View):
   pk_type = 'int'
 
   _model = None
-  _model_name = 'object'
-  _model_plural = 'objects'
 
   # Simple accessor properties
   @property
@@ -72,22 +70,6 @@ class ModelView(View):
   @property
   def model(self):
     return self._model
-
-  # Model/DB Inspection
-  # TODO: Fix -- this is cheating
-  @property
-  def model_name(self):
-    if self.model is None:
-      return self._model_name
-    else:
-      return self.model.__name__.lower()
-
-  @property
-  def model_plural(self):
-    if self.model is None:
-      return self._model_plural
-    else:
-      return self.model.__tablename__
 
   @property
   def modified_attr_name(self):
@@ -123,7 +105,7 @@ class ModelView(View):
     return self.get_collection().filter(self.model.id == id).first()
 
   def not_found_message(self):
-    return '{0} not found.'.format(self.model_name.title())
+    return '{0} not found.'.format(self.model._inflector.title_singular)
 
   def not_found_response(self):
     return current_app.make_response((self.not_found_message(), 404, []))
@@ -161,13 +143,18 @@ class ModelView(View):
     return cls.__name__
 
   @classmethod
-  def url_for(cls, *args, **kwargs):
-    if args and isinstance(args[0], db.Model):
-      return url_for(cls.endpoint_name(), *args[1:], id=args[0].id, **kwargs)
+  def url_for_preserving_querystring(cls, *args, **kwargs):
+    url = cls.url_for(*args, **kwargs)
     # preserve original query string
     idx = request.url.find('?')
     querystring = '' if idx < 0 else '?' + request.url[idx+1:]
-    return url_for(cls.endpoint_name(), *args, **kwargs) + querystring
+    return url + querystring
+
+  @classmethod
+  def url_for(cls, *args, **kwargs):
+    if args and isinstance(args[0], db.Model):
+      return url_for(cls.endpoint_name(), *args[1:], id=args[0].id, **kwargs)
+    return url_for(cls.endpoint_name(), *args, **kwargs)
 
   @classmethod
   def decorate_view_func(cls, view_func, decorators):
@@ -269,11 +256,12 @@ class Resource(ModelView):
     if header_error:
       return header_error
     src = UnicodeSafeJsonWrapper(self.request.json)
+    root_attribute = self.model._inflector.table_singular
     try:
-      src = src[self.model_name]
+      src = src[root_attribute]
     except KeyError, e:
       return current_app.make_response((
-        'Required attribute "{0}" not found'.format(self.model_name), 400, []))
+        'Required attribute "{0}" not found'.format(root_attribute), 400, []))
     ggrc.builder.json.update(obj, src)
     #FIXME Fake the modified_by_id until we have that information in session.
     obj.modified_by_id = get_current_user_id()
@@ -319,11 +307,12 @@ class Resource(ModelView):
         'Content-Type must be application/json', 415,[]))
     obj = self.model()
     src = UnicodeSafeJsonWrapper(self.request.json)
+    root_attribute = self.model._inflector.table_singular
     try:
-      src = src[self.model_name]
+      src = src[root_attribute]
     except KeyError, e:
       return current_app.make_response((
-        'Required attribute "{0}" not found'.format(self.model_name), 400, []))
+        'Required attribute "{0}" not found'.format(root_attribute), 400, []))
     ggrc.builder.json.create(obj, src)
     #FIXME Fake the modified_by_id until we have that information in session.
     obj.modified_by_id = get_current_user_id()
@@ -361,7 +350,7 @@ class Resource(ModelView):
     return as_json(obj, **kwargs)
 
   def object_for_json(self, obj, model_name=None):
-    model_name = model_name or self.model_name
+    model_name = model_name or self.model._inflector.table_singular
     json_obj = ggrc.builder.json.publish(obj)
     return { model_name: json_obj }
 
@@ -388,7 +377,7 @@ class Resource(ModelView):
 
   def collection_for_json(
       self, objects, model_plural=None, collection_name=None):
-    model_plural = model_plural or self.model_plural
+    model_plural = model_plural or self.model._inflector.table_plural
     collection_name = collection_name or '{0}_collection'.format(model_plural)
 
     objects_json = []
@@ -399,7 +388,7 @@ class Resource(ModelView):
 
     collection_json = {
       collection_name: {
-        'selfLink': self.url_for(),
+        'selfLink': self.url_for_preserving_querystring(),
         model_plural: objects_json,
         }
       }

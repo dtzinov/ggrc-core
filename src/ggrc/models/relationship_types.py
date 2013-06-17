@@ -45,7 +45,11 @@ class RelationshipTypes(object):
         obj_type = obj_type.__class__
       obj_type = obj_type.__name__
 
-    return [vr for vr in cls.valid_relationship_helper(obj_type) if vr]
+    valid_relationships = {}
+    for vr in cls.valid_relationship_helper(obj_type):
+      if vr and vr['related_model'] not in valid_relationships:
+        valid_relationships[vr['related_model']] = vr
+    return valid_relationships.values()
 
 
 RELATIONSHIP_TYPES = {

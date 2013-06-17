@@ -13,8 +13,8 @@ Feature: A Relationship models a relation between two resources. Relationships
     And a new "<type_b>" named "resource_b"
     And "resource_b" is POSTed to its collection
     And a new "Relationship" named "relationship"
-    And "relationship" link property "source" is "resource_a"
-    And "relationship" link property "destination" is "resource_b"
+    And "relationship" polymorphic link property "source" is "resource_a"
+    And "relationship" polymorphic link property "destination" is "resource_b"
     And "relationship" property "relationship_type_id" is "test_asymmetric"
     And "relationship" is POSTed to its collection
     When GET of the resource "relationship"
@@ -44,8 +44,8 @@ Feature: A Relationship models a relation between two resources. Relationships
     And a new "<type_b>" named "resource_b"
     And "resource_b" is POSTed to its collection
     And a new "Relationship" named "relationship"
-    And "relationship" link property "source" is "resource_a"
-    And "relationship" link property "destination" is "resource_b"
+    And "relationship" polymorphic link property "source" is "resource_a"
+    And "relationship" polymorphic link property "destination" is "resource_b"
     And "relationship" property "relationship_type_id" is "test_symmetric"
     And "relationship" is POSTed to its collection
     When GET of the resource "relationship"

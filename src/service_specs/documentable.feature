@@ -7,8 +7,11 @@ Feature: Some resources can be related to Document resources
     Given a new "Document" named "document"
     And "document" is POSTed to its collection
     And a new "<documentable_type>" named "documentable"
-    And "document" is added to links property "documents" of "documentable"
     And "documentable" is POSTed to its collection
+    And a new "ObjectDocument" named "object_document"
+    And "object_document" link property "document" is "document"
+    And "object_document" polymorphic link property "documentable" is "documentable"
+    And "object_document" is POSTed to its collection
     When GET of the resource "documentable"
     Then "document" is in the links property "documents" of "documentable"
 

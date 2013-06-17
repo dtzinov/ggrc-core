@@ -451,6 +451,54 @@ Mustache.registerHelper("render", function(template, context, options) {
   return can.view.render(template, context.serialize ? context.serialize() : context);
 });
 
+Mustache.registerHelper("renderLive", function(template, context, options) {
+  if(!options) {
+    options = context;
+    context = this;
+  }
+
+  if(typeof context === "function") {
+    context = context();
+  }
+
+  if(typeof template === "function") {
+    template = template();
+  }
+
+  return can.view.render(template, context);
+});
+
+function defer_render(tag_name, func) {
+  var hook
+    ;
+
+  tag_name = tag_name || "span";
+
+  function hookup(element, parent, view_id) {
+    var f = function() {
+      frag_or_html = func();
+      $(element).after(frag_or_html).remove();
+    };
+    setTimeout(f, 13);
+  }
+
+  hook = can.view.hook(hookup);
+  return ["<", tag_name, " ", hook, ">", "</", tag_name, ">"].join("");
+}
+
+Mustache.registerHelper("defer", function(tag_name, options) {
+  var context = this;
+
+  if (!options) {
+    options = tag_name;
+    tag_name = "span";
+  }
+
+  return defer_render(tag_name, function() {
+    return options.fn(context);
+  });
+});
+
 Mustache.registerHelper("pbc_is_read_only", function() {
   var options = arguments[arguments.length - 1];
   if (window.location.pathname.split('/')[1] == 'pbc_lists')

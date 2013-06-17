@@ -11,10 +11,10 @@
               People
               %span.grc-badge{ 'class': '={ "no-object" if not all_object_people|length else "" }' }
                 (={ all_object_people|length })
-              %a.pull-right{ 'href': 'list_edit_flow_object_people_path(object_type: instance.class.name, object_id: instance.id)', 'data-toggle': 'modal-ajax-relationship-selector', 'data-modal-reset': 'reset', 'data-list-target': '#personList', 'data-modal-class': 'modal-wide', 'rel': 'tooltip', 'data-placement': 'left', 'title': 'Link People' }
+              %a.pull-right{ 'href': 'javascript://', 'data-toggle': 'modal-selector', 'data-modal-selector-options': 'object_people', 'data-list-target': '#personList', 'data-modal-class': 'modal-wide', 'rel': 'tooltip', 'data-placement': 'left', 'title': 'Link People' }
                 %i.grcicon-link
 
-  %script#person_list_item{ 'type': 'text/html', 'data-member': 'object_person' }
+  %script#person_list_item{ 'type': 'text/html', 'data-member': 'object_person', 'data-role': 'Accountable' }
     %li.controlSlot{ 'data-id': '<%= person.id %>' }
       .item-main
         .item-title

@@ -1,0 +1,26 @@
+<div class="selector-info">
+  <h4>
+    <i class="grcicon-user-black"></i>
+    Related People ({{joins.length}})
+  </h4>
+  <ul class="linked-people">
+    {{#joins}}
+    <li class="{{#if _removed}}removed{{/if}}">
+      <select class="role pull-right">
+        <option value="accountable" {{#if_equals role "accountable"}}selected="true"{{/if_equals}}>
+          Accountable
+        </option>
+        <option value="responsible" {{#if_equals role "responsible"}}selected="true"{{/if_equals}}>
+          Responsible
+        </option>
+      </select>
+      <a class="jump-to-control" href="#">
+        <span>
+          {{firstnonempty person.name person.email}}
+          &nbsp;
+        </span>
+      </a>
+    </li>
+    {{/joins}}
+  </ul>
+</div>
