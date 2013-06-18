@@ -3,17 +3,16 @@
 # Created By: david@reciprocitylabs.com
 # Maintained By: david@reciprocitylabs.com
 
-from flask import request
-from .common import Resource
+from flask import request, current_app
 
-class LogEvents(Resource):
-  def modified_attr_name(self):
-    return 'created_at'
+def log_event():
+  '''Log javascript client errors to syslog via application logger.'''
+  method = request.method.lower()
+  if method == 'post':
+    severity = request.json['log_event']['severity']
+    description = request.json['log_event']['description']
+    current_app.logger.error('Javascript Client: {0} {1}'.format(
+      severity, description))
+    return current_app.make_response(('', 200, []))
+  raise NotImplementedError()
 
-  def dispatch_request(self, *args, **kwargs):
-    method = request.method.lower()
-
-    if method in ['head','get','post']:
-      return super(LogEvents, self).dispatch_request(*args, **kwargs)
-
-    raise NotImplementedError()

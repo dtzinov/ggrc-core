@@ -1,7 +1,7 @@
 # Copyright (C) 2013 Google Inc., authors, and contributors <see AUTHORS file>
 # Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
-# Created By:
-# Maintained By:
+# Created By: david@reciprocitylabs.com
+# Maintained By: dan@reciprocitylabs.com
 
 from ggrc import settings, db
 from sqlalchemy.ext.declarative import declared_attr
@@ -113,7 +113,12 @@ class Timeboxed(object):
   # REST properties
   _publish_attrs = ['start_date', 'end_date']
 
-class Base(Identifiable, ChangeTracked):
+class ContextRBAC(object):
+  context_id = db.Column(db.Integer)
+
+  _publish_attrs = ['context_id']
+
+class Base(Identifiable, ChangeTracked, ContextRBAC):
   """Several of the models use the same mixins. This class covers that common
   case.
   """
