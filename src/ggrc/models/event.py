@@ -1,8 +1,8 @@
 
 # Copyright (C) 2013 Google Inc., authors, and contributors <see AUTHORS file>
 # Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
-# Created By:
-# Maintained By:
+# Created By: vraj@reciprocitylabs.com
+# Maintained By: vraj@reciprocitylabs.com
 
 from ggrc import db
 from .mixins import Identifiable, created_at_args
