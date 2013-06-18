@@ -10,7 +10,13 @@
 (function(can) {
 can.Model("can.Model.Cacheable", {
 
-  init : function() {
+  findOne : "GET {href}"
+  , setup : function(construct, name, statics, prototypes) {
+    if(!statics.findAll && this.findAll === can.Model.Cacheable.findAll)
+      this.findAll = "GET /api/" + this.root_collection;
+    return this._super.apply(this, arguments);
+  }
+  , init : function() {
     this.bind("created", function(ev, new_obj) {
       var cache = can.getObject("cache", new_obj.constructor, true);
       if(new_obj.id) {
@@ -42,7 +48,10 @@ can.Model("can.Model.Cacheable", {
       return ret;
     };
 
-
+    var _refresh = this.makeFindOne({ type : "get", url : "{href}" });
+    this.refresh = function(params) {
+      return _refresh.call(this, {href : params.selfLink || params.href});
+    };
   }
 
   , findInCacheById : function(id) {
@@ -121,19 +130,7 @@ can.Model("can.Model.Cacheable", {
           delete params[obj_name];
         }
     }
-    m = this.findInCacheById(params.id);
-    if(m && m !== params) {
-      can.each(params, function(val, key) {
-        if(m[key] && m[key].attr) {
-          m[key].attr(val);
-        } else {
-          m.attr(key, val);
-        }
-      });
-    } else if(!m) {
-      m = this._super(params);
-    }
-    return m;
+    return this._super(params);
   }
   , tree_view_options : {}
 }, {
@@ -170,12 +167,13 @@ can.Model("can.Model.Cacheable", {
     this._triggerChange(attrName, "set", this[attrName], this[attrName].slice(0, this[attrName].length - 1));
   }
   , refresh : function() {
-    return $.ajax({
-      url : this.selfLink || this.href
-      , type : "get"
-      , dataType : "json"
-    })
-    .then(can.proxy(this.constructor, "model"));
+    return this.constructor.findOne({href : this.selfLink || this.href});
+    // return $.ajax({
+    //   url : this.selfLink || this.href
+    //   , type : "get"
+    //   , dataType : "json"
+    // })
+    // .then(can.proxy(this.constructor, "model"));
   }
   , serialize : function() {
     var that = this, serial = {};

@@ -9,7 +9,7 @@
 
 can.Observe("can.Observe.TreeOptions", {
   defaults : {
-    instance : null
+    instance : undefined
     , children_drawn : false
   }
 }, {});
@@ -128,7 +128,7 @@ can.Control("CMS.Controllers.TreeView", {
   , add_child_lists_to_child : function(item) {
     var that = this;
     if(!item.child_options)
-      item.attr("child_options", new can.Observe.TreeOptions.List());
+      item.attr("child_options", new can.Observe.List());
     can.each(this.options.child_options.length != null ? this.options.child_options : [this.options.child_options], function(data) {
       var options = new can.Observe.TreeOptions();
       data.each(function(v, k) {

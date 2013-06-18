@@ -180,8 +180,6 @@ CMS.Models.Section("CMS.Models.SectionSlug", {
 can.Model.Cacheable("CMS.Models.ControlSection", {
   root_collection : "control_sections"
   , root_object : "control_section"
-  , findAll : "GET /api/control_sections"
-  , findOne : "GET /api/control_sections/{id}"
   , create : "POST /api/control_sections"
   , destroy : "DELETE /api/control_sections/{id}"
   , init : function() {

@@ -12,8 +12,6 @@ can.Model.Cacheable("CMS.Models.Control", {
   // static properties
     root_object : "control"
   , root_collection : "controls"
-  , findAll : "GET /api/controls"
-  , findOne : "GET /api/controls/{id}"
   , create : "POST /api/controls"
   , update : function(id, params) {
     return $.ajax({
@@ -26,6 +24,7 @@ can.Model.Cacheable("CMS.Models.Control", {
     object_documents : "CMS.Models.ObjectDocument.models"
     , documents : "CMS.Models.Document.models"
     , implementing_controls : "CMS.Models.Control.models"
+    , control_sections : "CMS.Models.ControlSection.models"
     //, implemented_controls : "CMS.Models.Control.models"
     //, directive : "CMS.Models.Directive.model"
     //, sections : "CMS.Models.SectionSlug.models"
