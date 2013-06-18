@@ -7,11 +7,14 @@
 from ggrc import db
 from .mixins import Identifiable, created_at_args
 
-class Revision(Identifiable, db.Model):
-  __tablename__ = 'revisions'
+class Event(Identifiable, db.Model):
+  __tablename__ = 'events'
 
+  person_id = db.Column(db.Integer, db.ForeignKey('people.id'), nullable = False)
+  created_at = db.Column(db.DateTime, nullable = False, **created_at_args())
+  http_method = db.Column(db.String, nullable = False)
   resource_id = db.Column(db.Integer, nullable = False)
   resource_type = db.Column(db.String, nullable = False)
-  event_id = db.Column(db.Integer, db.ForeignKey('events.id'), nullable = False)
-  action = db.Column(db.Enum(u'created', u'modified', u'deleted'), nullable = False)
-  content = db.Column(db.String, nullable = False)
+
+  events = db.relationship('Revision', backref='event', lazy='subquery') # We always need the revisions
+  person = db.relationship('Person')

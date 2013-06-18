@@ -1,8 +1,8 @@
 
 # Copyright (C) 2013 Google Inc., authors, and contributors <see AUTHORS file>
 # Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
-# Created By:
-# Maintained By:
+# Created By: david@reciprocitylabs.com
+# Maintained By: vraj@reciprocitylabs.com
 
 """All gGRC model classes grouped together for convenience."""
 
@@ -53,9 +53,10 @@ from .system_system import SystemSystem
 from .transaction import Transaction
 
 # TODO: Include?
-from .version import Version
 from .log_event import LogEvent
 
+from .revision import Revision
+from .event import Event
 all_models = [
   Categorization,
   Category,
@@ -95,8 +96,9 @@ all_models = [
   SystemControl,
   SystemSystem,
   Transaction,
-  Version,
   LogEvent,
+  Revision,
+  Event,
   ]
 
 __all__ = [model.__name__ for model in all_models]
