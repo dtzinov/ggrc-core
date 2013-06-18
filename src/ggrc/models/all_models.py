@@ -53,9 +53,10 @@ from .system_system import SystemSystem
 from .transaction import Transaction
 
 # TODO: Include?
-from .version import Version
 from .log_event import LogEvent
 
+from .revision import Revision
+from .event import Event
 all_models = [
   Categorization,
   Category,
@@ -95,8 +96,9 @@ all_models = [
   SystemControl,
   SystemSystem,
   Transaction,
-  Version,
   LogEvent,
+  Revision,
+  Event,
   ]
 
 __all__ = [model.__name__ for model in all_models]
