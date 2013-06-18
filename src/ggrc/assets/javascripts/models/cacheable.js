@@ -30,23 +30,32 @@ can.Model("can.Model.Cacheable", {
     });
     //can.getObject("cache", this, true);
 
-    var _update = this.update;
-    this.update = function(id, params) {
-      var ret = _update.call(this, id, this.process_args(params)).fail(function(status) {
-        if(status === 409) {
-          //handle conflict.
-        }
-      });
-      delete ret.hasFailCallback;
-      return ret;
-    };
+    if (!this.update.wrapped) {
+      this._update = this.update;
+      this.update = function(id, params) {
+        var ret = this._update
+          .call(this, id, this.process_args(params))
+          .fail(function(status) {
+            if(status === 409) {
+              //handle conflict.
+            }
+          });
+        delete ret.hasFailCallback;
+        return ret;
+      };
+      this.update.wrapped = true;
+    }
 
-    var _create = this.create;
-    this.create = function(params) {
-      var ret = _create.call(this, this.process_args(params));
-      delete ret.hasFailCallback;
-      return ret;
-    };
+    if (!this.create.wrapped) {
+      this._create = this.create;
+      this.create = function(params) {
+        var ret = this._create
+          .call(this, this.process_args(params));
+        delete ret.hasFailCallback;
+        return ret;
+      };
+      this.create.wrapped = true;
+    }
 
     var _refresh = this.makeFindOne({ type : "get", url : "{href}" });
     this.refresh = function(params) {

@@ -60,8 +60,8 @@
                           %li.divider
                           %li.title Create New ...
                           =dropup_create_new("Program", "programs", "new_flow_program_path")
-                          =dropup_create_new("Regulation", "directives", "new_flow_directive_path(:meta_kind => :regulation)")
-                          =dropup_create_new("Contract", "directives", "new_flow_directive_path(:meta_kind => :contract)")
+                          =dropup_create_new("Regulation", "regulations", "new_flow_directive_path(:meta_kind => :regulation)")
+                          =dropup_create_new("Contract", "contracts", "new_flow_directive_path(:meta_kind => :contract)")
                           =dropup_create_new("Policy", "policies", "new_flow_directive_path(:meta_kind => :policy)")
                           -# FIXME: Limit view to risk managers
                           -#if current_user.can_manage_risk
