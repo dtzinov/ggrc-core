@@ -94,12 +94,15 @@ can.Model("can.Model.Cacheable", {
   }
   , models : function(params) {
     if(params[this.root_collection + "_collection"]) {
-      params = params[this.root_collection + "_collection"]
+      params = params[this.root_collection + "_collection"];
     }
     if(params[this.root_collection]) {
       params = params[this.root_collection];
     }
-    return this._super(params);
+    var ms = this._super(params);
+    if(params instanceof can.Observe)
+      params.replace(ms);
+    return ms;
   }
   , model : function(params) {
     var m;
@@ -107,8 +110,8 @@ can.Model("can.Model.Cacheable", {
     if(typeof obj_name !== "undefined" && params[obj_name]) {
         for(var i in params[obj_name]) {
           if(params[obj_name].hasOwnProperty(i)) {
-            params.attr 
-            ? params.attr(i, params[obj_name][i]) 
+            params.attr
+            ? params.attr(i, params[obj_name][i])
             : (params[i] = params[obj_name][i]);
           }
         }
@@ -118,9 +121,16 @@ can.Model("can.Model.Cacheable", {
           delete params[obj_name];
         }
     }
-    if(m = this.findInCacheById(params.id)) {
-      m.attr(params);
-    } else {
+    m = this.findInCacheById(params.id);
+    if(m && m !== params) {
+      can.each(params, function(val, key) {
+        if(m[key] && m[key].attr) {
+          m[key].attr(val);
+        } else {
+          m.attr(key, val);
+        }
+      });
+    } else if(!m) {
       m = this._super(params);
     }
     return m;
@@ -161,13 +171,9 @@ can.Model("can.Model.Cacheable", {
   }
   , refresh : function() {
     return $.ajax({
-      url : this.selfLink
+      url : this.selfLink || this.href
       , type : "get"
       , dataType : "json"
-    })
-    .then(function(data, status, xhr) {
-      data.etag = xhr.getResponseHeader("ETag");
-      data['last-modified'] = xhr.getResponseHeader("Last-Modified");
     })
     .then(can.proxy(this.constructor, "model"));
   }

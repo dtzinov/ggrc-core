@@ -30,115 +30,32 @@ can.Model.Cacheable("CMS.Models.Section", {
   , attributes : {
     children : "CMS.Models.Section.model"
   }
-  , map_rcontrol : function(params, section) {
-    return can.ajax({
-      url : "/mapping/map_rcontrol"
-      , data : params
-      , type : "post"
-      , dataType : "json"
-      , success : function() {
-        if(section) {
-          var flatctls = [];
-          var linkedctl =
-            (params.rcontrol ? 
-              CMS.Models.RegControl.findInCacheById(params.rcontrol) 
-              : CMS.Models.Control.findInCacheById(params.ccontrol))
-            ;
-          var addctls = function(ctl) {
-            flatctls.push(ctl);
-            can.each(ctl.implementing_controls, addctls);
-          }
-          addctls(linkedctl);
-          var ctlids = can.map(flatctls, function(ctl) { return ctl.id });
-
-          if(params.u) {
-            //unmap
-            var ctlindex;
-            for(var i = section.linked_controls.length - 1; i >= 0; i--) {
-              //if(!section.linked_controls[i] instanceof CMS.Models.Control)
-              if((ctlindex = can.inArray(section.linked_controls[i].id, ctlids)) >= 0)
-              {
-                section.linked_controls[i].unbind_section(section);
-                section.linked_controls.splice(i, 1);
-                ctlids.splice(ctlindex, 1);
-              }
-            }
-            var section_idx = can.inArray(section.id, linkedctl.mapped_section_ids);
-            if(~section_idx) linkedctl.mapped_section_ids.splice(section_idx, 1);
-          } else {
-            //map
-            // can.each(section.linked_controls, function() {
-            //   var i = can.inArray(this.id, ctlids);
-            //   if(i >= 0) {
-            //     flatctls.splice(i, 1);
-            //     ctlids.splice(i, 1);
-            //   }
-            // });
-            section.linked_controls.push.apply(section.linked_controls, flatctls);
-            params.rcontrol && linkedctl.bind_section(section);
-            ~can.inArray(section.id, linkedctl.mapped_section_ids) || linkedctl.mapped_section_ids.push(section.id);
-          }
-          section.updated();
-        }
-      }
-    });
-  }
-
   , map_control : function(params, section) {
-    return can.ajax({
-      url : "/mapping/map_rcontrol"
-      , data : params
-      , type : "post"
-      , dataType : "json"
-      , success : function() {
-        if(section) {
-          var flatctls = [];
-          var linkedctl = CMS.Models.Control.findInCacheById(params.ccontrol);
-          var addctls = function(ctl) {
-            flatctls.push(ctl);
-            can.each(ctl.implementing_controls, addctls);
-          }
-          addctls(linkedctl);
-          var ctlids = can.map(flatctls, function(ctl) { return ctl.id });
+    var control_section_ids, joins;
 
-          if(params.u) {
-            //unmap
-            var ctlindex;
-            for(var i = section.linked_controls.length - 1; i >= 0; i--) {
-              //if(!section.linked_controls[i] instanceof CMS.Models.Control)
-              if((ctlindex = can.inArray(section.linked_controls[i].id, ctlids)) >= 0)
-              {
-                section.linked_controls[i].unbind_section(section);
-                section.linked_controls.splice(i, 1);
-                ctlids.splice(ctlindex, 1);
-              }
-            var section_idx = can.inArray(section.id, linkedctl.mapped_section_ids);
-            if(~section_idx) linkedctl.mapped_section_ids.splice(section_idx, 1);
-            }
-          } else {
-            section.linked_controls.push.apply(section.linked_controls, flatctls);
-            linkedctl.bind_section(section);
-            ~can.inArray(section.id, linkedctl.mapped_section_ids) || linkedctl.mapped_section_ids.push(section.id);
-          }
-          section.updated();
-        }
-      }
-    });
-  }
+    if(params.u) {
+      control_section_ids = can.map(params.control.control_sections, function(v) {
+        return v.id;
+      });
 
-  , model : function(attrs) {
-    var id;
-    if((id = attrs.id || (attrs[this.root_object] && attrs[this.root_object].id)) && this.findInCacheById(id)) {
-      var cached = this.findInCacheById(id).attr(attrs.serialize ? attrs.serialize() : attrs);
-      if($(this.linked_controls).filter(function() { return this instanceof CMS.Models.RegControl; }).length)
-        cached.update_linked_controls();
-      else
-        cached.update_linked_controls_ccontrol_only();
-      return cached;
+      joins = can.map(section.control_sections, function(sc) {
+        return ~can.inArray(sc.id, control_section_ids) ? sc : undefined;
+      });
+
+      return $.when.apply($, can.map(joins, function(join) {
+        return join.refresh().then(function(j) {
+          return j.destroy();
+        });
+      }));
     } else {
-      return this._super.apply(this, arguments);
+      return new CMS.Models.ControlSection({
+        section : section
+        , control : params.control
+      }).save();
     }
+
   }
+
 }, {
 
   init : function() {
@@ -161,43 +78,10 @@ can.Model.Cacheable("CMS.Models.Section", {
     }));
   }
 
-  , map_rcontrol : function(params) {
-    return this.constructor.map_rcontrol(can.extend({}, params, {section : this.id}), this);
-  }
-
   , map_control : function(params) {
-    return this.constructor.map_control(can.extend({}, params, {section : this.id}), this);
-  }
-
-  , update_linked_controls_ccontrol_only : function() {
-    this.controls && this.controls.replace(CMS.Models.Control.models(this.controls));
-  }
-
-  , update_linked_controls : function() {
-    var lcs = new can.Model.List();
-    var oldlinked = this.linked_controls.slice(0);
-    while(oldlinked.length > 0) {
-      //nasty hack -- assuming that RegControls are always listed before their respective implementing controls
-      var oldrctl = oldlinked.shift();
-      var rctl = null;
-      if(oldrctl instanceof CMS.Models.RegControl || !(oldrctl instanceof CMS.Models.Control) ) {
-        rctl = CMS.Models.RegControl.findInCacheById(oldrctl.id || oldrctl.control.id);
-      }
-      if(rctl) {
-        lcs.push(rctl);
-        rctl.bind_section(this);
-        can.each(rctl.implementing_controls, function(ctl) {
-          var firstfound = false;
-          lcs.push(CMS.Models.Control.findInCacheById(ctl.id || ctl.control.id));
-          oldlinked = can.filter(can.makeArray(oldlinked), function(lctl) {
-            if(firstfound) return true;
-            firstfound = (lctl.id || lctl.control.id) === (ctl.id || ctl.control.id)
-            return !firstfound
-          })
-        });
-      }
-    }    
-    this.attr("linked_controls").replace(lcs);
+    return this.constructor.map_control(
+      can.extend({}, params, { section : this })
+      , this);
   }
 
 });
@@ -206,6 +90,7 @@ CMS.Models.Section("CMS.Models.SectionSlug", {
   attributes : {
     children : "CMS.Models.SectionSlug.models"
     , controls : "CMS.Models.Control.models"
+    , control_sections : "CMS.Models.ControlSection.models"
   }
   , update : function(id, section) {
     var param = this.process_args(
@@ -289,5 +174,28 @@ CMS.Models.Section("CMS.Models.SectionSlug", {
   , init : function() {
     this._super.apply(this, arguments);
     this.tree_view_options.child_options[1].model = this;
+  }
+}, {});
+
+can.Model.Cacheable("CMS.Models.ControlSection", {
+  root_collection : "control_sections"
+  , root_object : "control_section"
+  , findAll : "GET /api/control_sections"
+  , findOne : "GET /api/control_sections/{id}"
+  , create : "POST /api/control_sections"
+  , destroy : "DELETE /api/control_sections/{id}"
+  , init : function() {
+    this._super.apply(this, arguments);
+    this.bind("created destroyed", function(ev, inst) {
+      var section =
+        CMS.Models.SectionSlug.findInCacheById(inst.section.id)
+        || CMS.Models.Section.findInCacheById(inst.section.id);
+      var control = 
+        CMS.Models.RegControl.findInCacheById(inst.control.id)
+        || CMS.Models.Control.findInCacheById(inst.control.id);
+
+      section && section.refresh();
+      control && control.refresh();
+    });
   }
 }, {});

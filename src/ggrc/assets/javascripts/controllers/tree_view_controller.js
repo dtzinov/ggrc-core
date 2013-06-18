@@ -70,15 +70,20 @@ can.Control("CMS.Controllers.TreeView", {
   , draw_list : function(list) {
     var that = this;
     if(list) {
-      this.options.attr("list", list.length == null ? [list] : list);
+      list = list.length == null ? [list] : list;
+    } else {
+      list = this.options.list;
     }
-    this.options.list.replace(can.map(this.options.list, function(v) {
+    can.Observe.startBatch();
+    this.options.attr("list", []);
+    can.each(list, function(v) {
       if(v instanceof can.Observe.TreeOptions) {
-        return v;
+        that.options.list.push(v);
       } else {
-        return new can.Observe.TreeOptions().attr("instance", v).attr("start_expanded", that.options.start_expanded);
+        that.options.list.push(new can.Observe.TreeOptions().attr("instance", v).attr("start_expanded", that.options.start_expanded));
       }
-    }));
+    });
+    can.Observe.stopBatch();
     can.view(this.options.list_view, this.options, function(frag) {
       GGRC.queue_event(function() {
         that.element && that.element.html(frag);

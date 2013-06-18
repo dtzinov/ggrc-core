@@ -14,20 +14,20 @@
 function mapunmap(unmap) {
   return function(section, rcontrol, ccontrol) {
       var params = {
-        ccontrol : (ccontrol ? ccontrol.id : "")
+        ccontrol : ccontrol
       };
       if(unmap)
         params.u = "1";
-      if(rcontrol) params.rcontrol = rcontrol.id;
-      if(rcontrol === null) params.rcontrol = ccontrol.id;
-      if(section) params.section = section.id;
+      if(rcontrol) params.control = rcontrol;
+      if(rcontrol === null) params.control = ccontrol;
+      if(section) params.section = section;
 
       var dfd = section ?
-        section["map_" + (rcontrol === null ? "control" : "rcontrol")](params)
+        section.map_control(params)
         : rcontrol.map_ccontrol(params);
       dfd.done(can.proxy(this.updateButtons, this));
       return dfd;
-  }
+  };
 }
 
 
@@ -323,8 +323,6 @@ CMS.Controllers.Mapping("CMS.Controllers.ControlMappingPopup", {
 
       that.search_filter(that.options.company_list_controller.find_all_deferred).done(function(d) {
         that.list = d;
-        that.options.section.update_linked_controls_ccontrol_only();
-        //that.options.observer.attr("controls", d);
         that.update();
         that.element.trigger("shown").trigger("kill-all-popoevers");
       });
