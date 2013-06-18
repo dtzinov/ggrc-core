@@ -1,0 +1,59 @@
+-set all_object_documents = instance.object_documents
+
+%li.tab-title-holder
+  .item-main
+    .item-title
+      .row-fluid
+        .span12
+          .js-list-container-title
+            %h3.tab-title
+              References
+              %span.grc-badge{ 'class': '={ "no-object" if not all_object_documents|length else "" }' }
+                (#{ all_object_documents|length })
+              %a.pull-right{ 'href': 'javascript://', 'data-toggle': 'modal-selector', 'data-modal-selector-options': 'object_documents', 'data-list-target': '#referenceList', 'data-modal-class': 'modal-wide', 'rel': 'tooltip', 'data-placement': 'left', 'title': 'Link References' }
+                %i.grcicon-link
+
+
+  %script#reference_list_item{ 'type': 'text/html', 'data-member': 'object_document'}
+    %li.controlSlot{ 'data-id': '<%= document.id %>' }
+      .item-main
+        .item-title
+          .row-fluid
+            .span12
+              .oneline
+                %span.addition-info
+                  %a.reference{ 'href': '<%= document.link_url %>', 'target': '_blank' }
+                    <%= document.title || document.link_url || '&nbsp;' %>
+                %span.option
+                  <%= document.document_type || '&nbsp;' %>
+
+  %ul#referenceList.tree-structure{ 'data-template-id': 'reference_list_item' }
+    -for object_item in all_object_documents
+      -set item = object_item.document
+      %li{ 'data-id': '={ item.id }' }
+        -if item.link_url
+          .item-main
+            .item-title
+              .row-fluid
+                .span12
+                  .oneline
+                    %span.addition-info
+                      %a.reference{
+                        'href': '={ item.link_url }',
+                        'target': '_blank',
+                        'data-popover-trigger': 'sticky-hover',
+                        'data-original-title': "<div class='row-fluid'><div class='span12'><h3><i class='grcicon-link'></i> Viewing ={ item.title|default(item.link_url) } </span> </h3></div></div>",
+                        'data-content': 'render(:partial: "documents/tooltip", :locals: { :document: item })' }
+                          =item.title.presence|default(item.link_url)|default('')
+                    %span.option
+                      =item.document_type|default('')
+        -else
+          .item-main
+            .item-title
+              .row-fluid
+                .span12
+                  .oneline
+                    %span.addition-info
+                      =item.title|default(item.link_url)|default(';')
+                    %span.option
+                      =item.document_type|default('')

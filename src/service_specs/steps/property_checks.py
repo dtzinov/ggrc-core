@@ -1,8 +1,7 @@
-
 # Copyright (C) 2013 Google Inc., authors, and contributors <see AUTHORS file>
 # Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
-# Created By:
-# Maintained By:
+# Created By: david@reciprocitylabs.com
+# Maintained By: david@reciprocitylabs.com
 
 from behave import given, then
 
@@ -35,6 +34,33 @@ def add_link_to_list(context, target_resource, property_name, source_resource):
   else:
     links = getattr(source, property_name, [])
     links.append({'id': target.get(u'id')})
+    setattr(source, property_name, links)
+
+@given(\
+  '"{source_resource}" polymorphic link property "{property_name}" is "{target_resource}"')
+def set_polymorphic_link_property(
+    context, source_resource, property_name, target_resource):
+  source = getattr(context, source_resource)
+  target = getattr(context, target_resource)
+  set_property(
+      source,
+      property_name,
+      {'id': target.get(u'id'), 'href': target.get(u'selfLink'), 'type': target.resource_type},
+      )
+
+@given(\
+    '"{target_resource}" is added to polymorphic links property "{property_name}" of '\
+    '"{source_resource}"')
+def add_polymorphic_link_to_list(context, target_resource, property_name, source_resource):
+  source = getattr(context, source_resource)
+  target = getattr(context, target_resource)
+  if isinstance(source, Example):
+    links = source.value.get(property_name) or []
+    links.append({'id': target.get(u'id'), 'type': target.resource_type})
+    source.value[property_name] = links
+  else:
+    links = getattr(source, property_name, [])
+    links.append({'id': target.get(u'id'), 'type': target.resource_type})
     setattr(source, property_name, links)
 
 def get_property_from(context, property_path, resource):
@@ -101,3 +127,7 @@ def check_property_value(context, property_name, resource_name, expected):
   resource = getattr(context, resource_name)
   actual = resource.get(property_name)
   assert expected == actual, 'Expected {}, found {}'.format(expected, actual)
+
+@then('evaluate "{expression}"')
+def evaluate_expression(context, expression):
+  assert eval(expression) == True

@@ -37,7 +37,7 @@
           %i.grcicon-audit
           %span Start Audit
     %li
-      %a{ 'href': "edit_flow_program_path(instance)", 'data-toggle': 'modal-ajax-form', 'data-modal-reset': 'reset', 'data-form-target': 'refresh', 'data-modal-class': 'modal-wide', 'title': 'Edit Program' }
+      %a{ 'href': 'javascript://', 'data-toggle': 'modal-ajax-form', 'data-modal-reset': 'reset', 'data-form-target': 'refresh', 'data-modal-class': 'modal-wide', 'data-object-singular': 'Program', 'data-object-plural': 'programs', 'data-object-id': 'page' }
         %i.grcicon-edit
         %span Edit Program
 
@@ -53,10 +53,11 @@
           -include 'programs/_main.haml'
         -if not instance.company_controls
           -with widget_class = 'widget-tabs widget-tabs-horizontal related business'
-            -#include 'shared/_related.haml'
+            -with widget_title = "Impact/Scope"
+              -include 'shared/_related.haml'
         -if instance.company_controls
           -with widget_class = 'widget-tabs widget-tabs-horizontal programs'
-            -#include 'programs/_linked_programs.haml'
+            -include 'programs/_linked_programs.haml'
         -else
           -include 'shared/_add_widget_section.haml'
 
@@ -65,7 +66,7 @@
           -include 'programs/_info.haml'
         -if not instance.company_controls
           -with widget_class = 'programs'
-            -#include 'programs/_audit_cycles.haml'
+            -include 'programs/_audit_cycles.haml'
         -with widget_class = 'related business'
           -include 'programs/_more_info.haml'
         -if not instance.company_controls

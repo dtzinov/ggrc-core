@@ -1,7 +1,8 @@
 {{#list}}
-<li class="category" data-object-id="{{id}}" data-object-type="category" data-object-meta-type="category" {{^descendant_controls}}style="display:none"{{/descendant_controls}}>
-  <div class="item-main">
-    {{#show_expander draw_children children "||" draw_children linked_controls}}
+<li class="category" data-object-id="{{instance.id}}" data-object-type="category" data-object-meta-type="category" {{^instance.descendant_controls}}style="display:none"{{/instance.descendant_controls}}>
+  {{#instance}}
+  <div class="item-main" {{data 'model'}}>
+    {{#show_expander draw_children children "||" draw_children controls}}
       <div class="openclose {{#if start_expanded}}active{{/if}}"></div>
     {{/show_expander}}    
     <div class="item-title">
@@ -10,12 +11,15 @@
       </div>
     </div>
   </div>
-  {{#draw_children}}
+  {{/instance}}
+  {{#if draw_children}}
+  {{^if_null 'z'}} {{! this line is just chopping the context stack down to one element}}
   <div class="item-content" {{#start_expanded}}style="display: block;"{{/start_expanded}}>
     {{#child_options}}
     <ul class="tree-structure" data-object-type="{{ model.shortName }}" {{data 'options'}} {{ (el) -> el.cms_controllers_tree_view(el.data("options")) }}></ul>
     {{/child_options}}
   </div>
-  {{/draw_children}}
+  {{/if_null}}
+  {{/if}}
 </li>
 {{/list}}

@@ -23,10 +23,11 @@ $(function() {
      $qs.find(".quick-search-results, section.content")
       .cms_controllers_quick_search({
         observer : obs
+        , spin : $qs.is(":not(section)")
       }).control(CMS.Controllers.QuickSearch);
 
   }
-  $(".quick-search, section.widget-tabs").each(bindQuickSearch);//get anything that exists on the page already.
+  $("section.widget-tabs").each(bindQuickSearch);//get anything that exists on the page already.
 
   //Then listen for new ones
   $(document.body).on("click", ".quick-search:not(:has(.cms_controllers_quick_search)), section.widget-tabs:not(:has(.cms_controllers_quick_search))", bindQuickSearch);

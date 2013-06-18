@@ -344,7 +344,7 @@ CMS.Controllers.Mapping("CMS.Controllers.ControlMappingPopup", {
       el = arguments[1];
     }
 
-    if(~can.inArray($(el).data("model"), this.options.section.linked_controls)) {
+    if(~can.inArray($(el).data("model"), this.options.section.controls)) {
       $(el).find("input[type=checkbox]").prop("checked", true);
     } else {
       $(el).find("input[type=checkbox]").prop("checked", false);
@@ -358,7 +358,7 @@ CMS.Controllers.Mapping("CMS.Controllers.ControlMappingPopup", {
   , "input.map-control change" : function(el, ev) {
     var that = this
     , control = el.closest("[data-model]").data("model")
-    , is_mapped = !!~can.inArray(control, this.options.section.linked_controls);
+    , is_mapped = !!~can.inArray(control, this.options.section.controls);
 
     if(is_mapped ^ el.prop("checked")) {
       this[is_mapped ? "unmap" : "map"](this.options.section, null, control)
@@ -412,7 +412,7 @@ CMS.Controllers.Mapping("CMS.Controllers.ControlMappingPopup", {
     return this.options.company_list_controller
     .filter(search, check, dfd)
     .done(function(d) {
-      that.element.find(".search-results-count").html(d.length);
+      that.element.find(".search-results-count").html(d ? d.length : 0);
       that.update_map_all();
     });
   }
@@ -420,7 +420,7 @@ CMS.Controllers.Mapping("CMS.Controllers.ControlMappingPopup", {
   , redo_last_search : function(id_to_add) {
     var that = this;
     this.options.company_list_controller.redo_last_filter(id_to_add).done(function(d){
-      that.element.find(".search-results-count").html(d.length);
+      that.element.find(".search-results-count").html(d ? d.length : 0);
       that.update_map_all();
     });
   }

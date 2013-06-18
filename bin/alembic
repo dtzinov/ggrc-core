@@ -1,0 +1,17 @@
+#!/usr/bin/env python
+
+"""Mask ``alembic`` script to force ``import ggrc.bootstrap`` before
+importing ``sqlalchemy``.  This is currently required because the
+patched ``sqlalchemy`` in ``src/packages.zip`` must be used when
+ggrc.settings.APP_ENGINE is True, but ``alembic`` imports ``sqlalchemy``
+before importing ``migrations/env.py``.
+"""
+
+import ggrc.bootstrap
+__requires__ = 'alembic'
+import sys
+from pkg_resources import load_entry_point
+
+sys.exit(
+   load_entry_point('alembic', 'console_scripts', 'alembic')()
+)

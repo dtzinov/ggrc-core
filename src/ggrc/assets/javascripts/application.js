@@ -42,7 +42,7 @@ window.onerror = function(message, url, linenumber) {
     type : "post"
     , url : "/api/log_events"
     , dataType : "json"
-    , data : {logevent : {severity : "error", description : message + " (at " + url + ":" + linenumber + ")"}}
+    , data : {log_event : {severity : "error", description : message + " (at " + url + ":" + linenumber + ")"}}
   });
 };
 
@@ -81,6 +81,83 @@ window.onerror = function(message, url, linenumber) {
     return zindex + 10;
   };
 
+(function(GGRC) {
+  var eventqueue = [];
+
+jQuery.extend(GGRC, {
+  infer_object_type : function(data) {
+    var decision_tree = {
+      "program" : CMS.Models.Program
+      , "directive" : {
+        _key : "kind"
+        , "regulation" : CMS.Models.Regulation
+        , "policy" : CMS.Models.Policy
+        , "contract" : CMS.Models.Contract
+      }
+      , "org_group" : CMS.Models.OrgGroup
+      , "project" : CMS.Models.Project
+      , "facility" : CMS.Models.Facility
+      , "product" : CMS.Models.Product
+      , "data_asset" : CMS.Models.DataAsset
+      , "market" : CMS.Models.Market
+      , "system" : {
+        _key : "is_biz_process"
+        , "true" : CMS.Models.Process
+        , "false" : CMS.Models.StrictSystem
+      }
+      , "control" : CMS.Models.Control
+      , "risky_attribute" : CMS.Models.RiskyAttribute
+      , "risk" : CMS.Models.Risk
+      , "section" : CMS.Models.Section
+    };
+
+    function resolve_by_key(subtree, data) {
+      var kind = data[subtree._key];
+      var model;
+      can.each(subtree, function (v,k) {
+        if (k != "_key" && v.meta_kinds.indexOf(kind) >= 0) {
+          model = v;
+        }
+      });
+      return model;
+    }
+
+    function resolve(subtree, data) {
+      if(typeof subtree === "undefined")
+        return null;
+      return can.isPlainObject(subtree) ?
+        //resolve(subtree[data[subtree._key]], data) :
+        resolve_by_key(subtree, data) :
+        subtree;
+    }
+
+    return can.reduce(Object.keys(data), function(a, b) {
+      return a || resolve(decision_tree[b], data[b]);
+    }, null);
+  }
+  , make_model_instance : function(data) {
+    return GGRC.infer_object_type(data).model($.extend({}, data));
+  }
+
+  , queue_event : function(event) {
+    var timegap = 100 //ms
+    , currentTimeout = null;
+    function runNext() {
+      var fn = eventqueue.shift();
+      fn && fn();
+      if(eventqueue.length) {
+        currentTimeout = null;
+      } else {
+        currentTimeout = setTimeout(runNext, timegap);
+      }
+    }
+    eventqueue.push(event);
+    if(!currentTimeout) {
+      currentTimeout = setTimeout(runNext, timegap);
+    }
+  }
+});
+})(GGRC);
 
 // Set up all PUT requests to the server to respect ETags, to ensure that
 //  we are not overwriting more recent data than was viewed by the user.
@@ -95,6 +172,9 @@ jQuery.ajaxPrefilter(function( options, originalOptions, jqXHR ) {
     delete data.etag;
     delete data["last-modified"];
     options.data = JSON.stringify(data);
+  }
+  if( /^\/api\/\w+\/\d+/.test(options.url) && (options.type.toUpperCase() === "GET") ) {
+    options.cache = false;
   }
 });
 
@@ -629,7 +709,7 @@ jQuery(function($){
   });
 
 can.reduce ||
-  (can.reduce = function(a, f, i) { return [].reduce.apply(a, arguments.length < 3 ? [f] : [f, i]) });
+  (can.reduce = function(a, f, i) { if(a==null) return null; return [].reduce.apply(a, arguments.length < 3 ? [f] : [f, i]) });
 
 
   $(document.body).on("change", "[id$=_start_date]", function(ev) { 

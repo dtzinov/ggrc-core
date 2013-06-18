@@ -31,6 +31,9 @@ class ObjectDocument(Base, Timeboxed, db.Model):
 
   @documentable.setter
   def documentable(self, value):
+    self.documentable_id = value.id if value is not None else None
+    self.documentable_type = value.__class__.__name__ if value is not None \
+        else None
     return setattr(self, self.documentable_attr, value)
 
   _publish_attrs = [
@@ -61,8 +64,8 @@ class Documentable(object):
         )
 
   _publish_attrs = [
-      'documents',
-      PublishOnly('object_documents'),
+      PublishOnly('documents'),
+      'object_documents',
       ]
 
   @classmethod

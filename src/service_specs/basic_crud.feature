@@ -48,4 +48,5 @@ Feature: Basic RESTful CRUD Support
       | SystemSystem       |
       | SystemControl      |
       | Transaction        |
+      | LogEvent           |
 

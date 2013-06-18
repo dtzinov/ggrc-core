@@ -32,9 +32,9 @@ for module_name in settings_modules.split(" "):
   if len(module_name.strip()) == 0:
     continue
 
-  #logging.info("Loading settings file: %s" % module_name)
+  #logging.info("Loading settings file: {0}".format(module_name))
 
-  filename = "%s.py" % module_name
+  filename = "{0}.py".format(module_name)
   fullpath = os.path.join(SETTINGS_DIR, filename)
 
   try:
@@ -42,4 +42,4 @@ for module_name in settings_modules.split(" "):
   except Exception, e:
     raise
 
-#logging.info("SQLALCHEMY_DATABASE_URI: %s" % locals().get("SQLALCHEMY_DATABASE_URI", None))
+#logging.info("SQLALCHEMY_DATABASE_URI: {0}".format(locals().get("SQLALCHEMY_DATABASE_URI", None)))

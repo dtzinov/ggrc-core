@@ -35,8 +35,7 @@ have the prerequisite software installed. Here are the steps:
 
 .. sourcecode:: bash
 
-  git submodule init
-  git submodule update
+  git submodule update --init
   librarian-chef install
   vagrant up
   vagrant ssh

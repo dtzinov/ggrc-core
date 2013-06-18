@@ -5,29 +5,20 @@
 
 from ggrc.app import db, app
 from .tooltip import TooltipView
+from .relationships import RelatedObjectResults
+from . import filters
 
 """ggrc.views
 Handle non-RESTful views, e.g. routes which return HTML rather than JSON
 """
 
-# Additional template filters
-#
-
-@app.template_filter("underscore")
-def underscore_filter(s):
-  """Change spaces to underscores and make lowercase
-  """
-  return "_".join(s.lower().split(' '))
-
-@app.template_filter("nospace")
-def nospace_filter(s):
-  """Remove spaces
-  """
-  return "".join(s.split(' '))
-
 @app.context_processor
 def inject_config():
-    return dict(config=app.config)
+  from ggrc.models import get_model
+  return dict(
+      get_model=get_model,
+      config=app.config
+      )
 
 from flask import render_template
 
@@ -35,32 +26,31 @@ from flask import render_template
 #
 
 @app.route("/")
-def hello():
+def index():
   """The initial entry point of the app
   """
   return render_template("welcome/index.haml")
 
-@app.route("/login")
-def login():
-  """The login page
-  """
-  return render_template("user_sessions/login.html")
+from ggrc.login import login_required
 
 @app.route("/dashboard")
+@login_required
 def dashboard():
   """The dashboard page
   """
   return render_template("dashboard/index.haml")
 
 @app.route("/design")
+@login_required
 def styleguide():
-  '''The style guide page
-  '''
+  """The style guide page
+  """
   return render_template("styleguide.haml")
 
 def _all_views(view_list):
   import ggrc.services
-  collections = dict(ggrc.services.all_collections())
+  collections = dict(
+      [(e.name, e.model_class) for e in ggrc.services.all_collections()])
 
   def with_model(object_plural):
     return (object_plural, collections.get(object_plural))
@@ -107,8 +97,9 @@ def init_all_object_views(app):
   from .common import BaseObjectView
 
   for k,v in all_object_views():
-    BaseObjectView.add_to(app, '/{0}'.format(k), v)
+    BaseObjectView.add_to(
+      app, '/{0}'.format(k), v, decorators=(login_required,))
 
   for k,v in all_tooltip_views():
-    TooltipView.add_to(app, '/{0}'.format(k), v)
-
+    TooltipView.add_to(
+      app, '/{0}'.format(k), v, decorators=(login_required,))

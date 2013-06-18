@@ -20,6 +20,7 @@
 CMS.Controllers.Filterable("CMS.Controllers.QuickSearch", {
   defaults : {
     list_view : "/static/mustache/dashboard/object_list.mustache"
+    , spin : true
   }
 }, {
 
@@ -38,19 +39,26 @@ CMS.Controllers.Filterable("CMS.Controllers.QuickSearch", {
       , href = $tab.attr('href') || $tab.data('tab-href')
       , loaded = $tab.data('tab-loaded')
       , pane = ($tab.data('tab-target') || $tab.attr('href'))
-      , template = $tab.data("template") || "<div></div>"
+      , $pane = $(pane)
+      , template = $tab.data("template")
       , model_name = $tab.attr("data-model") || $tab.attr("data-object-singular")
       , model = can.getObject("CMS.Models." + model_name) || can.getObject("GGRC.Models." + model_name)
-      , view_data = new can.Observe({
-        list: new model.List()
-        //, list_view : template
-        , observer: that.options.observer
-        , tooltip_view : "/static/mustache/dashboard/object_tooltip.mustache"
-      });
+      , view_data = null
+      , spinner;
 
-      $tab.data("view_data", view_data);
+      if(!template && typeof console !== "undefined") {
+        console.warn("No template defined for quick_search in ", $pane.attr("id"));
+      }
 
-      if(model) {
+      if(model && template) {
+        view_data = new can.Observe({
+          list: new model.List()
+          //, list_view : template
+          , observer: that.options.observer
+          , tooltip_view : "/static/mustache/dashboard/object_tooltip.mustache"
+        });
+
+        $tab.data("view_data", view_data);
         $tab.data("model", model);
         model.findAll().done(function(data) {
           if($tab.is("li.active a")) {
@@ -58,28 +66,34 @@ CMS.Controllers.Filterable("CMS.Controllers.QuickSearch", {
             view_data.attr('list', data);
             can.Observe.stopBatch();
           } else {
-            setTimeout(function() {
+            GGRC.queue_event(function() {
               view_data.attr("list", data);
-            }, 100);
+            });
           }
           $tab.find(".item-count").html(data ? data.length : 0);
         });
 
         model.bind("created", function(ev, instance) {
-          view_data.list.unshift(instance.serialize());
+          if(instance.constructor === model) {
+            view_data.list.unshift(instance.serialize());
+          }
         });
       }
 
-      var spinner = new Spinner({ }).spin();
-      $(pane).html(spinner.el);
-      // Scroll up so spinner doesn't get pushed out of visibility
-      $(pane).scrollTop(0);
-      $(spinner.el).css({ width: '100px', height: '100px', left: '50px', top: '50px', zIndex : calculate_spinner_z_index });
+      if(that.options.spin) {
+        spinner = new Spinner({ }).spin();
+        $pane.html(spinner.el);
+        // Scroll up so spinner doesn't get pushed out of visibility
+        $pane.scrollTop(0);
+        $(spinner.el).css({ width: '100px', height: '100px', left: '50px', top: '50px', zIndex : calculate_spinner_z_index });
+      }
 
-      can.view(template /*GGRC.mustache_path + "/dashboard/quick_search_results.mustache"*/, view_data, function(frag, xhr) {
-        $tab.data('tab-loaded', true);
-        $(pane).html(frag).trigger("loaded", xhr, $tab.data("list"));
-      });
+      if (view_data) {
+        can.view(template /*GGRC.mustache_path + "/dashboard/quick_search_results.mustache"*/, view_data, function(frag, xhr) {
+          $tab.data('tab-loaded', true);
+          $pane.html(frag).trigger("loaded", xhr, $tab.data("list"));
+        });
+      }
     });
   }
 
@@ -123,7 +137,7 @@ CMS.Controllers.Filterable("CMS.Controllers.QuickSearch", {
     var singular = can.map(window.cms_singularize(plural).split("_"), can.capitalize).join(" ");
     el.closest(".widget").find(".object-type").text(singular)
       .closest("a").attr("data-object-plural", plural.split(" ").join("_").toLowerCase())
-      .attr("data-object-singular", singular);
+      .attr("data-object-singular", singular.replace(" ", ""));
   }
 
 });

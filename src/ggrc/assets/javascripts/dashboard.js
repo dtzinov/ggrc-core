@@ -286,9 +286,11 @@ jQuery(function($) {
       .tab('show');
     $($tab.find('> a').attr("href")).one("loaded", function() {
       if($tab.not(".quick-search-results .tabbable > ul > li").length) { //don't load the quickfind
-        setTimeout(function() {
-          $tab.siblings().find("> a").trigger("show"); //load all the others for counts after this one is showing
-        }, 100);
+        $tab.siblings().find("> a").each(function(i, a) {
+          GGRC.queue_event(function() {
+            $(a).trigger("show"); //load all the others for counts after this one is showing
+          });
+        });
       }
     })
   });
@@ -626,11 +628,17 @@ jQuery(function($) {
 //make buttons non-clickable when saving
 jQuery(function($) {
   can.extend(can.Control.prototype, {
-    bindXHRToButton : function(xhr, el) {
+    bindXHRToButton : function(xhr, el, newtext) {
       // binding of an ajax to a click is something we do manually
-      $(el).addClass("disabled pending-ajax").attr("disabled", true);
+      var $el = $(el)
+      , oldtext = $el.text();
+
+      if(newtext) {
+        $el.text(newtext);
+      }
+      $el.addClass("disabled pending-ajax").attr("disabled", true);
       xhr.always(function() {
-        $(el).removeAttr("disabled").removeClass("disabled pending-ajax");
+        $el.removeAttr("disabled").removeClass("disabled pending-ajax").text(oldtext);
       });
     }
   });

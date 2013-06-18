@@ -6,6 +6,7 @@
 from ggrc import settings, db
 from sqlalchemy.ext.declarative import declared_attr
 from sqlalchemy.orm import relationship
+from .inflector import ModelInflectorDescriptor
 
 """Mixins to add common attributes and relationships. Note, all model classes
 must also inherit from ``db.Model``. For example:
@@ -24,6 +25,8 @@ class Identifiable(object):
   # REST properties
   _publish_attrs = ['id']
   _update_attrs = []
+
+  _inflector = ModelInflectorDescriptor()
 
 def created_at_args():
   """Sqlite doesn't have a server, per se, so the server_* args are useless."""

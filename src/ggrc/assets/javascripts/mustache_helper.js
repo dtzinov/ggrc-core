@@ -166,9 +166,9 @@ $.ajaxPrefilter(function( options, originalOptions, jqXHR ) {
       }
       for(var i = 0; i < exprs.length; i ++) {
         var expr = exprs[i];
-        if(typeof expr === "object" && expr.attr) {
+        if(typeof expr === "object" && expr.attr && that.bind) {
           that.bind(expr.attr + "." + hash, $.proxy(classbinding, that, el));
-        } else if(can.isArray(expr) && expr.value) {
+        } else if(can.isArray(expr) && expr.value && that.bind) {
           can.each(expr, function(attr_expr) {
             var attr_token = attr_expr.attr;
             that.bind(attr_token + "." + hash, $.proxy(classbinding, that, el));
@@ -379,24 +379,24 @@ Mustache.registerHelper("pack", function() {
       if(typeof obj === "function") {
           objects[i] = obj = obj();
       }
-    if(obj instanceof can.Observe) {
-      obj.bind("change", function(ev, attr, how, newVal, oldVal) {
-        var tokens, idx, subobj;
-        switch(how) {
-        case "remove":
-        case "add":
-        tokens = attr.split(".");
-        idx = tokens.pop();
-        subobj = can.getObject(tokens.join("."), pack);
-        subobj && (subobj instanceof can.Observe.List 
-          ? subobj.splice.apply(subobj, how === "remove" ? [+idx, 1] : [+idx, 0, newVal])
-          : pack.attr(attr, newVal));
-        break;
-        default:          
-        pack.attr(attr, newVal);
-        }
-      });
-    }
+    // if(obj instanceof can.Observe) {
+    //   obj.bind("change", function(ev, attr, how, newVal, oldVal) {
+    //     var tokens, idx, subobj;
+    //     switch(how) {
+    //     case "remove":
+    //     case "add":
+    //     tokens = attr.split(".");
+    //     idx = tokens.pop();
+    //     subobj = can.getObject(tokens.join("."), pack);
+    //     subobj && (subobj instanceof can.Observe.List 
+    //       ? subobj.splice.apply(subobj, how === "remove" ? [+idx, 1] : [+idx, 0, newVal])
+    //       : pack.attr(attr, newVal));
+    //     break;
+    //     default:          
+    //     pack.attr(attr, newVal);
+    //     }
+    //   });
+    // }
     if(obj._data) {
       obj = obj._data;
     }
@@ -449,6 +449,54 @@ Mustache.registerHelper("render", function(template, context, options) {
   }
 
   return can.view.render(template, context.serialize ? context.serialize() : context);
+});
+
+Mustache.registerHelper("renderLive", function(template, context, options) {
+  if(!options) {
+    options = context;
+    context = this;
+  }
+
+  if(typeof context === "function") {
+    context = context();
+  }
+
+  if(typeof template === "function") {
+    template = template();
+  }
+
+  return can.view.render(template, context);
+});
+
+function defer_render(tag_name, func) {
+  var hook
+    ;
+
+  tag_name = tag_name || "span";
+
+  function hookup(element, parent, view_id) {
+    var f = function() {
+      frag_or_html = func();
+      $(element).after(frag_or_html).remove();
+    };
+    setTimeout(f, 13);
+  }
+
+  hook = can.view.hook(hookup);
+  return ["<", tag_name, " ", hook, ">", "</", tag_name, ">"].join("");
+}
+
+Mustache.registerHelper("defer", function(tag_name, options) {
+  var context = this;
+
+  if (!options) {
+    options = tag_name;
+    tag_name = "span";
+  }
+
+  return defer_render(tag_name, function() {
+    return options.fn(context);
+  });
 });
 
 Mustache.registerHelper("pbc_is_read_only", function() {

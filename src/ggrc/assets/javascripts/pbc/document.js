@@ -13,17 +13,18 @@
 can.Model.Cacheable("CMS.Models.Document", {
     root_object : "document"
     , root_collection : "documents"
-    , findAll : "GET /documents.json"
+    , findAll : "GET /api/documents"
     , create : function(params) {
         var _params = {
             document : {
-                title : params.title
-                , link : params.link_url
+                title : params.document.title
+                , description : params.document.description
+                , link : params.document.link
             }
         };
         return $.ajax({
             type : "POST"
-            , "url" : "/documents.json"
+            , "url" : "/api/documents"
             , dataType : "json"
             , data : _params
         });
@@ -31,7 +32,7 @@ can.Model.Cacheable("CMS.Models.Document", {
     , search : function(request, response) {
         return $.ajax({
             type : "get"
-            , url : "/documents.json"
+            , url : "/api/documents"
             , dataType : "json"
             , data : {s : request.term}
             , success : function(data) {
@@ -73,23 +74,29 @@ can.Model.Cacheable("CMS.Models.Document", {
 can.Model.Cacheable("CMS.Models.ObjectDocument", {
     root_object : "object_document"
     , root_collection : "object_documents"
+    , findAll: "GET /api/object_documents"
     , create : function(params) {
         var _params = {
             object_document : {
-                documentable_id : params.xable_id
-                , document_id : params.document_id
-                , role : params.role
-                , documentable_type : params.xable_type
+              documentable: {
+                id: params.object_document.documentable_id || params.xable_id
+              , type: params.object_document.documentable_type || params.xable_type
+              }
+            , document: {
+                id: params.object_document.document_id
+              }
+            , role : params.role
             }
         };
+
         return $.ajax({
             type : "POST"
-            , "url" : "/object_documents.json"
+            , "url" : "/api/object_documents"
             , dataType : "json"
             , data : _params
         });
     }
-    , destroy : "DELETE /object_documents/{id}.json"
+    , destroy : "DELETE /api/object_documents/{id}"
 }, {
     init : function() {
         var _super = this._super;
@@ -97,11 +104,16 @@ can.Model.Cacheable("CMS.Models.ObjectDocument", {
             var that = this;
 
             typeof _super === "function" && _super.call(this);
-            this.attr(
+            this.attr("document", CMS.Models.get_instance(
+                  "Document", this.document_id || (this.document && this.document.id)));
+            this.attr("documentable", CMS.Models.get_instance(
+                  this.documentable_type || (this.documentable && this.documentable.type),
+                  this.documentable_id || (this.documentable && this.documentable.id)));
+            /*this.attr(
                 "document"
-                , CMS.Models.Document.findInCacheById(this.document_id) 
-                || new CMS.Models.Document(this.document && this.document.serialize ? this.document.serialize() : this.document)); 
-
+                , CMS.Models.Document.findInCacheById(this.document_id)
+                || new CMS.Models.Document(this.document && this.document.serialize ? this.document.serialize() : this.document));
+*/
             this.each(function(value, name) {
               if (value === null)
               that.removeAttr(name);
@@ -111,8 +123,17 @@ can.Model.Cacheable("CMS.Models.ObjectDocument", {
         this.bind("created", can.proxy(reinit, this));
 
         reinit.call(this);
+    },
+    destroy: function() {
+      return $.ajax({
+        url: "/api/object_documents/" + this.id
+      , headers: {
+          "If-Match": this.etag
+        , "If-Unmodified-Since": this['last-modified']
+        }
+      , type: "DELETE"
+      })
     }
-
 });
 
 })(this, can);

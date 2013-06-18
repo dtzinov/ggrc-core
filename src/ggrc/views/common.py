@@ -32,13 +32,15 @@ class BaseObjectView(ModelView):
       'instance': obj,
       'controller': self,
       'instance_json':
-        lambda: as_json({ self.model_name: ggrc.builder.json.publish(obj) })
+        lambda: as_json({
+            self.model._inflector.table_singular: ggrc.builder.json.publish(obj)
+          })
       }
 
   def render_template_for_object(self, obj):
     context = self.get_context_for_object(obj)
     template_paths = [
-      self.model_template.format(model_plural=self.model_plural),
+      self.model_template.format(model_plural=self.model._inflector.table_plural),
       self.base_template
       ]
     return render_template(template_paths, **context)
@@ -63,10 +65,13 @@ class BaseObjectView(ModelView):
     return rendered_template
 
   @classmethod
-  def add_to(cls, app, url, model_class=None):
+  def add_to(cls, app, url, model_class=None, decorators=()):
     if model_class:
-      view_class = type('%sObjectView' % (model_class.__name__), (BaseObjectView,), {
-        '_model': model_class
+      view_class = type(
+        '{0}ObjectView'.format(model_class.__name__),
+        (BaseObjectView,),
+        {
+          '_model': model_class
         })
       import ggrc.views
       setattr(ggrc.views, model_class.__name__, view_class)
@@ -74,7 +79,9 @@ class BaseObjectView(ModelView):
       view_class = cls
 
     view_func = view_class.as_view(view_class.endpoint_name())
-    view_route = '%s/<%s:%s>' % (url, cls.pk_type, cls.pk)
+    view_func = cls.decorate_view_func(view_func, decorators)
+    view_route = '{url}/<{type}:{pk}>'.format(
+        url=url, type=cls.pk_type, pk=cls.pk)
     app.add_url_rule(view_route,
       view_func=view_func,
       methods=['GET'])

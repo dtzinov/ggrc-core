@@ -25,7 +25,7 @@ class DateTimeEncoder(json.JSONEncoder):
       return (datetime.datetime.min + obj).time().isoformat('T')
     else:
       return super(DateTimeEncoder, self).default(obj)
- 
+
 def get_json_response(context):
   if not hasattr(context, 'json'):
     context.json = context.response.json()
@@ -35,7 +35,7 @@ def post_example(context, resource_type, example, url):
   #For **some** reason, I can't import this at the module level in a steps file
   import requests
   data = json.dumps(
-      {resource_type.lower(): example},
+      {get_resource_table_singular(resource_type): example},
       cls=DateTimeEncoder,
       )
   return requests.post(
@@ -55,6 +55,13 @@ def get_resource(context, url):
         },
       )
 
+import re
+def get_resource_table_singular(resource_type):
+  # This should match the implementation at
+  #   ggrc.models.inflector:ModelInflector.underscore_from_camelcase
+  s1 = re.sub(r'(.)([A-Z][a-z]+)', r'\1_\2', resource_type)
+  return re.sub(r'([a-z0-9])([A-Z])', r'\1_\2', s1).lower()
+
 class Example(object):
   """An example resource for use in a behave scenario, by name."""
   def __init__(self, resource_type, value):
@@ -62,7 +69,7 @@ class Example(object):
     self.value = value
 
   def get(self, attr):
-    return self.value.get(self.resource_type.lower()).get(attr)
+    return self.value.get(get_resource_table_singular(self.resource_type)).get(attr)
 
   def set(self, attr, value):
     self.value[attr] = value
@@ -156,7 +163,7 @@ def validate_location_header(context):
 @then('we receive a valid "{resource_type}" in the entity body')
 def validate_resource_in_response(context, resource_type):
   assert 'application/json' == context.response.headers['Content-Type']
-  assert resource_type.lower() in get_json_response(context)
+  assert get_resource_table_singular(resource_type) in get_json_response(context)
   #FIXME more more more
 
 def dates_within_tolerance(original, response):
@@ -168,7 +175,7 @@ def dates_within_tolerance(original, response):
 
 @then('the received "{resource_type}" matches the one we posted')
 def check_resource_equality_for_response(context, resource_type):
-  root = unicode(resource_type.lower())
+  root = unicode(get_resource_table_singular(resource_type))
   resp_json = get_json_response(context)[root]
   orig_json = context.example_resource
   for k in orig_json:

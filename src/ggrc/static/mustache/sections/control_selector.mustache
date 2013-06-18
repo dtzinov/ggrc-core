@@ -50,11 +50,11 @@
             {{{description}}}
           </div>
           <h5>
-            Already Mapped Controls ({{linked_controls.length}})
+            Already Mapped Controls ({{controls.length}})
           </h5>
-          {{#if linked_controls.length}}
+          {{#if controls.length}}
             <ul class="linked-controls">
-              {{#linked_controls}}
+              {{#controls}}
               <li>
                 <a href="javascript://" class="jump-to-control" data-content-id="{{content_id}}">
                   {{#pack this}}
@@ -64,10 +64,10 @@
                   {{/pack}}
                 </a>
               </li>
-              {{/linked_controls}}
+              {{/controls}}
             </ul>
           {{/if}}
-          {{#unless linked_controls.length}}
+          {{#unless controls.length}}
             <ul class="linked-controls">
               <li class="not-applicable">
                 <input type="checkbox" id="section_na" {{#if na}}checked="checked"{{/if}}>

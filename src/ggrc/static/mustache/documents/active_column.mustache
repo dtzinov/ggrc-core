@@ -1,0 +1,18 @@
+<div class="selector-info">
+  <h4>
+    <i class="grcicon-user-black"></i>
+    Related Documents ({{joins.length}})
+  </h4>
+  <ul class="linked-people">
+    {{#joins}}
+    <li class="{{#if _removed}}removed{{/if}}">
+      <a class="jump-to-control" href="#">
+        <span>
+          {{document.title}}
+          &nbsp;
+        </span>
+      </a>
+    </li>
+    {{/joins}}
+  </ul>
+</div>

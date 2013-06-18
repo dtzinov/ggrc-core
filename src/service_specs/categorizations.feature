@@ -4,6 +4,7 @@ Feature: Many resources can be "categorized". This feature will exercise
   Background:
     Given service description
 
+  @wip
   Scenario Outline:
     Given a Category resource named "some_category" for scope "<scope>"
     And "some_category" is POSTed to its collection

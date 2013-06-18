@@ -18,7 +18,8 @@ can.Control("GGRC.Controllers.Modals", {
     content_view : GGRC.mustache_path + "/help/help_modal_content.mustache"
     , header_view : GGRC.mustache_path + "/modals/modal_header.mustache"
     , button_view : null
-    , model : null
+    , model : null    // model class to use when finding or creating new
+    , instance : null // model instance to use instead of finding/creating (e.g. for update)
     , new_object_form : false
     , find_params : {}
   }
@@ -48,23 +49,27 @@ can.Control("GGRC.Controllers.Modals", {
   , fetch_data : function(params) {
     var that = this;
     var dfd;
-    if(this.options.model) {
+    if (this.options.instance) {
+      dfd = this.options.instance.refresh();
+    } else if (this.options.model) {
       dfd = this.options.new_object_form
-          ? new $.Deferred().resolve(new this.options.model(params || this.find_params()))
+          ? $.when(this.options.instance = new this.options.model(params || this.find_params()))
           : this.options.model.findAll(params || this.find_params()).then(function(data) {
+            var h;
             if(data.length) {
+              that.options.instance = data[0];
               return data[0].refresh(); //have to refresh (get ETag) to be editable.
             } else {
               that.options.new_object_form = true;
-              return new that.options.model(params || that.find_params());
+              that.options.instance = new that.options.model(params || that.find_params());
+              return that.options.instance;
             }
           });
     } else {
-      dfd = new $.Deferred().resolve(params || this.find_params());
+      this.options.instance = new can.Observe(params || this.find_params());
+      dfd = new $.Deferred().resolve(this.options.instance);
     }
-    return dfd.done(function(h) {
-      that.options.instance = h;
-    });
+    return dfd;
   }
 
   , fetch_all : function() {
@@ -118,14 +123,15 @@ can.Control("GGRC.Controllers.Modals", {
 
   , "{$footer} a.btn[data-toggle='modal-submit']:not(.disabled) click" : function(el, ev) {
     var instance = this.options.instance
-    , that = this;
+    , that = this
+    , ajd;
 
     can.each(this.options.$content.find("form").serializeArray(), this.proxy("set_value"));
 
-    var ajd = instance.save().done(function() {
+    ajd = instance.save().done(function() {
       that.element.modal_form("hide");
     }).fail(function(xhr, status) {
-      var error = xhr.getResponseHeader("X-Flash-Error")
+      var error = xhr.responseText
       , tmpl = '<div class="alert alert-error"><a href="#" class="close" data-dismiss="alert">&times;</a><span>'
         + error
         + '</span></div>';
@@ -134,6 +140,14 @@ can.Control("GGRC.Controllers.Modals", {
 
       error && that.options.$content.find(".flash").append(tmpl);
     });
+    this.bindXHRToButton(ajd, el, "Saving, please wait...");
+  }
+
+  , destroy : function() {
+    if(this.options.model && this.options.model.cache) {
+      delete this.options.model.cache[undefined];
+    }
+    this._super && this._super.apply(this, arguments);
   }
 });
 
