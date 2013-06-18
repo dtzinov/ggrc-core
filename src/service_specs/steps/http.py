@@ -109,6 +109,16 @@ def post_named_example_to_collection_endpoint(context, name):
   url = get_service_endpoint_url(context, example.resource_type)
   post_named_example(context, name, url)
 
+@given('HTTP POST of "{name}" to "{url}"')
+def simple_post_of_named(context, name, url):
+  example = getattr(context, name)
+  response = post_example(
+      context, example.resource_type, example.value, url)
+  assert response.status_code == 200, \
+      'Expected status code {0}, received {1}'.format(
+          200, response.status_code)
+  context.response = response
+
 @given('"{name}" is POSTed to "{url}"')
 def post_named_example(context, name, url):
   example = getattr(context, name)

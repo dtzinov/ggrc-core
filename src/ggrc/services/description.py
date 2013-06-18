@@ -30,6 +30,7 @@ class ServiceDescription(MethodView):
           #'documentationLink': '',
           }
     endpoints['search'] = { 'href': '/search' }
+    endpoints['log_event'] = {'href': '/api/log_event' }
     return json.dumps({
         'service_description': {
           'name': 'gGRC-Core',

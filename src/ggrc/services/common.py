@@ -14,7 +14,8 @@ from ggrc import db
 from ggrc.fulltext import get_indexer
 from ggrc.fulltext.recordbuilder import fts_record_for
 from ggrc.login import get_current_user_id
-from werkzeug.exceptions import BadRequest
+from ggrc.rbac import permissions
+from werkzeug.exceptions import BadRequest, Forbidden
 from wsgiref.handlers import format_date_time
 from .attribute_query import AttributeQueryBuilder
 
@@ -86,7 +87,7 @@ class ModelView(View):
     return getattr(obj, self.modified_attr_name)
 
   # Default model/DB helpers
-  def get_collection(self):
+  def get_collection(self, filter_by_contexts=True):
     if hasattr(self.model, 'eager_query'):
       query = self.model.eager_query()
     else:
@@ -98,11 +99,17 @@ class ModelView(View):
         for j in joinlist:
           query = query.join(j)
         query = query.filter(filter)
+    if filter_by_contexts:
+      contexts = permissions.read_contexts_for(self.model.__name__)
+      #FIXME cascade through joins, too!
+      if contexts is not None:
+        query = query.filter(self.model.context_id.in_(contexts))
     return query.order_by(self.modified_attr.desc())
 
   def get_object(self, id):
     # This could also use `self.pk`
-    return self.get_collection().filter(self.model.id == id).first()
+    return self.get_collection(filter_by_contexts=False)\
+        .filter(self.model.id == id).first()
 
   def not_found_message(self):
     return '{0} not found.'.format(self.model._inflector.title_singular)
@@ -215,6 +222,8 @@ class Resource(ModelView):
        'application/json' not in self.request.headers['Accept']:
       return current_app.make_response((
         'application/json', 406, [('Content-Type', 'text/plain')]))
+    if not permissions.is_allowed_read(self.model.__name__, obj.context_id):
+      raise Forbidden()
     object_for_json = self.object_for_json(obj)
     if 'If-None-Match' in self.request.headers and \
         self.request.headers['If-None-Match'] == self.etag(object_for_json):
@@ -262,6 +271,8 @@ class Resource(ModelView):
     except KeyError, e:
       return current_app.make_response((
         'Required attribute "{0}" not found'.format(root_attribute), 400, []))
+    if not permissions.is_allowed_update(self.model.__name__, obj.context_id):
+      raise Forbidden()
     ggrc.builder.json.update(obj, src)
     #FIXME Fake the modified_by_id until we have that information in session.
     obj.modified_by_id = get_current_user_id()
@@ -280,6 +291,8 @@ class Resource(ModelView):
     header_error = self.validate_headers_for_put_or_delete(obj)
     if header_error:
       return header_error
+    if not permissions.is_allowed_delete(self.model.__name__, obj.context_id):
+      raise Forbidden()
     db.session.delete(obj)
     db.session.commit()
     get_indexer().delete_record(self.url_for(id=id))
@@ -313,6 +326,11 @@ class Resource(ModelView):
     except KeyError, e:
       return current_app.make_response((
         'Required attribute "{0}" not found'.format(root_attribute), 400, []))
+    if 'context_id' not in src:
+      raise BadRequest('context_id MUST be specified.')
+    if not permissions.is_allowed_create(
+        self.model.__name__, src['context_id']):
+      raise Forbidden()
     ggrc.builder.json.create(obj, src)
     #FIXME Fake the modified_by_id until we have that information in session.
     obj.modified_by_id = get_current_user_id()

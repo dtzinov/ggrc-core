@@ -1,12 +1,10 @@
-
 # Copyright (C) 2013 Google Inc., authors, and contributors <see AUTHORS file>
 # Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
-# Created By:
-# Maintained By:
+# Created By: david@reciprocitylabs.com
+# Maintained By: david@reciprocitylabs.com
 
 from collections import namedtuple
 from .common import *
-from .log_event import LogEvents
 
 """All gGRC REST services."""
 
@@ -35,7 +33,6 @@ def all_collections():
     service('documents', models.Document),
     service('facilities', models.Facility),
     service('help', models.Help),
-    service('log_events', models.LogEvent, LogEvents),
     service('markets', models.Market),
     service('meetings', models.Meeting),
     service('object_documents', models.ObjectDocument),
@@ -78,6 +75,10 @@ def init_all_services(app):
   from .search import search
   app.add_url_rule(
     '/search', 'search', login_required(search))
+
+  from .log_event import log_event
+  app.add_url_rule(
+    '/api/log_events', 'log_events', log_event, methods=['POST'])
 
   from .description import ServiceDescription
   app.add_url_rule(
