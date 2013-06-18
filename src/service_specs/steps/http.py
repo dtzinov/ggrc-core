@@ -38,22 +38,47 @@ def post_example(context, resource_type, example, url):
       {get_resource_table_singular(resource_type): example},
       cls=DateTimeEncoder,
       )
-  return requests.post(
+  response = requests.post(
       context.base_url+url,
       data=data,
       headers={
         'Content-Type': 'application/json',
         },
+      allow_redirects=False,
+      cookies=getattr(context, 'cookies', {}),
       )
+  if response.status_code == 302:
+    # deal with login redirect, expect noop
+    response = requests.get(
+        response.headers['Location'],
+        headers={
+          'Accept': 'text/html',
+          },
+        allow_redirects=False,
+        )
+    context.cookies = response.cookies
+    response = requests.post(
+        context.base_url+url,
+        data=data,
+        headers={
+          'Content-Type': 'application/json',
+          },
+        cookies=context.cookies,
+        )
+  context.cookies = response.cookies
+  return response
 
 def get_resource(context, url):
   import requests
-  return requests.get(
+  response = requests.get(
       context.base_url+url,
       headers={
         'Accept': 'application/json',
         },
+      cookies=getattr(context, 'cookies', {})
       )
+  context.cookies = response.cookies
+  return response
 
 import re
 def get_resource_table_singular(resource_type):

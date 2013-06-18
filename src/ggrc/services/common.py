@@ -101,9 +101,10 @@ class ModelView(View):
         query = query.filter(filter)
     if filter_by_contexts:
       contexts = permissions.read_contexts_for(self.model.__name__)
-      #FIXME cascade through joins, too!
       if contexts is not None:
         query = query.filter(self.model.context_id.in_(contexts))
+        for j in joinlist:
+          query = query.filter(j.context_id.in_(contexts))
     return query.order_by(self.modified_attr.desc())
 
   def get_object(self, id):
