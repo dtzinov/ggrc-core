@@ -4,5 +4,5 @@ SCRIPTPATH=$( cd "$(dirname "$0")" ; pwd -P )
 
 cd "${SCRIPTPATH}/../src"
 
-python -c "import ggrc.models; ggrc.models.create_db()"
+python -c "import ggrc.models; ggrc.models.drop_db(use_migrations=True); ggrc.models.create_db(use_migrations=True)"
 
