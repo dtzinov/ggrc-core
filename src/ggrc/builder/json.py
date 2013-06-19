@@ -1,4 +1,4 @@
-#i Copyright (C) 2013 Google Inc., authors, and contributors <see AUTHORS file>
+# Copyright (C) 2013 Google Inc., authors, and contributors <see AUTHORS file>
 # Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
 # Created By: david@reciprocitylabs.com
 # Maintained By: david@reciprocitylabs.com
@@ -7,7 +7,6 @@ import ggrc.builder
 import ggrc.services
 import iso8601
 from datetime import datetime
-from flask import _request_ctx_stack
 from ggrc import db
 from ggrc.models.reflection import AttributeInfo
 from ggrc.services.util import url_for
@@ -128,7 +127,9 @@ class UpdateAttrHandler(object):
     """Translate the JSON value for a ``Datetime`` column."""
     value = json_obj.get(attr_name)
     try:
-      return iso8601.parse_date(value) if value else None
+      d = iso8601.parse_date(value) if value else None
+      d = d.replace(tzinfo=None)
+      return d
     except iso8601.ParseError as e:
       raise BadRequest(
           'Malformed DateTime {0} for parameter {1}. '
