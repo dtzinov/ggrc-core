@@ -90,10 +90,12 @@ can.Control("CMS.Controllers.TreeView", {
     can.Observe.startBatch();
     this.options.attr("list", []);
     can.each(list, function(v) {
-      if(v instanceof can.Observe.TreeOptions) {
-        that.options.list.push(v);
-      } else {
-        that.options.list.push(new can.Observe.TreeOptions().attr("instance", v).attr("start_expanded", that.options.start_expanded));
+      if(!(v instanceof can.Observe.TreeOptions)) {
+        v = new can.Observe.TreeOptions().attr("instance", v).attr("start_expanded", that.options.start_expanded);
+      }
+      that.options.list.push(v);
+      if(!v.instance.selfLink) {
+        v.instance.refresh();
       }
     });
     can.Observe.stopBatch();
