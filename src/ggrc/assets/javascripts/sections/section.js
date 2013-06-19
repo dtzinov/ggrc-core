@@ -14,21 +14,12 @@ can.Model.Cacheable("CMS.Models.Section", {
   , root_collection : "sections"
   , findAll : "GET /api/sections?" + window.cms_singularize((/^\/([^\/]+)\//.exec(window.location.pathname) || ["",""])[1]) + ".id=" + (/^\/[^\/]+\/([^\/]+)/.exec(window.location.pathname) || ["",""])[1]
   , create : "POST /api/sections"
-  , update : function(id, section) {
-    var param = {};
-    can.each(section, function(val, key) {
-      if(can.inArray(key, ["parent_id", "created_at", "id", "kind", "modified_by_id", "updated_at", "linked_controls", "description_inline"]) < 0)
-        param["section[" + key + "]"] = val;
-    });
-    return $.ajax({
-      type : "PUT"
-      , url : "/sections/" + id + ".json"
-      , dataType : "json"
-      , data : param
-    });
-  }
+  , update : "PUT /api/sections/{id}"
   , attributes : {
     children : "CMS.Models.Section.model"
+  }
+  , defaults : {
+    children : []
   }
   , map_control : function(params, section) {
     var control_section_ids, joins;
@@ -49,8 +40,8 @@ can.Model.Cacheable("CMS.Models.Section", {
       }));
     } else {
       return new CMS.Models.ControlSection({
-        section : section
-        , control : params.control
+        section : section.stub()
+        , control : params.control.stub()
       }).save();
     }
 
@@ -69,9 +60,6 @@ can.Model.Cacheable("CMS.Models.Section", {
     });
 
     this.attr("descendant_sections", can.compute(function() {
-      if(!that.children) {
-        return [];
-      }
       return that.attr("children").concat(can.reduce(that.children, function(a, b) {
         return a.concat(can.makeArray(b.descendant_sections()));
       }, []));
@@ -94,28 +82,6 @@ CMS.Models.Section("CMS.Models.SectionSlug", {
     children : "CMS.Models.SectionSlug.models"
     , controls : "CMS.Models.Control.models"
     , control_sections : "CMS.Models.ControlSection.models"
-  }
-  , update : function(id, section) {
-    var param = this.process_args(
-      section
-      , { not : [
-        "parent_id"
-        , "created_at"
-        , "id"
-        , "kind"
-        , "modified_by_id"
-        , "updated_at"
-        , "linked_controls"
-        , "description_inline"
-        , "children"
-        , "child_options"
-      ]});
-    return $.ajax({
-      type : "PUT"
-      , url : "/mapping/update/" + id + ".json"
-      , dataType : "json"
-      , data : param
-    });
   }
   ,  findAll : function(params) {
     function filter_out(original, predicate) {

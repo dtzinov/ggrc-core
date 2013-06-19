@@ -174,6 +174,9 @@ $.ajaxPrefilter(function( options, originalOptions, jqXHR ) {
     jqXHR.setRequestHeader("If-Unmodified-Since", (etags[originalOptions.url] || [])[1]);
     options.data = JSON.stringify(data);
   }
+  if( /^\/api\/\w+$/.test(options.url) && (options.type.toUpperCase() === "GET") && !options.data ) {
+    options.cache = false;
+  }
   if( /^\/api\/\w+\/\d+/.test(options.url) && (options.type.toUpperCase() === "GET") ) {
     options.cache = false;
     jqXHR.done(function(data, status, xhr) {

@@ -241,7 +241,7 @@ can.Control("CMS.Controllers.Mapping", {
   , "#section_na click" : function(el, ev) {
     var section = this.options.section_model.findInCacheById(el.closest("[data-section-id]").data("section-id"));
     section.attr("na", el.attr("checked") ? 1 : 0);
-    this.bindXHRToButton(section.save(), el);
+    this.bindXHRToButton(section.refresh().then(function(s) { s.save() }), el);
   }
 
   , "#section_notes change" : function(el, ev) {
@@ -361,9 +361,12 @@ CMS.Controllers.Mapping("CMS.Controllers.ControlMappingPopup", {
     if(is_mapped ^ el.prop("checked")) {
       this[is_mapped ? "unmap" : "map"](this.options.section, null, control)
       .done(function() {
-        setTimeout(function() {
-          that.style_item(that.element.find("[content_id=" + control.content_id + "]").parent());
-        }, 10)
+        that.options.section.constructor.bind("updated." + control.content_id, function() {
+          setTimeout(function() {
+            that.style_item(that.element.find("[content_id=" + control.content_id + "]").parent());
+          }, 10);
+          that.options.section.constructor.unbind("." + control.content_id);
+        });
       });
     }
   }

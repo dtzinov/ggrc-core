@@ -12,7 +12,7 @@ can.Model("can.Model.Cacheable", {
 
   findOne : "GET {href}"
   , setup : function(construct, name, statics, prototypes) {
-    if(!statics.findAll && this.findAll === can.Model.Cacheable.findAll)
+    if((!statics || !statics.findAll) && this.findAll === can.Model.Cacheable.findAll)
       this.findAll = "GET /api/" + this.root_collection;
     return this._super.apply(this, arguments);
   }
@@ -70,12 +70,9 @@ can.Model("can.Model.Cacheable", {
     }
   }
   , process_args : function(args, names) {
-    var pargs = {
-      etag : args.etag
-      , "last-modified" : args["last-modified"]
-    };
+    var pargs = {};
     var obj = pargs;
-    if(this.root_object) {
+    if(this.root_object && !(this.root_object in args)) {
       obj = pargs[this.root_object] = {};
     }
     var src = args.serialize ? args.serialize() : args;
@@ -109,9 +106,12 @@ can.Model("can.Model.Cacheable", {
       params = params[this.root_collection];
     }
     var ms = this._super(params);
-    if(params instanceof can.Observe)
+    if(params instanceof can.Observe) {
       params.replace(ms);
-    return ms;
+      return params;
+    } else {
+      return ms;
+    }
   }
   , model : function(params) {
     var m, that = this;
@@ -131,7 +131,8 @@ can.Model("can.Model.Cacheable", {
         }
     }
     if(m = this.findInCacheById(params.id)) {
-      can.each(params, function(val, key) {
+      var fn = (typeof params.each === "function") ? can.proxy(params.each,"call") : can.each;
+      fn(params, function(val, key) {
         var p = val && val.serialize ? val.serialize() : val;
         if(m[key] instanceof can.Observe.List) {
           m[key].replace(
