@@ -69,6 +69,9 @@ can.Model.Cacheable("CMS.Models.Section", {
     });
 
     this.attr("descendant_sections", can.compute(function() {
+      if(!that.children) {
+        return [];
+      }
       return that.attr("children").concat(can.reduce(that.children, function(a, b) {
         return a.concat(can.makeArray(b.descendant_sections()));
       }, []));
@@ -174,6 +177,11 @@ CMS.Models.Section("CMS.Models.SectionSlug", {
   , init : function() {
     this._super.apply(this, arguments);
     this.tree_view_options.child_options[1].model = this;
+    this.bind("created updated", function(ev, inst) {
+      can.each(this.attributes, function(v, key) {
+        (inst.key instanceof can.Observe.List) && inst.key.replace(inst.key); //force redraw in places
+      });
+    });
   }
 }, {});
 
@@ -196,4 +204,16 @@ can.Model.Cacheable("CMS.Models.ControlSection", {
       control && control.refresh();
     });
   }
-}, {});
+}, {
+  serialize : function(name) {
+    var serial;
+    if(!name) {
+      serial = this._super();
+      serial.section && (serial.section = this.section.stub());
+      serial.control && (serial.control = this.control.stub());
+      return serial;
+    } else {
+      return this._super.apply(this, arguments);
+    }
+  }
+});

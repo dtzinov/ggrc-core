@@ -74,6 +74,19 @@ can.Control("CMS.Controllers.TreeView", {
     } else {
       list = this.options.list;
     }
+    list.bind("add", function(ev, newVals, index) {
+      can.each(newVals, function(newVal) {
+        that.element.trigger("newChild", new can.Observe.TreeOptions({instance : newVal}));
+      });
+    }).bind("remove", function(ev, oldVals, index) {
+      can.each(oldVals, function(oldVal) {
+        for(var i = that.options.list.length - 1; i >= 0; i--) {
+          if(that.options.list[i].instance === oldVal) {
+            that.options.list.splice(i, 1);
+          }
+        }
+      });
+    });
     can.Observe.startBatch();
     this.options.attr("list", []);
     can.each(list, function(v) {
@@ -128,7 +141,7 @@ can.Control("CMS.Controllers.TreeView", {
   , add_child_lists_to_child : function(item) {
     var that = this;
     if(!item.child_options)
-      item.attr("child_options", new can.Observe.List());
+      item.attr("child_options", new can.Observe.TreeOptions.List());
     can.each(this.options.child_options.length != null ? this.options.child_options : [this.options.child_options], function(data) {
       var options = new can.Observe.TreeOptions();
       data.each(function(v, k) {
@@ -150,7 +163,7 @@ can.Control("CMS.Controllers.TreeView", {
       if(find_params && find_params.length) {
         find_params = find_params.slice(0);
       }
-     data.attr("list", find_params);
+      data.attr("list", find_params);
     } else {
       find_params = data.attr("find_params");
       if(!find_params) {
@@ -171,7 +184,7 @@ can.Control("CMS.Controllers.TreeView", {
     if(!this.options.parent_id || (this.options.parent_id === data.parent_id)) { // '==' just because null vs. undefined sometimes happens here
       model = data instanceof this.options.model ? data : new this.options.model(data.serialize ? data.serialize() : data);
       this.add_child_lists([model]);
-      this.options.list.push(model);
+      this.options.list.push(new can.Observe.TreeOptions({ instance : model}));
       setTimeout(function() {
         $("[data-object-id=" + data.id + "]").parents(".item-content").siblings(".item-main").openclose("open");
       }, 10);

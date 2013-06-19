@@ -114,7 +114,7 @@ can.Model("can.Model.Cacheable", {
     return ms;
   }
   , model : function(params) {
-    var m;
+    var m, that = this;
     var obj_name = this.root_object;
     if(typeof obj_name !== "undefined" && params[obj_name]) {
         for(var i in params[obj_name]) {
@@ -130,7 +130,24 @@ can.Model("can.Model.Cacheable", {
           delete params[obj_name];
         }
     }
-    return this._super(params);
+    if(m = this.findInCacheById(params.id)) {
+      can.each(params, function(val, key) {
+        var p = val && val.serialize ? val.serialize() : val;
+        if(m[key] instanceof can.Observe.List) {
+          m[key].replace(
+            m[key].constructor.models ?
+              m[key].constructor.models(p)
+              : p);
+        } else if(m[key] instanceof can.Model) {
+          m[key].constructor.model(params[key]);
+        } else {
+          m.attr(key, p);
+        }
+      });
+    } else {
+      m = this._super(params);
+    }
+    return m;
   }
   , tree_view_options : {}
 }, {
@@ -167,7 +184,9 @@ can.Model("can.Model.Cacheable", {
     this._triggerChange(attrName, "set", this[attrName], this[attrName].slice(0, this[attrName].length - 1));
   }
   , refresh : function() {
-    return this.constructor.findOne({href : this.selfLink || this.href});
+    return this.constructor.findOne({href : this.selfLink || this.href}).done(function(d) {
+      d.updated();
+    });
     // return $.ajax({
     //   url : this.selfLink || this.href
     //   , type : "get"
@@ -185,18 +204,22 @@ can.Model("can.Model.Cacheable", {
       if(that.constructor.attributes && that.constructor.attributes[name]) {
         fun_name = that.constructor.attributes[name].split(".").reverse()[0];
         if(fun_name === "models") {
-          serial[name] = can.map(val, function(v) { return {id : v.id, href : v.selfLink || v.href };});
+          serial[name] = can.map(val, this.stub);
         } else if(fun_name === "model") {
-          serial[name] = { id : val.id, href : val.selfLink || val.href };
+          serial[name] = val.stub();
         } else {
           serial[name] = that._super(name);
         }
-      } else {
-        serial[name] = that._super(name);
+      } else if(typeof val !== 'function') {
+        serial[name] = that[name] && that[name].serialize ? that[name].serialize() : that._super(name);
       }
     });
     return serial;
   }
 });
+
+can.Observe.prototype.stub = function() {
+  return { id : this.id, href : this.selfLink || this.href };
+};
 
 })(window.can);

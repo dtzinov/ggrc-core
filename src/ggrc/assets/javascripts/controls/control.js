@@ -29,14 +29,6 @@ can.Model.Cacheable("CMS.Models.Control", {
     //, directive : "CMS.Models.Directive.model"
     //, sections : "CMS.Models.SectionSlug.models"
   }
-  , serialize : {
-    "CMS.Models.Directive.model" : function(val, type) {
-      return {id : val.id, href : val.selfLink || val.href };
-    }
-    , "CMS.Models.SectionSlug.models" : function(val, type) {
-      return can.map(val, function(v) { return {id : v.id, href : v.selfLink || v.href }; });
-    }
-  }
   // , model : function(attrs) {
   //   var id;
   //   if((id = attrs.id || (attrs[this.root_object] && attrs[this.root_object].id)) && this.findInCacheById(id)) {
@@ -45,6 +37,13 @@ can.Model.Cacheable("CMS.Models.Control", {
   //     return this._super.apply(this, arguments);
   //   }
   // }
+  , defaults : {
+    "type" : {id : 1}
+    , "selected" : false
+    , "title" : this.title || ""
+    , "slug" : this.slug || ""
+    , "description" : this.description || ""
+  }
 }
 , {
 // prototype properties
@@ -61,8 +60,6 @@ can.Model.Cacheable("CMS.Models.Control", {
     // }
     this.attr({
       "content_id" : Math.floor(Math.random() * 10000000)
-      , "type" : {id : 1}
-      , "selected" : false
     });
     this._super();
   }
