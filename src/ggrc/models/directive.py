@@ -11,6 +11,8 @@ from .object_document import Documentable
 from .object_person import Personable
 from .reflection import PublishOnly
 
+from sqlalchemy.orm import validates
+
 class Directive(Documentable, Personable, Timeboxed, BusinessObject, db.Model):
   __tablename__ = 'directives'
 
@@ -58,6 +60,31 @@ class Directive(Documentable, Personable, Timeboxed, BusinessObject, db.Model):
       'version',
       ]
 
+  @validates('kind')
+  def validate_kind(self, key, value):
+    if type(self) is Directive:
+      assert self._model_for_kind(value) is not None
+    else:
+      assert value in self.valid_kinds
+    return value
+
+  def kind_model(self):
+    return self._model_for_kind(self.kind)
+
+  @classmethod
+  def _model_for_kind(cls, kind):
+    for model in (Policy, Regulation, Contract):
+      if kind in model.valid_kinds:
+        return model
+
+  @property
+  def kind_plural(self):
+    return self.kind_model()._kind_plural
+
+  @property
+  def kind_singular(self):
+    return self.kind_model().__name__
+
   @classmethod
   def eager_query(cls):
     from sqlalchemy import orm
@@ -69,3 +96,16 @@ class Directive(Documentable, Personable, Timeboxed, BusinessObject, db.Model):
         orm.subqueryload('controls'),
         orm.subqueryload_all('program_directives.program'),
         orm.subqueryload('sections'))
+
+# FIXME: For subclasses, restrict kind
+class Policy(Directive):
+  _kind_plural = 'policies'
+  valid_kinds = ("Company Policy", "Org Group Policy", "Data Asset Policy", "Product Policy", "Contract-Related Policy", "Company Controls Policy")
+
+class Regulation(Directive):
+  _kind_plural = 'regulations'
+  valid_kinds = ("Regulation",)
+
+class Contract(Directive):
+  _kind_plural = 'contracts'
+  valid_kinds = ("Contract",)

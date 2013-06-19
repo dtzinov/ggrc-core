@@ -182,7 +182,7 @@
         , button_view : GGRC.Controllers.Modals.BUTTON_VIEW_SAVE_CANCEL
         , model : model
         , instance : instance
-        , title : (instance ? "Edit " : "New ") + $trigger.attr("data-object-singular")
+        , modal_title : (instance ? "Edit " : "New ") + $trigger.attr("data-object-singular")
         , content_view : GGRC.mustache_path + "/" + $trigger.attr("data-object-plural") + "/modal_content.mustache"
       });
 

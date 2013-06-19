@@ -94,6 +94,18 @@ class System(
       'transactions',
       ]
 
+  def kind_model(self):
+    return Process if self.is_biz_process else System
+
+  _kind_plural = 'systems'
+  @property
+  def kind_plural(self):
+    return self.kind_model()._kind_plural
+
+  @property
+  def kind_singular(self):
+    return self.kind_model().__name__
+
   @classmethod
   def eager_query(cls):
     from sqlalchemy import orm
@@ -107,3 +119,6 @@ class System(
         orm.subqueryload_all('sub_system_systems.child'),
         orm.subqueryload_all('super_system_systems.parent'),
         orm.subqueryload('transactions'))
+
+class Process(System):
+  _kind_plural = 'processes'

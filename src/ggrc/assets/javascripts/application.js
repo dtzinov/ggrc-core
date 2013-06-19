@@ -36,6 +36,13 @@ var GGRC = {
 
 jQuery.migrateMute = true; //turn off console warnings for jQuery-migrate
 
+function ModelError(message, data) {
+  this.name = "ModelError";
+  this.message = message || "Invalid Model encountered";
+  this.data = data;
+}
+ModelError.prototype = Error.prototype;
+
 window.onerror = function(message, url, linenumber) {
   $(document.body).trigger("ajax:flash", {"error" : message});
   $.ajax({
@@ -89,10 +96,17 @@ jQuery.extend(GGRC, {
     var decision_tree = {
       "program" : CMS.Models.Program
       , "directive" : {
-        _key : "kind"
-        , "regulation" : CMS.Models.Regulation
-        , "policy" : CMS.Models.Policy
-        , "contract" : CMS.Models.Contract
+        _discriminator: function(data) {
+          var model_i, model;
+          models =  [CMS.Models.Regulation, CMS.Models.Policy, CMS.Models.Contract];
+          for (model_i in models) {
+            model = models[model_i];
+            if (model.meta_kinds.indexOf(data.kind) >= 0) {
+              return model;
+            }
+          }
+          throw new ModelError("Invalid Directive#kind value '" + data.kind + "'", data);
+        }
       }
       , "org_group" : CMS.Models.OrgGroup
       , "project" : CMS.Models.Project
@@ -101,9 +115,12 @@ jQuery.extend(GGRC, {
       , "data_asset" : CMS.Models.DataAsset
       , "market" : CMS.Models.Market
       , "system" : {
-        _key : "is_biz_process"
-        , "true" : CMS.Models.Process
-        , "false" : CMS.Models.StrictSystem
+        _discriminator: function(data) {
+          if (data.is_biz_process)
+            return CMS.Models.Process;
+          else
+            return CMS.Models.StrictSystem;
+        }
       }
       , "control" : CMS.Models.Control
       , "risky_attribute" : CMS.Models.RiskyAttribute
@@ -126,8 +143,7 @@ jQuery.extend(GGRC, {
       if(typeof subtree === "undefined")
         return null;
       return can.isPlainObject(subtree) ?
-        //resolve(subtree[data[subtree._key]], data) :
-        resolve_by_key(subtree, data) :
+        subtree._discriminator(data) :
         subtree;
     }
 
@@ -167,7 +183,7 @@ var etags = {};
 $.ajaxPrefilter(function( options, originalOptions, jqXHR ) {
   var data;
   if ( /^\/api\//.test(options.url) && /PUT|POST|DELETE/.test(options.type.toUpperCase())) {
-    data = can.deparam(options.data);
+    data = originalOptions.data;
     options.dataType = "json";
     options.contentType = "application/json";
     jqXHR.setRequestHeader("If-Match", (etags[originalOptions.url] || [])[0]);

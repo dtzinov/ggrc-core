@@ -1,0 +1,8 @@
+-extends "base_objects/show.haml"
+
+-block subheader_extras
+  %ul.actions.pull-right
+    %li
+      %a{ 'href': 'javascript://', 'data-toggle': 'modal-ajax-form', 'data-modal-reset': 'reset', 'data-form-target': 'refresh', 'data-modal-class': 'modal-wide', 'data-object-singular': '={instance.kind_singular}', 'data-object-plural': '={instance.kind_plural}', 'data-object-id': 'page' }
+        %i.grcicon-edit
+        %span Edit ={instance.kind_singular}

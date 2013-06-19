@@ -14,14 +14,12 @@ can.Model.Cacheable("CMS.Models.System", {
     root_object : "system"
     , root_collection : "systems"
     , xable_type : "System"
-    , findAll : "GET /api/systems?responseid={id}"
+    , findAll : "GET /api/systems"
     , findOne : "GET /api/systems/{id}"
     , create : "POST /api/systems"
     , update : function(id, params) {
-      return $.ajax({
-        url : "/systems/" + id + ".json"
-        , data : this.process_args(
-          params
+      var data = this.process_args(
+          params['system']
           , ["notes"
             , "description"
             , "infrastructure"
@@ -33,7 +31,10 @@ can.Model.Cacheable("CMS.Models.System", {
             , "title"
             , "type_id"
             , "url"
-            , "version"])
+            , "version"]);
+      return $.ajax({
+        url : "/api/systems/" + id
+        , data : data
         , type : "put"
       });
     }
@@ -101,7 +102,7 @@ can.Model.Cacheable("CMS.Models.System", {
         model : null ///filled in after init.
         , list_view : "/static/mustache/systems/tree.mustache"
         , parent_find_param : "parent_id"
-				, link_buttons: true
+        , link_buttons: true
       }]
     }
 }, {
@@ -150,7 +151,7 @@ can.Model.Cacheable("CMS.Models.System", {
 CMS.Models.System("CMS.Models.StrictSystem", {
   findAll : "GET /api/systems?is_biz_process=false"
   , create : function(params) {
-    params[is_biz_process] = false;
+    params.is_biz_process = false;
     return this._super(params);
   }
   , cache : can.getObject("cache", CMS.Models.System, true)
@@ -160,7 +161,7 @@ CMS.Models.System("CMS.Models.StrictSystem", {
 CMS.Models.System("CMS.Models.Process", {
   findAll : "GET /api/systems?is_biz_process=true"
   , create : function(params) {
-    params[is_biz_process] = true;
+    params.is_biz_process = true;
     return this._super(params);
   }
   , cache : can.getObject("cache", CMS.Models.System, true)

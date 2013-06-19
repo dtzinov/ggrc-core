@@ -43,7 +43,7 @@
 -block subheader_extras
   %ul.actions.pull-right
     %li
-      %a{ 'href': "url-for-edit-#{model_name}-#{instance.id}", 'data-toggle': 'modal-ajax-form', 'data-modal-reset': 'reset', 'data-form-target': 'refresh', 'data-modal-class': 'modal-wide', 'title': "Edit #{model_title}" }
+      %a{ 'href': "javascript://", 'data-toggle': 'modal-ajax-form', 'data-object-plural': '={model._inflector.table_plural}', 'data-object-singular': '={model._inflector.model_singular}', 'data-modal-reset': 'reset', 'data-form-target': 'refresh', 'data-modal-class': 'modal-wide', 'title': "Edit #{model_title}" }
         %i.grcicon-edit
         %span Edit #{model_title}
 

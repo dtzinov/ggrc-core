@@ -163,8 +163,9 @@ class UpdateAttrHandler(object):
       rel_obj = json_obj.get(attr_name)
       if rel_obj:
         try:
+          # FIXME: Should this be .one() instead of .first() ?
           return db.session.query(rel_class).filter(
-            rel_class.id == rel_obj[u'id']).one()
+            rel_class.id == rel_obj[u'id']).first()
         except(TypeError):
           raise TypeError(''.join(['Failed to convert attribute ', attr_name]))
       return None
