@@ -14,20 +14,20 @@
 function mapunmap(unmap) {
   return function(section, rcontrol, ccontrol) {
       var params = {
-        ccontrol : (ccontrol ? ccontrol.id : "")
+        ccontrol : ccontrol
       };
       if(unmap)
         params.u = "1";
-      if(rcontrol) params.rcontrol = rcontrol.id;
-      if(rcontrol === null) params.rcontrol = ccontrol.id;
-      if(section) params.section = section.id;
+      if(rcontrol) params.control = rcontrol;
+      if(rcontrol === null) params.control = ccontrol;
+      if(section) params.section = section;
 
       var dfd = section ?
-        section["map_" + (rcontrol === null ? "control" : "rcontrol")](params)
+        section.map_control(params)
         : rcontrol.map_ccontrol(params);
       dfd.done(can.proxy(this.updateButtons, this));
       return dfd;
-  }
+  };
 }
 
 
@@ -241,7 +241,7 @@ can.Control("CMS.Controllers.Mapping", {
   , "#section_na click" : function(el, ev) {
     var section = this.options.section_model.findInCacheById(el.closest("[data-section-id]").data("section-id"));
     section.attr("na", el.attr("checked") ? 1 : 0);
-    this.bindXHRToButton(section.save(), el);
+    this.bindXHRToButton(section.refresh().then(function(s) { s.save() }), el);
   }
 
   , "#section_notes change" : function(el, ev) {
@@ -323,8 +323,6 @@ CMS.Controllers.Mapping("CMS.Controllers.ControlMappingPopup", {
 
       that.search_filter(that.options.company_list_controller.find_all_deferred).done(function(d) {
         that.list = d;
-        that.options.section.update_linked_controls_ccontrol_only();
-        //that.options.observer.attr("controls", d);
         that.update();
         that.element.trigger("shown").trigger("kill-all-popoevers");
       });
@@ -363,9 +361,12 @@ CMS.Controllers.Mapping("CMS.Controllers.ControlMappingPopup", {
     if(is_mapped ^ el.prop("checked")) {
       this[is_mapped ? "unmap" : "map"](this.options.section, null, control)
       .done(function() {
-        setTimeout(function() {
-          that.style_item(that.element.find("[content_id=" + control.content_id + "]").parent());
-        }, 10)
+        that.options.section.constructor.bind("updated." + control.content_id, function() {
+          setTimeout(function() {
+            that.style_item(that.element.find("[content_id=" + control.content_id + "]").parent());
+          }, 10);
+          that.options.section.constructor.unbind("." + control.content_id);
+        });
       });
     }
   }
