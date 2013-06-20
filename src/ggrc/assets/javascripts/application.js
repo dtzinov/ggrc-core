@@ -159,27 +159,33 @@ jQuery.extend(GGRC, {
 });
 })(GGRC);
 
+(function($){
+
 // Set up all PUT requests to the server to respect ETags, to ensure that
 //  we are not overwriting more recent data than was viewed by the user.
-jQuery.ajaxPrefilter(function( options, originalOptions, jqXHR ) {
+var etags = {};
+$.ajaxPrefilter(function( options, originalOptions, jqXHR ) {
   var data;
-  if ( /^\/api\//.test(options.url) && (options.type.toUpperCase() === "PUT" || options.type.toUpperCase() === "POST" )) {
+  if ( /^\/api\//.test(options.url) && /PUT|POST|DELETE/.test(options.type.toUpperCase())) {
     data = can.deparam(options.data);
     options.dataType = "json";
     options.contentType = "application/json";
-    jqXHR.setRequestHeader("If-Match", data.etag);
-    jqXHR.setRequestHeader("If-Unmodified-Since", data["last-modified"]);
-    delete data.etag;
-    delete data["last-modified"];
+    jqXHR.setRequestHeader("If-Match", (etags[originalOptions.url] || [])[0]);
+    jqXHR.setRequestHeader("If-Unmodified-Since", (etags[originalOptions.url] || [])[1]);
     options.data = JSON.stringify(data);
+  }
+  if( /^\/api\/\w+$/.test(options.url) && (options.type.toUpperCase() === "GET") && !options.data ) {
+    options.cache = false;
   }
   if( /^\/api\/\w+\/\d+/.test(options.url) && (options.type.toUpperCase() === "GET") ) {
     options.cache = false;
+    jqXHR.done(function(data, status, xhr) {
+      etags[originalOptions.url] = [xhr.getResponseHeader("ETag"), xhr.getResponseHeader("Last-Modified")];
+    });
   }
 });
 
 //Set up default failure callbacks if nonesuch exist.
-(function($){
   var _old_ajax = $.ajax;
 
   var statusmsgs = {
@@ -196,11 +202,11 @@ jQuery.ajaxPrefilter(function( options, originalOptions, jqXHR ) {
   //  then() or pipe()), then the original one won't normally be notified of failure.
   can.ajax = $.ajax = function() {
     var _ajax = _old_ajax.apply($, arguments);
-    var _old_then = _ajax.then;
-    var _old_fail = _ajax.fail;
-    var _old_pipe = _ajax.pipe;
 
     function setup(_new_ajax, _old_ajax) {
+      var _old_then = _new_ajax.then;
+      var _old_fail = _new_ajax.fail;
+      var _old_pipe = _new_ajax.pipe;
       _old_ajax && (_new_ajax.hasFailCallback = _old_ajax.hasFailCallback);
       _new_ajax.then = function() {
         var _new_ajax = _old_then.apply(this, arguments);

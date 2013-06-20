@@ -57,17 +57,16 @@
               {{#controls}}
               <li>
                 <a href="javascript://" class="jump-to-control" data-content-id="{{content_id}}">
-                  {{#pack this}}
+                  {{#with this}}
                     {{! careful to avoid using the section's title or slug here, especially when the controls haven't loaded yet }}
-                    <span>{{firstnonempty control.title title}}</span>
-                    <small>{{firstnonempty control.slug slug}}</small>
-                  {{/pack}}
+                    <span>{{title}}</span>
+                    <small>{{slug}}</small>
+                  {{/with}}
                 </a>
               </li>
               {{/controls}}
             </ul>
-          {{/if}}
-          {{#unless controls.length}}
+          {{else}}
             <ul class="linked-controls">
               <li class="not-applicable">
                 <input type="checkbox" id="section_na" {{#if na}}checked="checked"{{/if}}>
@@ -75,7 +74,7 @@
               </li>
             </ul>
             
-          {{/unless}}
+          {{/if}}
         </div>
       </div>
       {{/section}}

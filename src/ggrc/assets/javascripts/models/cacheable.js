@@ -10,7 +10,13 @@
 (function(can) {
 can.Model("can.Model.Cacheable", {
 
-  init : function() {
+  findOne : "GET {href}"
+  , setup : function(construct, name, statics, prototypes) {
+    if((!statics || !statics.findAll) && this.findAll === can.Model.Cacheable.findAll)
+      this.findAll = "GET /api/" + this.root_collection;
+    return this._super.apply(this, arguments);
+  }
+  , init : function() {
     this.bind("created", function(ev, new_obj) {
       var cache = can.getObject("cache", new_obj.constructor, true);
       if(new_obj.id) {
@@ -42,7 +48,10 @@ can.Model("can.Model.Cacheable", {
       return ret;
     };
 
-
+    var _refresh = this.makeFindOne({ type : "get", url : "{href}" });
+    this.refresh = function(params) {
+      return _refresh.call(this, {href : params.selfLink || params.href});
+    };
   }
 
   , findInCacheById : function(id) {
@@ -61,12 +70,9 @@ can.Model("can.Model.Cacheable", {
     }
   }
   , process_args : function(args, names) {
-    var pargs = {
-      etag : args.etag
-      , "last-modified" : args["last-modified"]
-    };
+    var pargs = {};
     var obj = pargs;
-    if(this.root_object) {
+    if(this.root_object && !(this.root_object in args)) {
       obj = pargs[this.root_object] = {};
     }
     var src = args.serialize ? args.serialize() : args;
@@ -94,21 +100,27 @@ can.Model("can.Model.Cacheable", {
   }
   , models : function(params) {
     if(params[this.root_collection + "_collection"]) {
-      params = params[this.root_collection + "_collection"]
+      params = params[this.root_collection + "_collection"];
     }
     if(params[this.root_collection]) {
       params = params[this.root_collection];
     }
-    return this._super(params);
+    var ms = this._super(params);
+    if(params instanceof can.Observe) {
+      params.replace(ms);
+      return params;
+    } else {
+      return ms;
+    }
   }
   , model : function(params) {
-    var m;
+    var m, that = this;
     var obj_name = this.root_object;
     if(typeof obj_name !== "undefined" && params[obj_name]) {
         for(var i in params[obj_name]) {
           if(params[obj_name].hasOwnProperty(i)) {
-            params.attr 
-            ? params.attr(i, params[obj_name][i]) 
+            params.attr
+            ? params.attr(i, params[obj_name][i])
             : (params[i] = params[obj_name][i]);
           }
         }
@@ -119,7 +131,20 @@ can.Model("can.Model.Cacheable", {
         }
     }
     if(m = this.findInCacheById(params.id)) {
-      m.attr(params);
+      var fn = (typeof params.each === "function") ? can.proxy(params.each,"call") : can.each;
+      fn(params, function(val, key) {
+        var p = val && val.serialize ? val.serialize() : val;
+        if(m[key] instanceof can.Observe.List) {
+          m[key].replace(
+            m[key].constructor.models ?
+              m[key].constructor.models(p)
+              : p);
+        } else if(m[key] instanceof can.Model) {
+          m[key].constructor.model(params[key]);
+        } else {
+          m.attr(key, p);
+        }
+      });
     } else {
       m = this._super(params);
     }
@@ -160,16 +185,15 @@ can.Model("can.Model.Cacheable", {
     this._triggerChange(attrName, "set", this[attrName], this[attrName].slice(0, this[attrName].length - 1));
   }
   , refresh : function() {
-    return $.ajax({
-      url : this.selfLink
-      , type : "get"
-      , dataType : "json"
-    })
-    .then(function(data, status, xhr) {
-      data.etag = xhr.getResponseHeader("ETag");
-      data['last-modified'] = xhr.getResponseHeader("Last-Modified");
-    })
-    .then(can.proxy(this.constructor, "model"));
+    return this.constructor.findOne({href : this.selfLink || this.href}).done(function(d) {
+      d.updated();
+    });
+    // return $.ajax({
+    //   url : this.selfLink || this.href
+    //   , type : "get"
+    //   , dataType : "json"
+    // })
+    // .then(can.proxy(this.constructor, "model"));
   }
   , serialize : function() {
     var that = this, serial = {};
@@ -181,18 +205,22 @@ can.Model("can.Model.Cacheable", {
       if(that.constructor.attributes && that.constructor.attributes[name]) {
         fun_name = that.constructor.attributes[name].split(".").reverse()[0];
         if(fun_name === "models") {
-          serial[name] = can.map(val, function(v) { return {id : v.id, href : v.selfLink || v.href };});
+          serial[name] = can.map(val, this.stub);
         } else if(fun_name === "model") {
-          serial[name] = { id : val.id, href : val.selfLink || val.href };
+          serial[name] = val.stub();
         } else {
           serial[name] = that._super(name);
         }
-      } else {
-        serial[name] = that._super(name);
+      } else if(typeof val !== 'function') {
+        serial[name] = that[name] && that[name].serialize ? that[name].serialize() : that._super(name);
       }
     });
     return serial;
   }
 });
+
+can.Observe.prototype.stub = function() {
+  return { id : this.id, href : this.selfLink || this.href };
+};
 
 })(window.can);

@@ -85,7 +85,13 @@ can.Model.Cacheable("CMS.Models.Category", {
 
     this.validatePresenceOf("title");
 
-    can.getObject("cache", this, true)[-1] = this.model({ id : -1, name : "Uncategorized Controls", children : [], controls : [] });
+    can.getObject("cache", this, true)[-1] = this.model({
+      id : -1
+      , name : "Uncategorized Controls"
+      , children : []
+      , controls : []
+      , selfLink : "#"
+    });
   }
 }, {
   init : function() {
