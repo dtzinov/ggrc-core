@@ -132,7 +132,7 @@ Feature: Collection filtering via query parameters
     Then query result selfLink query string is "directive.kind__in=bar,baz"
     And "control" is not in query result
 
-  Scenario: Property link objects and be included with __include
+  Scenario: Property link objects can be included with __include
     Given a new "Directive" named "directive"
     And "directive" property "kind" is "Testing__include1"
     And "directive" is POSTed to its collection
@@ -143,3 +143,4 @@ Feature: Collection filtering via query parameters
     Then query result selfLink query string is "program_directives.directive.kind=Testing__include1&__include=directives"
     And "program" is in query result
     And evaluate "context.queryresultcollection['programs_collection']['programs'][0]['directives'][0]['kind'] == 'Testing__include1'"
+

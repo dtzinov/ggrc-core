@@ -54,6 +54,9 @@ class UnicodeSafeJsonWrapper(dict):
   def get(self, key, default=None):
     return super(UnicodeSafeJsonWrapper, self).get(unicode(key), default)
 
+def inclusion_filter(obj):
+  return permissions.is_allowed_read(obj.__class__.__name__, obj.context_id)
+
 def as_json(obj, **kwargs):
   return json.dumps(obj, cls=DateTimeEncoder, **kwargs)
 
@@ -104,7 +107,7 @@ class ModelView(View):
       if contexts is not None:
         query = query.filter(self.model.context_id.in_(contexts))
         for j in joinlist:
-          query = query.filter(j.context_id.in_(contexts))
+          query = query.filter(j.class_.context_id.in_(contexts))
     return query.order_by(self.modified_attr.desc())
 
   def get_object(self, id):

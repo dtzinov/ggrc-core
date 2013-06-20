@@ -55,7 +55,8 @@ class DefaultUserPermissions(UserPermissions):
     permissions = session['permissions']
     if permissions is None:
       return None
-    return permissions.get(action, {}).get(resource_type, ())
+    ret = list(permissions.get(action, {}).get(resource_type, ()))
+    ret.append(None)
 
   def create_contexts_for(self, resource_type):
     """All contexts in which the user has create permission."""
