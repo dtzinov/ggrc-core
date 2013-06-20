@@ -7,8 +7,8 @@
 -extends "layouts/dashboard.haml"
 
 -set model = controller.model
--set model_title = model.__name__
--set model_name = model_title|underscore
+-set model_title = model._inflector.title_singular
+-set model_name = model._inflector.table_singular
 
 -block title
   =instance.title
