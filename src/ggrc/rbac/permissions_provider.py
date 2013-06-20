@@ -56,7 +56,6 @@ class DefaultUserPermissions(UserPermissions):
     if permissions is None:
       return None
     ret = list(permissions.get(action, {}).get(resource_type, ()))
-    ret.append(None)
     return ret
 
   def create_contexts_for(self, resource_type):

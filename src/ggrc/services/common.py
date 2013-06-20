@@ -15,6 +15,7 @@ from ggrc.fulltext import get_indexer
 from ggrc.fulltext.recordbuilder import fts_record_for
 from ggrc.login import get_current_user_id
 from ggrc.rbac import permissions
+from sqlalchemy import or_
 from werkzeug.exceptions import BadRequest, Forbidden
 from wsgiref.handlers import format_date_time
 from .attribute_query import AttributeQueryBuilder
@@ -105,7 +106,15 @@ class ModelView(View):
     if filter_by_contexts:
       contexts = permissions.read_contexts_for(self.model.__name__)
       if contexts is not None:
-        query = query.filter(self.model.context_id.in_(contexts))
+        query = query.filter(or_(
+          self.model.context_id.in_(contexts),
+          self.model.context_id == None))
+      for j in joinlist:
+        j_class = j.property.mapper.class_
+        j_contexts = permissions.read_contexts_for(j_class.__name__)
+        query = query.filter(or_(
+          j_class.context_id.in_(j_contexts),
+          j_class.context_id == None))
     return query.order_by(self.modified_attr.desc())
 
   def get_object(self, id):

@@ -179,6 +179,7 @@ Feature: RBAC Permissions enforcement for REST API
       | SystemControl      |
       | Transaction        |
 
+  @wip
   Scenario: Property link objects can be included with __include if the user has read access to the target
     Given current user is "{\"email\": \"bobtester@testertester.com\", \"name\": \"Bob Tester\", \"permissions\": {\"create\": {\"Directive\": [1,2], \"Program\": [1,2]}, \"read\": {\"Directive\": [1,2], \"Program\": [1,2]}, \"update\": {\"Directive\": [1,2]}}}"
     And a new "Directive" named "directive_in_1"
@@ -205,6 +206,10 @@ Feature: RBAC Permissions enforcement for REST API
     And "program" is in query result
     And evaluate "len(context.queryresultcollection['programs_collection']['programs'][0]['directives']) == 2"
     And evaluate "'kind' in context.queryresultcollection['programs_collection']['programs'][0]['directives'][0] != 'kind' in context.queryresultcollection['programs_collection']['programs'][0]['directives'][1]"
+    Given current user is "{\"email\": \"alicetester@testertester.com\", \"name\": \"Alice Tester\", \"permissions\": {\"read\": {\"Directive\": [3], \"Program\": [1]}, \"update\": {\"Directive\": [1]}}}"
+    When Querying "Program" with "program_directives.directive.kind=Testing__include1&__include=directives"
+    Then query result selfLink query string is "program_directives.directive.kind=Testing__include1&__include=directives"
+    And "program" is not in query result
 
   Scenario Outline: A single query parameter supplied to a collection finds matching resources in contexts that the user is authorized to for read
     Given a new "<resource_type>" named "resource1"
