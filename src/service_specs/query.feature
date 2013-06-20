@@ -8,7 +8,6 @@ Feature: Collection filtering via query parameters
   Background:
     Given service description
   
-  @wip
   Scenario Outline: A single query parameter supplied to a collection finds matching resources
     Given a new "<resource_type>" named "resource1"
     And a new "<resource_type>" named "resource2"

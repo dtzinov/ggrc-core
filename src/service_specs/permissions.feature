@@ -179,7 +179,6 @@ Feature: RBAC Permissions enforcement for REST API
       | SystemControl      |
       | Transaction        |
 
-  @wip
   Scenario: Property link objects can be included with __include if the user has read access to the target
     Given current user is "{\"email\": \"bobtester@testertester.com\", \"name\": \"Bob Tester\", \"permissions\": {\"create\": {\"Directive\": [1,2], \"Program\": [1,2]}, \"read\": {\"Directive\": [1,2], \"Program\": [1,2]}, \"update\": {\"Directive\": [1,2]}}}"
     And a new "Directive" named "directive_in_1"
@@ -206,4 +205,34 @@ Feature: RBAC Permissions enforcement for REST API
     And "program" is in query result
     And evaluate "len(context.queryresultcollection['programs_collection']['programs'][0]['directives']) == 2"
     And evaluate "'kind' in context.queryresultcollection['programs_collection']['programs'][0]['directives'][0] != 'kind' in context.queryresultcollection['programs_collection']['programs'][0]['directives'][1]"
+
+  Scenario Outline: A single query parameter supplied to a collection finds matching resources in contexts that the user is authorized to for read
+    Given a new "<resource_type>" named "resource1"
+    And a new "<resource_type>" named "resource2"
+    And "resource1" property "<property_name>" is "<match_value>"
+    And "resource2" property "<property_name>" is "<match_value>"
+    And "resource1" property "context_id" is literal "1"
+    And "resource2" property "context_id" is literal "2"
+    And current user is "{\"email\": \"bobtester@testertester.com\", \"name\": \"Bob Tester\", \"permissions\": {\"create\": {\"<resource_type>\": [1,2]}, \"read\": {\"<resource_type>\": [1,2]}, \"update\": {\"<resource_type>\": [1,2]}}}"
+    And "resource1" is POSTed to its collection
+    And "resource2" is POSTed to its collection
+    When Querying "<resource_type>" with "<property_name>=<match_value>"
+    And GET of the resource "resource1"
+    And GET of the resource "resource2"
+    Then query result selfLink query string is "<property_name>=<match_value>"
+    And "resource1" is in query result
+    And "resource2" is in query result
+    Given current user is "{\"email\": \"tester@testertester.com\", \"name\": \"Jo Tester\", \"permissions\": {\"create\": {\"<resource_type>\": [1]}, \"read\": {\"<resource_type>\": [1]}, \"update\": {\"<resource_type>\": [1]}}}"
+    When Querying "<resource_type>" with "<property_name>=<match_value>"
+    Then query result selfLink query string is "<property_name>=<match_value>"
+    And "resource1" is in query result
+    And "resource2" is not in query result
+
+  Examples: Resources
+      | resource_type | property_name | match_value         |
+      | Category      | name          | category1           |
+      | Category      | scope_id      | 3                   |
+      | Help          | slug          | foo                 |
+      | Program       | start_date    | 2013-06-03T00:00:00 |
+      | Cycle         | start_at      | 2013-06-03          |
 
