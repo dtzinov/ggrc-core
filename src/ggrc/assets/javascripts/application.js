@@ -174,13 +174,29 @@ $.ajaxPrefilter(function( options, originalOptions, jqXHR ) {
     jqXHR.setRequestHeader("If-Unmodified-Since", (etags[originalOptions.url] || [])[1]);
     options.data = JSON.stringify(data);
   }
-  if( /^\/api\/\w+$/.test(options.url) && (options.type.toUpperCase() === "GET") && !options.data ) {
+  if( /^\/api\/\w+(\/\d+|$)/.test(options.url) && (options.type.toUpperCase() === "GET")) {
     options.cache = false;
   }
-  if( /^\/api\/\w+\/\d+/.test(options.url) && (options.type.toUpperCase() === "GET") ) {
-    options.cache = false;
+  if( /^\/api\/\w+/.test(options.url)) {
     jqXHR.done(function(data, status, xhr) {
-      etags[originalOptions.url] = [xhr.getResponseHeader("ETag"), xhr.getResponseHeader("Last-Modified")];
+      if(!/^\/api\/\w+\/\d+/.test(options.url) && options.type.toUpperCase() === "GET")
+        return;
+      switch(options.type.toUpperCase()) {
+        case "GET":
+        case "PUT":
+          etags[originalOptions.url] = [xhr.getResponseHeader("ETag"), xhr.getResponseHeader("Last-Modified")];
+          break;
+        case "POST":
+          for(var d in data) {
+            if(data.hasOwnProperty(d) && data[d].selfLink) {
+              etags[data[d].selfLink] = [xhr.getResponseHeader("ETag"), xhr.getResponseHeader("Last-Modified")];
+            }
+          }
+          break;
+        case "DELETE":
+          delete etags[originalOptions.url];
+          break;
+      }
     });
   }
 });

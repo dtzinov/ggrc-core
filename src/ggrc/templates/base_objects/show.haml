@@ -7,13 +7,13 @@
 -extends "layouts/dashboard.haml"
 
 -set model = controller.model
--set model_name = controller.model_name
--set model_title = model_name|title
+-set model_title = model._inflector.title_singular
+-set model_name = model._inflector.table_singular
 
 -block title
   =instance.title
 
--block page_help
+-block page_help scoped
   =model_name
 
 -block extra_javascript
