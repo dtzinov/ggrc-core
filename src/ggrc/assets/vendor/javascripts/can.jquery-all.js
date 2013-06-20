@@ -5765,7 +5765,7 @@
                             can.each(funcs, function(func) {
                                 var res = func.call(self, isTest ? (self.__convert ?
                                         self.__convert(attr, newVal) :
-                                        newVal) : self[attr]);
+                                        newVal) : self.attr(attr));
                                 if (res) {
                                     if (!errors[attr]) {
                                         errors[attr] = [];
