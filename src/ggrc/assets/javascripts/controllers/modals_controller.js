@@ -131,16 +131,26 @@ can.Control("GGRC.Controllers.Modals", {
     ajd = instance.save().done(function() {
       that.element.modal_form("hide");
     }).fail(function(xhr, status) {
-      var error = xhr.responseText
-      , tmpl = '<div class="alert alert-error"><a href="#" class="close" data-dismiss="alert">&times;</a><span>'
-        + error
-        + '</span></div>';
-
-      that.options.$content.find(".flash").length || that.options.$content.prepend("<div class='flash'>");
-
-      error && that.options.$content.find(".flash").append(tmpl);
+      el.trigger("ajax:flash", { error : xhr.responseText });
     });
     this.bindXHRToButton(ajd, el, "Saving, please wait...");
+  }
+
+  , " ajax:flash" : function(el, ev, mesg) {
+    var that = this;
+    this.options.$content.find(".flash").length || that.options.$content.prepend("<div class='flash'>");
+
+    can.each(["success", "warning", "error"], function(type) {
+      var tmpl;
+      if(mesg[type]) {
+        tmpl = '<div class="alert alert-'
+        + type
+        +'"><a href="#" class="close" data-dismiss="alert">&times;</a><span>'
+        + mesg[type]
+        + '</span></div>';
+        that.options.$content.find(".flash").append(tmpl);
+      }
+    });
   }
 
   , destroy : function() {

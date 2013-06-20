@@ -21,7 +21,9 @@ GGRC.Controllers.Modals("GGRC.Controllers.Help", {
   }
 
   , "{$content} input.btn[name='commit'] click" : function(el, ev) {
-    this.options.instance.save();
+    this.bindXHRToButton(this.options.instance.save().done(function() {
+      el.trigger("ajax:flash", { success : "Help content saved successfully"});
+    }), el);
   }
 
   , "{$header} .help-edit click" : function(el, ev) {

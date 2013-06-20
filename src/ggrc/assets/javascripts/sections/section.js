@@ -157,8 +157,10 @@ can.Model.Cacheable("CMS.Models.ControlSection", {
   , create : "POST /api/control_sections"
   , destroy : "DELETE /api/control_sections/{id}"
   , init : function() {
+    var that = this;
     this._super.apply(this, arguments);
     this.bind("created destroyed", function(ev, inst) {
+      if(that !== inst.constructor) return;
       var section =
         CMS.Models.SectionSlug.findInCacheById(inst.section.id)
         || CMS.Models.Section.findInCacheById(inst.section.id);

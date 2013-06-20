@@ -227,7 +227,6 @@ can.Model.Cacheable("CMS.Models.Help", {
   root_object : "help"
   , root_collection : "helps"
   , findAll : "GET /api/help"
-  , findOne : "GET /api/help/{id}"
   , update : "PUT /api/help/{id}"
   , create : "POST /api/help"
 }, {});
